@@ -13,6 +13,7 @@ import org.junit.Test;
 import mirrg.helium.compile.oxygen.parser.core.ISyntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxSlot;
+import mirrg.helium.compile.oxygen.util.ColoredString;
 import mirrg.helium.standard.hydrogen.struct.Struct1;
 import mirrg.helium.standard.hydrogen.struct.Struct2;
 
@@ -93,9 +94,9 @@ public class Test1
 			s -> new FormulaLiteral(constants.get(s), Color.blue));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
 		ISyntax<IFormula> syntaxBrackets = map(serial(Struct1<IFormula>::new)
-			.and(string("("))
+			.and(map(string("("), s -> new ColoredString(s, Color.green)))
 			.and(syntaxExpression, Struct1::setX)
-			.and(string(")")),
+			.and(map(string(")"), s -> new ColoredString(s, Color.green))),
 			Struct1::getX);
 		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
 			.or(syntaxInteger)
