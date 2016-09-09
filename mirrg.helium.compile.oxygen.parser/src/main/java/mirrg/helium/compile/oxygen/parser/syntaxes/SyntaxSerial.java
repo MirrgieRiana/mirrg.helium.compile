@@ -29,7 +29,7 @@ public class SyntaxSerial<T> implements ISyntax<T>
 	{
 		syntaxes.add(t -> HSyntaxOxygen.map(syntax, t2 -> {
 			function.accept(t, t2);
-			return null;
+			return t2;
 		}));
 		return this;
 	}

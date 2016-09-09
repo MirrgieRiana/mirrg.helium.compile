@@ -4,6 +4,7 @@ import static mirrg.helium.compile.oxygen.parser.HParserOxygen.*;
 import static mirrg.helium.compile.oxygen.parser.HSyntaxOxygen.*;
 import static org.junit.Assert.*;
 
+import java.awt.Color;
 import java.util.Hashtable;
 import java.util.function.ToDoubleFunction;
 
@@ -66,7 +67,7 @@ public class Test1
 		assertEquals(Math.PI, f.applyAsDouble("0+pi"), D);
 	}
 
-	public static ISyntax<IFormula> formulaOperationArray(
+	public static ISyntax<IFormula> operation(
 		ISyntax<IFormula> syntaxOperand,
 		ISyntax<IFunction> syntaxOperator)
 	{
@@ -78,15 +79,18 @@ public class Test1
 				(n1, n2) -> n1.right = n2));
 	}
 
-	@Test
-	public void test3()
+	public static SyntaxSlot<IFormula> test3_getSyntax()
 	{
+		Hashtable<String, Double> constants = new Hashtable<>();
+		constants.put("pi", Math.PI);
+		constants.put("e", Math.E);
+
 		ISyntax<IFormula> syntaxInteger = map(
 			regex("\\d+"),
-			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
+			s -> new FormulaLiteral(Integer.parseInt(s, 10), Color.red));
 		ISyntax<IFormula> syntaxConstant = map(
-			regex("\\d+"),
-			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
+			regex("[a-zA-Z_][a-zA-Z_0-9]*"),
+			s -> new FormulaLiteral(constants.get(s), Color.blue));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
 		ISyntax<IFormula> syntaxBracket = map(serial(Struct1<IFormula>::new)
 			.and(string("("))
@@ -97,16 +101,23 @@ public class Test1
 			.or(syntaxInteger)
 			.or(syntaxConstant)
 			.or(syntaxBracket);
-		ISyntax<IFormula> syntaxTerm = wrap(formulaOperationArray(
+		ISyntax<IFormula> syntaxTerm = wrap(operation(
 			syntaxFactor,
 			or((IFunction) null)
 				.or(map(string("*"), s -> (a, b) -> a * b))
 				.or(map(string("/"), s -> (a, b) -> a / b))));
-		syntaxExpression.setSyntax(wrap(formulaOperationArray(
+		syntaxExpression.setSyntax(wrap(operation(
 			syntaxTerm,
 			or((IFunction) null)
 				.or(map(string("+"), s -> (a, b) -> a + b))
 				.or(map(string("-"), s -> (a, b) -> a - b)))));
+		return syntaxExpression;
+	}
+
+	@Test
+	public void test3()
+	{
+		ISyntax<IFormula> syntaxExpression = test3_getSyntax();
 
 		ToDoubleFunction<String> f = src -> parse(syntaxExpression, src).value.calculate();
 
