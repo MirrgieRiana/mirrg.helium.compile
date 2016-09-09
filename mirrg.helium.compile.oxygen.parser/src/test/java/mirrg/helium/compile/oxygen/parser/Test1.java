@@ -1,6 +1,5 @@
 package mirrg.helium.compile.oxygen.parser;
 
-import static mirrg.helium.compile.oxygen.parser.HParserOxygen.*;
 import static mirrg.helium.compile.oxygen.parser.HSyntaxOxygen.*;
 import static org.junit.Assert.*;
 
@@ -33,7 +32,7 @@ public class Test1
 			.and(string("+"), (f, f2) -> f.function = (a, b) -> a + b)
 			.and(syntaxFactor, FormulaOperation::setRight));
 
-		ToDoubleFunction<String> f = src -> parse(syntaxExpression, src).value.calculate();
+		ToDoubleFunction<String> f = src -> syntaxExpression.parse(src).value.calculate();
 
 		assertEquals(2, f.applyAsDouble("1+1"), D);
 		assertEquals(133, f.applyAsDouble("010+123"), D);
@@ -63,7 +62,7 @@ public class Test1
 			.and(string("+"), (f, f2) -> f.function = (a, b) -> a + b)
 			.and(syntaxFactor, FormulaOperation::setRight));
 
-		ToDoubleFunction<String> f = src -> parse(syntaxExpression, src).value.calculate();
+		ToDoubleFunction<String> f = src -> syntaxExpression.parse(src).value.calculate();
 
 		assertEquals(Math.PI, f.applyAsDouble("0+pi"), D);
 	}
@@ -80,7 +79,7 @@ public class Test1
 				(n1, n2) -> n1.right = n2));
 	}
 
-	public static SyntaxSlot<IFormula> test3_getSyntax()
+	public static ISyntax<IFormula> test3_getSyntax()
 	{
 		Hashtable<String, Double> constants = new Hashtable<>();
 		constants.put("pi", Math.PI);
@@ -120,7 +119,7 @@ public class Test1
 	{
 		ISyntax<IFormula> syntaxExpression = test3_getSyntax();
 
-		ToDoubleFunction<String> f = src -> parse(syntaxExpression, src).value.calculate();
+		ToDoubleFunction<String> f = src -> syntaxExpression.parse(src).value.calculate();
 
 		assertEquals(77.9852278869, f.applyAsDouble("15/26*158+41-27*14/7+45/61*5-27/7"), D);
 		assertEquals(-3.85706255112, f.applyAsDouble("15/(26*158+41-27)*(14/(7+45)/61)*5-27/7"), D);
