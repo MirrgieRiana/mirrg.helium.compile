@@ -14,7 +14,7 @@ project.archivesBaseName = 'mirrg.helium.compile.oxygen.parser'
 
 // ★成果物のバージョン
 def superversion = '0' // 破壊的なバージョン変更
-def subversion = '0.1' // 破壊的でないバージョン変更
+def subversion = '0.2' // 破壊的でないバージョン変更
 
 // ★依存関係
 dependencies {
@@ -25,8 +25,8 @@ dependencies {
 	//compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
 	//compile group: 'mirrg', name: 'mirrg.struct.hydrogen-1.0', version: '+'
 	compile 'mirrg:mirrg.helium.standard.hydrogen.struct:+'
-	testCompile 'mirrg:mirrg.helium.standard.hydrogen.util:+'
-	testCompile 'mirrg:mirrg.helium.swing.nitrogen.util:+'
+	compile 'mirrg:mirrg.helium.standard.hydrogen.util:+'
+	compile 'mirrg:mirrg.helium.swing.nitrogen.util:+'
 
 }
 
