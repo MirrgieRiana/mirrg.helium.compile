@@ -92,7 +92,7 @@ public class Test1
 			regex("[a-zA-Z_][a-zA-Z_0-9]*"),
 			s -> new FormulaLiteral(constants.get(s), Color.blue));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
-		ISyntax<IFormula> syntaxBracket = map(serial(Struct1<IFormula>::new)
+		ISyntax<IFormula> syntaxBrackets = map(serial(Struct1<IFormula>::new)
 			.and(string("("))
 			.and(syntaxExpression, Struct1::setX)
 			.and(string(")")),
@@ -100,7 +100,7 @@ public class Test1
 		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
 			.or(syntaxInteger)
 			.or(syntaxConstant)
-			.or(syntaxBracket);
+			.or(syntaxBrackets);
 		ISyntax<IFormula> syntaxTerm = wrap(operation(
 			syntaxFactor,
 			or((IFunction) null)
