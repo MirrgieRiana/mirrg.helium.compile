@@ -25,7 +25,7 @@ public class FrameSyntax extends JFrame
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -59694329365843532L;
 	private ISyntax<?> syntax;
@@ -101,6 +101,7 @@ public class FrameSyntax extends JFrame
 			for (int i = 0; i < bytes.size(); i++) {
 				bytes2[i] = bytes.get(i);
 			}
+			resetText(textPane1);
 			appendText(textPane1, new String(bytes2), Color.red);
 			return;
 		}
