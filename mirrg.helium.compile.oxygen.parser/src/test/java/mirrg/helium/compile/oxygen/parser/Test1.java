@@ -1,5 +1,7 @@
 package mirrg.helium.compile.oxygen.parser;
 
+import static mirrg.helium.compile.oxygen.parser.HParserOxygen.*;
+import static mirrg.helium.compile.oxygen.parser.HSyntaxOxygen.*;
 import static org.junit.Assert.*;
 
 import java.util.Hashtable;
@@ -21,15 +23,15 @@ public class Test1
 	@Test
 	public void test1()
 	{
-		ISyntax<IFormula> syntaxFactor = HSyntaxOxygen.map(
-			HSyntaxOxygen.regex("\\d+"),
+		ISyntax<IFormula> syntaxFactor = map(
+			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		ISyntax<IFormula> syntaxExpression = HSyntaxOxygen.wrap(HSyntaxOxygen.serial(FormulaOperation::new)
+		ISyntax<IFormula> syntaxExpression = wrap(serial(FormulaOperation::new)
 			.and(syntaxFactor, FormulaOperation::setLeft)
-			.and(HSyntaxOxygen.string("+"), (f, f2) -> f.function = (a, b) -> a + b)
+			.and(string("+"), (f, f2) -> f.function = (a, b) -> a + b)
 			.and(syntaxFactor, FormulaOperation::setRight));
 
-		ToDoubleFunction<String> f = src -> HParserOxygen.parse(syntaxExpression, src).value.calculate();
+		ToDoubleFunction<String> f = src -> parse(syntaxExpression, src).value.calculate();
 
 		assertEquals(2, f.applyAsDouble("1+1"), D);
 		assertEquals(133, f.applyAsDouble("010+123"), D);
@@ -45,21 +47,21 @@ public class Test1
 		constants.put("pi", Math.PI);
 		constants.put("e", Math.E);
 
-		ISyntax<IFormula> syntaxInteger = HSyntaxOxygen.map(
-			HSyntaxOxygen.regex("\\d+"),
+		ISyntax<IFormula> syntaxInteger = map(
+			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		ISyntax<IFormula> syntaxConstant = HSyntaxOxygen.map(
-			HSyntaxOxygen.regex("[a-zA-Z_][a-zA-Z_0-9]*"),
+		ISyntax<IFormula> syntaxConstant = map(
+			regex("[a-zA-Z_][a-zA-Z_0-9]*"),
 			s -> new FormulaLiteral(constants.get(s)));
-		SyntaxOr<IFormula> syntaxFactor = HSyntaxOxygen.or((IFormula) null)
+		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
 			.or(syntaxInteger)
 			.or(syntaxConstant);
-		ISyntax<IFormula> syntaxExpression = HSyntaxOxygen.wrap(HSyntaxOxygen.serial(FormulaOperation::new)
+		ISyntax<IFormula> syntaxExpression = wrap(serial(FormulaOperation::new)
 			.and(syntaxFactor, FormulaOperation::setLeft)
-			.and(HSyntaxOxygen.string("+"), (f, f2) -> f.function = (a, b) -> a + b)
+			.and(string("+"), (f, f2) -> f.function = (a, b) -> a + b)
 			.and(syntaxFactor, FormulaOperation::setRight));
 
-		ToDoubleFunction<String> f = src -> HParserOxygen.parse(syntaxExpression, src).value.calculate();
+		ToDoubleFunction<String> f = src -> parse(syntaxExpression, src).value.calculate();
 
 		assertEquals(Math.PI, f.applyAsDouble("0+pi"), D);
 	}
@@ -68,9 +70,9 @@ public class Test1
 		ISyntax<IFormula> syntaxOperand,
 		ISyntax<IFunction> syntaxOperator)
 	{
-		return HSyntaxOxygen.wrap(HSyntaxOxygen.serial(FormulaOperationArray::new)
+		return wrap(serial(FormulaOperationArray::new)
 			.and(syntaxOperand, (n1, n2) -> n1.left = n2)
-			.and(HSyntaxOxygen.repeat(HSyntaxOxygen.serial(Struct2<IFunction, IFormula>::new)
+			.and(repeat(serial(Struct2<IFunction, IFormula>::new)
 				.and(syntaxOperator, (n1, n2) -> n1.x = n2)
 				.and(syntaxOperand, (n1, n2) -> n1.y = n2)),
 				(n1, n2) -> n1.right = n2));
@@ -79,34 +81,34 @@ public class Test1
 	@Test
 	public void test3()
 	{
-		ISyntax<IFormula> syntaxInteger = HSyntaxOxygen.map(
-			HSyntaxOxygen.regex("\\d+"),
+		ISyntax<IFormula> syntaxInteger = map(
+			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		ISyntax<IFormula> syntaxConstant = HSyntaxOxygen.map(
-			HSyntaxOxygen.regex("\\d+"),
+		ISyntax<IFormula> syntaxConstant = map(
+			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		SyntaxSlot<IFormula> syntaxExpression = HSyntaxOxygen.slot();
-		ISyntax<IFormula> syntaxBracket = HSyntaxOxygen.map(HSyntaxOxygen.serial(Struct1<IFormula>::new)
-			.and(HSyntaxOxygen.string("("))
+		SyntaxSlot<IFormula> syntaxExpression = slot();
+		ISyntax<IFormula> syntaxBracket = map(serial(Struct1<IFormula>::new)
+			.and(string("("))
 			.and(syntaxExpression, Struct1::setX)
-			.and(HSyntaxOxygen.string(")")),
+			.and(string(")")),
 			Struct1::getX);
-		SyntaxOr<IFormula> syntaxFactor = HSyntaxOxygen.or((IFormula) null)
+		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
 			.or(syntaxInteger)
 			.or(syntaxConstant)
 			.or(syntaxBracket);
-		ISyntax<IFormula> syntaxTerm = HSyntaxOxygen.wrap(formulaOperationArray(
+		ISyntax<IFormula> syntaxTerm = wrap(formulaOperationArray(
 			syntaxFactor,
-			HSyntaxOxygen.or((IFunction) null)
-				.or(HSyntaxOxygen.map(HSyntaxOxygen.string("*"), s -> (a, b) -> a * b))
-				.or(HSyntaxOxygen.map(HSyntaxOxygen.string("/"), s -> (a, b) -> a / b))));
-		syntaxExpression.setSyntax(HSyntaxOxygen.wrap(formulaOperationArray(
+			or((IFunction) null)
+				.or(map(string("*"), s -> (a, b) -> a * b))
+				.or(map(string("/"), s -> (a, b) -> a / b))));
+		syntaxExpression.setSyntax(wrap(formulaOperationArray(
 			syntaxTerm,
-			HSyntaxOxygen.or((IFunction) null)
-				.or(HSyntaxOxygen.map(HSyntaxOxygen.string("+"), s -> (a, b) -> a + b))
-				.or(HSyntaxOxygen.map(HSyntaxOxygen.string("-"), s -> (a, b) -> a - b)))));
+			or((IFunction) null)
+				.or(map(string("+"), s -> (a, b) -> a + b))
+				.or(map(string("-"), s -> (a, b) -> a - b)))));
 
-		ToDoubleFunction<String> f = src -> HParserOxygen.parse(syntaxExpression, src).value.calculate();
+		ToDoubleFunction<String> f = src -> parse(syntaxExpression, src).value.calculate();
 
 		assertEquals(77.9852278869, f.applyAsDouble("15/26*158+41-27*14/7+45/61*5-27/7"), D);
 		assertEquals(-3.85706255112, f.applyAsDouble("15/(26*158+41-27)*(14/(7+45)/61)*5-27/7"), D);
