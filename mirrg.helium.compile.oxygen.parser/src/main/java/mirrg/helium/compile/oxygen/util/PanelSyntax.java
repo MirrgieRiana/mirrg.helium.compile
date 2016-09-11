@@ -2,16 +2,15 @@ package mirrg.helium.compile.oxygen.util;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Panel;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -22,13 +21,13 @@ import mirrg.helium.standard.hydrogen.event.EventManager;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.swing.nitrogen.util.HSwing;
 
-public class FrameSyntax extends JFrame
+public class PanelSyntax extends Panel
 {
 
 	/**
-	 *
+	 * 
 	 */
-	private static final long serialVersionUID = -59694329365843532L;
+	private static final long serialVersionUID = -2664189373288181817L;
 	private ISyntax<?> syntax;
 	private JTextPane textPane1;
 	private JTextPane textPane2;
@@ -37,7 +36,7 @@ public class FrameSyntax extends JFrame
 	private boolean occurEvent = true;
 	public final EventManager<String> eventManager = new EventManager<>();
 
-	public FrameSyntax(ISyntax<?> syntax, String text)
+	public PanelSyntax(ISyntax<?> syntax, String text)
 	{
 		this.syntax = syntax;
 
@@ -55,10 +54,6 @@ public class FrameSyntax extends JFrame
 		HSwing.hookChange(textPane2, e -> {
 			if (occurEvent) onUserEdit();
 		});
-
-		pack();
-		setLocationByPlatform(true);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 	}
 
 	private void onUserEdit()

@@ -1,15 +1,27 @@
 package mirrg.helium.compile.oxygen.parser;
 
-import mirrg.helium.compile.oxygen.util.FrameSyntax;
+import java.awt.CardLayout;
+
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+
+import mirrg.helium.compile.oxygen.util.PanelSyntax;
 
 public class SampleFrameSyntax
 {
 
 	public static void main(String[] args)
 	{
-		new FrameSyntax(
-			Test1.test3_getSyntax(),
-			"15/(26*158+pi-27)*(e/(7+45)/61)*5-27/7").setVisible(true);
+		JFrame frame = new JFrame();
+
+		frame.setLayout(new CardLayout());
+		frame.add(new PanelSyntax(Test1.test3_getSyntax(),
+			"15/(26*158+pi-27)*(e/(7+45)/61)*5-27/7"));
+
+		frame.pack();
+		frame.setLocationByPlatform(true);
+		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		frame.setVisible(true);
 	}
 
 }
