@@ -24,4 +24,5 @@ public class SyntaxMap<I, O> implements ISyntax<O>
 		if (node == null) return null;
 		return new Node<>(this, node.children, node.begin, node.end, function.apply(node.value));
 	}
+
 }
