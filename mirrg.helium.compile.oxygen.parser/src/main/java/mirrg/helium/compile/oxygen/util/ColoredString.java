@@ -2,40 +2,30 @@ package mirrg.helium.compile.oxygen.util;
 
 import java.awt.Color;
 
-public class ColoredString implements CharSequence, IColoredNode
+public class ColoredString extends Colored<String> implements CharSequence
 {
-
-	public final String string;
-	public final Color color;
 
 	public ColoredString(String string, Color color)
 	{
-		this.string = string;
-		this.color = color;
+		super(string, color);
 	}
 
 	@Override
 	public CharSequence subSequence(int start, int end)
 	{
-		return string.subSequence(start, end);
+		return get().subSequence(start, end);
 	}
 
 	@Override
 	public int length()
 	{
-		return string.length();
+		return get().length();
 	}
 
 	@Override
 	public char charAt(int index)
 	{
-		return string.charAt(index);
-	}
-
-	@Override
-	public Color getColor()
-	{
-		return color;
+		return get().charAt(index);
 	}
 
 }
