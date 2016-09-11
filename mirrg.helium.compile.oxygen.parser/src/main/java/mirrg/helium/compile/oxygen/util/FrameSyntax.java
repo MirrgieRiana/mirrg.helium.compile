@@ -18,6 +18,7 @@ import javax.swing.text.StyleConstants;
 
 import mirrg.helium.compile.oxygen.parser.core.ISyntax;
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.standard.hydrogen.event.EventManager;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.swing.nitrogen.util.HSwing;
 
@@ -34,6 +35,7 @@ public class FrameSyntax extends JFrame
 
 	private Thread threadRecolor;
 	private boolean occurEvent = true;
+	public final EventManager<String> eventManager = new EventManager<>();
 
 	public FrameSyntax(ISyntax<?> syntax, String text)
 	{
@@ -70,6 +72,7 @@ public class FrameSyntax extends JFrame
 			}
 			SwingUtilities.invokeLater(() -> {
 				int caretPosition = textPane2.getCaretPosition();
+				eventManager.post(textPane2.getText());
 				set(textPane2.getText());
 				textPane2.setCaretPosition(caretPosition);
 			});

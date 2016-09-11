@@ -26,6 +26,7 @@ dependencies {
 	//compile group: 'mirrg', name: 'mirrg.struct.hydrogen-1.0', version: '+'
 	compile 'mirrg:mirrg.helium.standard.hydrogen.struct:+'
 	compile 'mirrg:mirrg.helium.standard.hydrogen.util:+'
+	compile 'mirrg:mirrg.helium.standard.hydrogen.event:+'
 	compile 'mirrg:mirrg.helium.swing.nitrogen.util:+'
 
 }
