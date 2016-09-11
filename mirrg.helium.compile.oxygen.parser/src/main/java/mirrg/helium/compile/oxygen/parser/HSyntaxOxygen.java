@@ -7,6 +7,7 @@ import mirrg.helium.compile.oxygen.parser.core.ISyntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxMap;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOptional;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
+import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxPack;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxRegex;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxRepeat;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxSerial;
@@ -59,6 +60,11 @@ public class HSyntaxOxygen
 	public static <I, O> SyntaxMap<I, O> map(ISyntax<I> syntax, Function<I, O> function)
 	{
 		return new SyntaxMap<>(syntax, function);
+	}
+
+	public static <I, O> SyntaxPack<I, O> pack(ISyntax<I> syntax, Function<I, O> function)
+	{
+		return new SyntaxPack<>(syntax, function);
 	}
 
 	public static <I extends O, O> ISyntax<O> wrap(ISyntax<I> syntax)
