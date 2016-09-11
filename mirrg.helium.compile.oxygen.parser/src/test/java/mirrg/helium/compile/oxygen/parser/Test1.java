@@ -86,16 +86,16 @@ public class Test1
 		constants.put("e", Math.E);
 
 		ISyntax<IFormula> syntaxInteger = pack(
-			map(regex("\\d+"), s -> new Colored<String>(s, Color.red)),
+			map(regex("\\d+"), s -> new Colored<>(s, Color.red)),
 			s -> new FormulaLiteral(Integer.parseInt(s.get(), 10)));
 		ISyntax<IFormula> syntaxConstant = pack(
-			map(regex("[a-zA-Z_][a-zA-Z_0-9]*"), s -> new Colored<String>(s, Color.blue)),
+			map(regex("[a-zA-Z_][a-zA-Z_0-9]*"), s -> new Colored<>(s, Color.blue)),
 			s -> new FormulaLiteral(constants.get(s.get())));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
 		ISyntax<IFormula> syntaxBrackets = map(serial(Struct1<IFormula>::new)
-			.and(map(string("("), s -> new Colored<String>(s, Color.green)))
+			.and(map(string("("), s -> new Colored<>(s, Color.green)))
 			.and(syntaxExpression, Struct1::setX)
-			.and(map(string(")"), s -> new Colored<String>(s, Color.green))),
+			.and(map(string(")"), s -> new Colored<>(s, Color.green))),
 			Struct1::getX);
 		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
 			.or(syntaxInteger)
