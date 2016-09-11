@@ -8,6 +8,7 @@ public interface ISyntax<T>
 	public default Node<T> parse(String text)
 	{
 		Node<T> node = parse(text, 0);
+		if (node == null) return null;
 		if (node.end == text.length()) return node;
 		return null;
 	}
