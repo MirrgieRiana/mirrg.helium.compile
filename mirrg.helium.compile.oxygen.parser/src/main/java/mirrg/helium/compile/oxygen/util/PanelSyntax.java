@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
@@ -49,7 +50,9 @@ public class PanelSyntax extends Panel
 			}), 600, 400),
 			HSwing.createScrollPane(textPane2 = new JTextPane(), 600, 100)));
 
+		occurEvent = false;
 		set(text);
+		occurEvent = true;
 
 		HSwing.hookChange(textPane2, e -> {
 			if (occurEvent) onUserEdit();
@@ -68,7 +71,11 @@ public class PanelSyntax extends Panel
 			SwingUtilities.invokeLater(() -> {
 				int caretPosition = textPane2.getCaretPosition();
 				eventManager.post(textPane2.getText());
-				set(textPane2.getText());
+
+				occurEvent = false;
+				update();
+				occurEvent = true;
+
 				textPane2.setCaretPosition(caretPosition);
 			});
 		});
@@ -77,51 +84,70 @@ public class PanelSyntax extends Panel
 
 	private void set(String text)
 	{
+		textPane2.setText(text);
+		update();
+	}
+
+	private void update()
+	{
+		String text = textPane2.getText();
+
 		Node<?> node;
 		try {
 			node = syntax.parse(text);
 		} catch (Exception e) {
-			ArrayList<Byte> bytes = new ArrayList<>();
-			try {
-				e.printStackTrace(new PrintStream(new OutputStream() {
-
-					@Override
-					public void write(int b) throws IOException
-					{
-						bytes.add((byte) b);
-					}
-
-				}, true, "UTF-8"));
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-			}
-			byte[] bytes2 = new byte[bytes.size()];
-			for (int i = 0; i < bytes.size(); i++) {
-				bytes2[i] = bytes.get(i);
-			}
-			resetText(textPane1);
-			appendText(textPane1, new String(bytes2), Color.red);
+			textPane1.setText("");
+			appendText(textPane1, toString(e), Color.red);
 			return;
 		}
+
 		if (node != null) {
-			resetText(textPane1);
-			resetText(textPane2);
-			appendText(text, node, 0);
+			textPane1.setText("");
+			appendText(textPane1, text, node, 0);
+
+			SimpleAttributeSet attr = new SimpleAttributeSet();
+			attr.addAttribute(StyleConstants.Foreground, Color.black);
+			((DefaultStyledDocument) textPane2.getDocument()).setCharacterAttributes(
+				0, textPane2.getDocument().getLength(), attr, false);
+
+			updateText(textPane2, node);
 		} else {
-			resetText(textPane1);
-			resetText(textPane2);
-			appendText(textPane2, text, Color.black);
+			textPane1.setText("");
 		}
 	}
 
-	private void appendText(String text, Node<?> node, int indent)
+	private String toString(Exception e)
 	{
-		appendText(textPane1, HString.rept("  ", indent), Color.black);
-		appendText(textPane1, "[b=", Color.gray);
-		appendText(textPane1, "" + node.begin, Color.magenta);
-		appendText(textPane1, ", e=", Color.gray);
-		appendText(textPane1, "" + node.end, Color.magenta);
-		appendText(textPane1, ", s=", Color.gray);
+		ArrayList<Byte> bytes = new ArrayList<>();
+		try {
+			e.printStackTrace(new PrintStream(new OutputStream() {
+
+				@Override
+				public void write(int b) throws IOException
+				{
+					bytes.add((byte) b);
+				}
+
+			}, true, "UTF-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		byte[] bytes2 = new byte[bytes.size()];
+		for (int i = 0; i < bytes.size(); i++) {
+			bytes2[i] = bytes.get(i);
+		}
+		String string = new String(bytes2);
+		return string;
+	}
+
+	private void appendText(JTextPane textPane, String text, Node<?> node, int indent)
+	{
+		appendText(textPane, HString.rept("  ", indent), Color.black);
+		appendText(textPane, "[b=", Color.gray);
+		appendText(textPane, "" + node.begin, Color.magenta);
+		appendText(textPane, ", e=", Color.gray);
+		appendText(textPane, "" + node.end, Color.magenta);
+		appendText(textPane, ", s=", Color.gray);
 		{
 			if (node.children == null) {
 				Color color = null;
@@ -130,46 +156,53 @@ public class PanelSyntax extends Panel
 				} else {
 					color = Color.black;
 				}
-				appendText(textPane1, text.substring(node.begin, node.end), color);
-				appendText(textPane2, text.substring(node.begin, node.end), color);
+				appendText(textPane, text.substring(node.begin, node.end), color);
 			} else {
-				appendText(textPane1, text.substring(node.begin, node.end), Color.gray);
+				appendText(textPane, text.substring(node.begin, node.end), Color.gray);
 			}
 		}
-		appendText(textPane1, ", v=", Color.gray);
+		appendText(textPane, ", v=", Color.gray);
 		if (node.value != null) {
-			appendText(textPane1, "" + node.value.getClass().getSimpleName(), Color.blue);
+			appendText(textPane, "" + node.value.getClass().getSimpleName(), Color.blue);
 		} else {
-			appendText(textPane1, "null", Color.gray);
+			appendText(textPane, "null", Color.gray);
 		}
-		appendText(textPane1, "]\n", Color.gray);
+		appendText(textPane, "]\n", Color.gray);
 
 		if (node.children != null) {
 			for (Node<?> child : node.children) {
-				appendText(text, child, indent + 1);
+				appendText(textPane, text, child, indent + 1);
 			}
 		}
 
-	}
-
-	private void resetText(JTextPane textPane)
-	{
-		occurEvent = false;
-		textPane.setText("");
-		occurEvent = true;
 	}
 
 	private void appendText(JTextPane textPane, String string, Color color)
 	{
 		SimpleAttributeSet attr = new SimpleAttributeSet();
 		attr.addAttribute(StyleConstants.Foreground, color);
-		occurEvent = false;
 		try {
 			textPane.getDocument().insertString(textPane.getDocument().getLength(), string, attr);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-		occurEvent = true;
+	}
+
+	private void updateText(JTextPane textPane, Node<?> node)
+	{
+		if (node.value instanceof IColoredNode) {
+			SimpleAttributeSet attr = new SimpleAttributeSet();
+			attr.addAttribute(StyleConstants.Foreground, ((IColoredNode) node.value).getColor());
+			((DefaultStyledDocument) textPane.getDocument()).setCharacterAttributes(
+				node.begin, node.end - node.begin, attr, false);
+		}
+
+		if (node.children != null) {
+			for (Node<?> child : node.children) {
+				updateText(textPane, child);
+			}
+		}
+
 	}
 
 }
