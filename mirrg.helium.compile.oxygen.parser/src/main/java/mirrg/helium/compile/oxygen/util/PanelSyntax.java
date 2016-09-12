@@ -44,7 +44,7 @@ public class PanelSyntax extends Panel
 {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2664189373288181817L;
 	private Syntax<?> syntax;
