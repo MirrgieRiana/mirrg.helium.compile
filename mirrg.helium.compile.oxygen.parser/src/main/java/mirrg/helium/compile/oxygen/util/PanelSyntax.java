@@ -151,8 +151,8 @@ public class PanelSyntax extends Panel
 		{
 			if (node.children == null) {
 				Color color = null;
-				if (node.value instanceof IColoredNode) {
-					color = ((IColoredNode) node.value).getColor();
+				if (node.value instanceof IProviderColor) {
+					color = ((IProviderColor) node.value).getColor();
 				} else {
 					color = Color.black;
 				}
@@ -190,9 +190,9 @@ public class PanelSyntax extends Panel
 
 	private void updateText(JTextPane textPane, Node<?> node)
 	{
-		if (node.value instanceof IColoredNode) {
+		if (node.value instanceof IProviderColor) {
 			SimpleAttributeSet attr = new SimpleAttributeSet();
-			attr.addAttribute(StyleConstants.Foreground, ((IColoredNode) node.value).getColor());
+			attr.addAttribute(StyleConstants.Foreground, ((IProviderColor) node.value).getColor());
 			((DefaultStyledDocument) textPane.getDocument()).setCharacterAttributes(
 				node.begin, node.end - node.begin, attr, false);
 		}
