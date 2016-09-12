@@ -6,13 +6,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Panel;
 import java.awt.Point;
-import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -23,8 +18,6 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.swing.JDialog;
-import javax.swing.JList;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -35,6 +28,7 @@ import javax.swing.text.StyleConstants;
 
 import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
+import mirrg.helium.compile.oxygen.util.DialogProposal.EventDialogProposal;
 import mirrg.helium.standard.hydrogen.event.EventManager;
 import mirrg.helium.standard.hydrogen.util.HLambda;
 import mirrg.helium.standard.hydrogen.util.HString;
@@ -119,141 +113,20 @@ public class PanelSyntax extends Panel
 							.collect(Collectors.toCollection(Vector::new));
 
 						{
-							JDialog dialog = new JDialog();
+							DialogProposal dialog = new DialogProposal(proposals);
 
-							dialog.setAutoRequestFocus(false);
-							dialog.setAlwaysOnTop(true);
-							dialog.setType(Window.Type.UTILITY);
+							dialog.eventManager.register(EventDialogProposal.Update.class, e2 -> {
 
-							dialog.setLayout(new CardLayout());
-							dialog.add(createScrollPane(get(() -> {
-								JList<String> list = new JList<>(proposals);
-								Runnable onAction = () -> {
-									String selectedValue = list.getSelectedValue();
-									if (selectedValue != null) {
-										try {
-											((DefaultStyledDocument) textPane2.getDocument()).replace(
-												node2.get().begin,
-												node2.get().end - node2.get().begin - 1,
-												selectedValue, null);
-										} catch (BadLocationException e1) {
-											HLog.processException(e1);
-										}
-										update();
-									}
-									dialog.dispose();
-								};
-								list.addKeyListener(new KeyListener() {
-
-									@Override
-									public void keyTyped(KeyEvent e)
-									{
-
-									}
-
-									@Override
-									public void keyReleased(KeyEvent e)
-									{
-										if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-											dialog.dispose();
-										}
-										if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-											onAction.run();
-										}
-									}
-
-									@Override
-									public void keyPressed(KeyEvent e)
-									{
-
-									}
-
-								});
-								list.addMouseListener(new MouseListener() {
-
-									@Override
-									public void mouseReleased(MouseEvent e)
-									{
-
-									}
-
-									@Override
-									public void mousePressed(MouseEvent e)
-									{
-
-									}
-
-									@Override
-									public void mouseExited(MouseEvent e)
-									{
-
-									}
-
-									@Override
-									public void mouseEntered(MouseEvent e)
-									{
-
-									}
-
-									@Override
-									public void mouseClicked(MouseEvent e)
-									{
-										if (e.getClickCount() == 2) {
-											String selectedValue = list.getSelectedValue();
-											if (selectedValue != null) {
-												onAction.run();
-											}
-											dialog.dispose();
-										}
-									}
-								});
-								return list;
-							}), 200, 200));
-
-							dialog.addWindowListener(new WindowListener() {
-
-								@Override
-								public void windowOpened(WindowEvent e)
-								{
-
+								try {
+									((DefaultStyledDocument) textPane2.getDocument()).replace(
+										node2.get().begin,
+										node2.get().end - node2.get().begin - 1,
+										e2.value, null);
+								} catch (BadLocationException e1) {
+									HLog.processException(e1);
 								}
 
-								@Override
-								public void windowIconified(WindowEvent e)
-								{
-
-								}
-
-								@Override
-								public void windowDeiconified(WindowEvent e)
-								{
-
-								}
-
-								@Override
-								public void windowDeactivated(WindowEvent e)
-								{
-									dialog.dispose();
-								}
-
-								@Override
-								public void windowClosing(WindowEvent e)
-								{
-
-								}
-
-								@Override
-								public void windowClosed(WindowEvent e)
-								{
-
-								}
-
-								@Override
-								public void windowActivated(WindowEvent e)
-								{
-
-								}
-
+								update();
 							});
 
 							{
