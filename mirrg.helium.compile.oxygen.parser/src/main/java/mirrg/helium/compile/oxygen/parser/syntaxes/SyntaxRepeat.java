@@ -2,17 +2,18 @@ package mirrg.helium.compile.oxygen.parser.syntaxes;
 
 import java.util.ArrayList;
 
-import mirrg.helium.compile.oxygen.parser.core.ISyntax;
+import mirrg.helium.compile.oxygen.parser.core.Memo;
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 
-public class SyntaxRepeat<T> implements ISyntax<ArrayList<T>>
+public class SyntaxRepeat<T> extends Syntax<ArrayList<T>>
 {
 
-	public final ISyntax<T> syntax;
+	public final Syntax<T> syntax;
 	public final int min;
 	public final int max;
 
-	public SyntaxRepeat(ISyntax<T> syntax, int min, int max)
+	public SyntaxRepeat(Syntax<T> syntax, int min, int max)
 	{
 		this.syntax = syntax;
 		this.min = min;
@@ -20,7 +21,7 @@ public class SyntaxRepeat<T> implements ISyntax<ArrayList<T>>
 	}
 
 	@Override
-	public Node<ArrayList<T>> parse(String text, int index)
+	protected Node<ArrayList<T>> parseImpl(Memo memo, String text, int index)
 	{
 		ArrayList<Node<?>> children = new ArrayList<>();
 		ArrayList<T> value = new ArrayList<>();
@@ -28,7 +29,7 @@ public class SyntaxRepeat<T> implements ISyntax<ArrayList<T>>
 		int end = begin;
 
 		while (true) {
-			Node<T> node = syntax.parse(text, index);
+			Node<T> node = syntax.parse(memo, text, index);
 			if (node == null) break;
 			children.add(node);
 			value.add(node.value);

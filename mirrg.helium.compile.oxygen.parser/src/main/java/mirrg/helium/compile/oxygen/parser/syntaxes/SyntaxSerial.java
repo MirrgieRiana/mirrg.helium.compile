@@ -6,26 +6,27 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import mirrg.helium.compile.oxygen.parser.HSyntaxOxygen;
-import mirrg.helium.compile.oxygen.parser.core.ISyntax;
+import mirrg.helium.compile.oxygen.parser.core.Memo;
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 
-public class SyntaxSerial<T> implements ISyntax<T>
+public class SyntaxSerial<T> extends Syntax<T>
 {
 
 	public final Supplier<T> supplier;
-	public final ArrayList<Function<T, ISyntax<?>>> syntaxes = new ArrayList<>();
+	public final ArrayList<Function<T, Syntax<?>>> syntaxes = new ArrayList<>();
 
 	public SyntaxSerial(Supplier<T> supplier)
 	{
 		this.supplier = supplier;
 	}
 
-	public <T2> SyntaxSerial<T> and(ISyntax<T2> syntax)
+	public <T2> SyntaxSerial<T> and(Syntax<T2> syntax)
 	{
 		return and(syntax, (t, t2) -> {});
 	}
 
-	public <T2> SyntaxSerial<T> and(ISyntax<T2> syntax, BiConsumer<T, T2> function)
+	public <T2> SyntaxSerial<T> and(Syntax<T2> syntax, BiConsumer<T, T2> function)
 	{
 		syntaxes.add(t -> HSyntaxOxygen.map(syntax, t2 -> {
 			function.accept(t, t2);
@@ -35,15 +36,15 @@ public class SyntaxSerial<T> implements ISyntax<T>
 	}
 
 	@Override
-	public Node<T> parse(String text, int index)
+	protected Node<T> parseImpl(Memo memo, String text, int index)
 	{
 		T t = supplier.get();
 		ArrayList<Node<?>> children = new ArrayList<>();
 		int begin = index;
 		int end = begin;
 
-		for (Function<T, ISyntax<?>> syntax : syntaxes) {
-			Node<?> node = syntax.apply(t).parse(text, index);
+		for (Function<T, Syntax<?>> syntax : syntaxes) {
+			Node<?> node = syntax.apply(t).parse(memo, text, index);
 			if (node == null) return null;
 			children.add(node);
 			index += node.end - node.begin;

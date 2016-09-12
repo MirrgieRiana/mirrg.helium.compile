@@ -3,10 +3,11 @@ package mirrg.helium.compile.oxygen.parser.syntaxes;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import mirrg.helium.compile.oxygen.parser.core.ISyntax;
+import mirrg.helium.compile.oxygen.parser.core.Memo;
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 
-public class SyntaxRegex implements ISyntax<String>
+public class SyntaxRegex extends Syntax<String>
 {
 
 	public final Pattern pattern;
@@ -17,7 +18,7 @@ public class SyntaxRegex implements ISyntax<String>
 	}
 
 	@Override
-	public Node<String> parse(String text, int index)
+	protected Node<String> parseImpl(Memo memo, String text, int index)
 	{
 		Matcher matcher = pattern.matcher(text);
 		if (matcher.find(index)) {

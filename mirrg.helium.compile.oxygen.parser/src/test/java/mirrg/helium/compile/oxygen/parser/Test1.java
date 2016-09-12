@@ -9,7 +9,7 @@ import java.util.function.ToDoubleFunction;
 
 import org.junit.Test;
 
-import mirrg.helium.compile.oxygen.parser.core.ISyntax;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxSlot;
 import mirrg.helium.compile.oxygen.util.Colored;
@@ -24,10 +24,10 @@ public class Test1
 	@Test
 	public void test1()
 	{
-		ISyntax<IFormula> syntaxFactor = map(
+		Syntax<IFormula> syntaxFactor = map(
 			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		ISyntax<IFormula> syntaxExpression = wrap(serial(FormulaOperation::new)
+		Syntax<IFormula> syntaxExpression = wrap(serial(FormulaOperation::new)
 			.and(syntaxFactor, FormulaOperation::setLeft)
 			.and(string("+"), (f, f2) -> f.function = (a, b) -> a + b)
 			.and(syntaxFactor, FormulaOperation::setRight));
@@ -48,16 +48,16 @@ public class Test1
 		constants.put("pi", Math.PI);
 		constants.put("e", Math.E);
 
-		ISyntax<IFormula> syntaxInteger = map(
+		Syntax<IFormula> syntaxInteger = map(
 			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		ISyntax<IFormula> syntaxConstant = map(
+		Syntax<IFormula> syntaxConstant = map(
 			regex("[a-zA-Z_][a-zA-Z_0-9]*"),
 			s -> new FormulaLiteral(constants.get(s)));
 		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
 			.or(syntaxInteger)
 			.or(syntaxConstant);
-		ISyntax<IFormula> syntaxExpression = wrap(serial(FormulaOperation::new)
+		Syntax<IFormula> syntaxExpression = wrap(serial(FormulaOperation::new)
 			.and(syntaxFactor, FormulaOperation::setLeft)
 			.and(string("+"), (f, f2) -> f.function = (a, b) -> a + b)
 			.and(syntaxFactor, FormulaOperation::setRight));
@@ -67,9 +67,9 @@ public class Test1
 		assertEquals(Math.PI, f.applyAsDouble("0+pi"), D);
 	}
 
-	public static ISyntax<IFormula> operation(
-		ISyntax<IFormula> syntaxOperand,
-		ISyntax<IFunction> syntaxOperator)
+	public static Syntax<IFormula> operation(
+		Syntax<IFormula> syntaxOperand,
+		Syntax<IFunction> syntaxOperator)
 	{
 		return wrap(serial(FormulaOperationArray::new)
 			.and(syntaxOperand, (n1, n2) -> n1.left = n2)
@@ -79,20 +79,20 @@ public class Test1
 				(n1, n2) -> n1.right = n2));
 	}
 
-	public static ISyntax<IFormula> test3_getSyntax()
+	public static Syntax<IFormula> test3_getSyntax()
 	{
 		Hashtable<String, Double> constants = new Hashtable<>();
 		constants.put("pi", Math.PI);
 		constants.put("e", Math.E);
 
-		ISyntax<IFormula> syntaxInteger = pack(
+		Syntax<IFormula> syntaxInteger = pack(
 			map(regex("\\d+"), s -> new Colored<>(s, Color.red)),
 			s -> new FormulaLiteral(Integer.parseInt(s.get(), 10)));
-		ISyntax<IFormula> syntaxConstant = pack(
+		Syntax<IFormula> syntaxConstant = pack(
 			map(regex("[a-zA-Z_][a-zA-Z_0-9]*"), s -> new Colored<>(s, Color.blue)),
 			s -> new FormulaLiteral(constants.get(s.get())));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
-		ISyntax<IFormula> syntaxBrackets = map(serial(Struct1<IFormula>::new)
+		Syntax<IFormula> syntaxBrackets = map(serial(Struct1<IFormula>::new)
 			.and(map(string("("), s -> new Colored<>(s, Color.green)))
 			.and(syntaxExpression, Struct1::setX)
 			.and(map(string(")"), s -> new Colored<>(s, Color.green))),
@@ -101,7 +101,7 @@ public class Test1
 			.or(syntaxInteger)
 			.or(syntaxConstant)
 			.or(syntaxBrackets);
-		ISyntax<IFormula> syntaxTerm = wrap(operation(
+		Syntax<IFormula> syntaxTerm = wrap(operation(
 			syntaxFactor,
 			or((IFunction) null)
 				.or(map(string("*"), s -> (a, b) -> a * b))
@@ -117,7 +117,7 @@ public class Test1
 	@Test
 	public void test3()
 	{
-		ISyntax<IFormula> syntaxExpression = test3_getSyntax();
+		Syntax<IFormula> syntaxExpression = test3_getSyntax();
 
 		ToDoubleFunction<String> f = src -> syntaxExpression.parse(src).value.calculate();
 

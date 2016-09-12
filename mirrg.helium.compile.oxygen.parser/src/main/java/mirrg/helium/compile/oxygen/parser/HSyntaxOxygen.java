@@ -3,7 +3,7 @@ package mirrg.helium.compile.oxygen.parser;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import mirrg.helium.compile.oxygen.parser.core.ISyntax;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxMap;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOptional;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
@@ -32,17 +32,17 @@ public class HSyntaxOxygen
 		return new SyntaxSerial<>(supplier);
 	}
 
-	public static <T> SyntaxRepeat<T> repeat(ISyntax<T> syntax)
+	public static <T> SyntaxRepeat<T> repeat(Syntax<T> syntax)
 	{
 		return repeat(syntax, 0, Integer.MAX_VALUE);
 	}
 
-	public static <T> SyntaxRepeat<T> repeat1(ISyntax<T> syntax)
+	public static <T> SyntaxRepeat<T> repeat1(Syntax<T> syntax)
 	{
 		return repeat(syntax, 1, Integer.MAX_VALUE);
 	}
 
-	public static <T> SyntaxRepeat<T> repeat(ISyntax<T> syntax, int min, int max)
+	public static <T> SyntaxRepeat<T> repeat(Syntax<T> syntax, int min, int max)
 	{
 		return new SyntaxRepeat<>(syntax, min, max);
 	}
@@ -52,22 +52,22 @@ public class HSyntaxOxygen
 		return new SyntaxOr<>();
 	}
 
-	public static <T> SyntaxOptional<T> optional(ISyntax<T> syntax)
+	public static <T> SyntaxOptional<T> optional(Syntax<T> syntax)
 	{
 		return new SyntaxOptional<>(syntax);
 	}
 
-	public static <I, O> SyntaxMap<I, O> map(ISyntax<I> syntax, Function<I, O> function)
+	public static <I, O> SyntaxMap<I, O> map(Syntax<I> syntax, Function<I, O> function)
 	{
 		return new SyntaxMap<>(syntax, function);
 	}
 
-	public static <I, O> SyntaxPack<I, O> pack(ISyntax<I> syntax, Function<I, O> function)
+	public static <I, O> SyntaxPack<I, O> pack(Syntax<I> syntax, Function<I, O> function)
 	{
 		return new SyntaxPack<>(syntax, function);
 	}
 
-	public static <I extends O, O> ISyntax<O> wrap(ISyntax<I> syntax)
+	public static <I extends O, O> Syntax<O> wrap(Syntax<I> syntax)
 	{
 		return map(syntax, i -> i);
 	}

@@ -5,7 +5,7 @@ import java.util.List;
 public class Node<T>
 {
 
-	public final ISyntax<?> syntax;
+	public final Syntax<?> syntax;
 	public final List<Node<?>> children;
 	public final int begin;
 	/**
@@ -14,7 +14,7 @@ public class Node<T>
 	public final int end;
 	public final T value;
 
-	public Node(ISyntax<?> syntax, List<Node<?>> children, int begin, int end, T value)
+	public Node(Syntax<?> syntax, List<Node<?>> children, int begin, int end, T value)
 	{
 		this.syntax = syntax;
 		this.children = children;

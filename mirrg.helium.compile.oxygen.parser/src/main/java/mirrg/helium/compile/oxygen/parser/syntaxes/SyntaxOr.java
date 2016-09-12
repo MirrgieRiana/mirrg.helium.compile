@@ -2,25 +2,26 @@ package mirrg.helium.compile.oxygen.parser.syntaxes;
 
 import java.util.ArrayList;
 
-import mirrg.helium.compile.oxygen.parser.core.ISyntax;
+import mirrg.helium.compile.oxygen.parser.core.Memo;
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 
-public class SyntaxOr<T> implements ISyntax<T>
+public class SyntaxOr<T> extends Syntax<T>
 {
 
-	public final ArrayList<ISyntax<T>> syntaxex = new ArrayList<>();
+	public final ArrayList<Syntax<T>> syntaxex = new ArrayList<>();
 
-	public SyntaxOr<T> or(ISyntax<T> syntax)
+	public SyntaxOr<T> or(Syntax<T> syntax)
 	{
 		syntaxex.add(syntax);
 		return this;
 	}
 
 	@Override
-	public Node<T> parse(String text, int index)
+	protected Node<T> parseImpl(Memo memo, String text, int index)
 	{
-		for (ISyntax<T> syntax : syntaxex) {
-			Node<T> node = syntax.parse(text, index);
+		for (Syntax<T> syntax : syntaxex) {
+			Node<T> node = syntax.parse(memo, text, index);
 			if (node != null) return node;
 		}
 		return null;

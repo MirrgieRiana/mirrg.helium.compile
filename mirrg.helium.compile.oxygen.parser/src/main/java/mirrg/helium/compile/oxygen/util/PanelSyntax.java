@@ -16,7 +16,7 @@ import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import mirrg.helium.compile.oxygen.parser.core.ISyntax;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.standard.hydrogen.event.EventManager;
 import mirrg.helium.standard.hydrogen.util.HString;
@@ -29,7 +29,7 @@ public class PanelSyntax extends Panel
 	 * 
 	 */
 	private static final long serialVersionUID = -2664189373288181817L;
-	private ISyntax<?> syntax;
+	private Syntax<?> syntax;
 	private JTextPane textPane1;
 	private JTextPane textPane2;
 
@@ -37,7 +37,7 @@ public class PanelSyntax extends Panel
 	private boolean occurEvent = true;
 	public final EventManager<String> eventManager = new EventManager<>();
 
-	public PanelSyntax(ISyntax<?> syntax, String text)
+	public PanelSyntax(Syntax<?> syntax, String text)
 	{
 		this.syntax = syntax;
 
