@@ -5,22 +5,38 @@ import static mirrg.helium.swing.nitrogen.util.HSwing.*;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Panel;
+import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.swing.JDialog;
+import javax.swing.JList;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.standard.hydrogen.event.EventManager;
+import mirrg.helium.standard.hydrogen.util.HLambda;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.swing.nitrogen.wrapper.artifacts.logging.HLog;
 
@@ -58,6 +74,214 @@ public class PanelSyntax extends Panel
 
 		hookChange(textPane2, e -> {
 			if (occurEvent) onUserEdit();
+		});
+		textPane2.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e)
+			{
+				if (e.isControlDown()) {
+					e.consume();
+
+					{
+						String text = textPane2.getText();
+						int caretPosition = textPane2.getCaretPosition();
+						String left = text.substring(0, caretPosition);
+						String right = text.substring(caretPosition);
+						String src2 = left + "a" + right;
+
+						Node<?> node = syntax.parse(src2);
+						if (node == null) return;
+
+						ArrayList<Node<?>> hierarchy = new ArrayList<>();
+						while (true) {
+							hierarchy.add(node);
+							if (node.children == null) break;
+							Optional<Node<?>> node2 = node.children.stream()
+								.filter(n -> n.begin <= caretPosition)
+								.filter(n -> n.end > caretPosition)
+								.findFirst();
+							if (!node2.isPresent()) break;
+							node = node2.get();
+						}
+
+						Optional<Node<?>> node2 = HLambda.reverse(hierarchy.stream())
+							.filter(n -> n.value instanceof IProviderProposal)
+							.findFirst();
+						if (!node2.isPresent()) return;
+
+						IProviderProposal providerProposal = (IProviderProposal) node2.get().value;
+
+						Stream<String> stream = providerProposal.getProposals();
+						if (stream == null) return;
+
+						Vector<String> proposals = stream
+							.collect(Collectors.toCollection(Vector::new));
+
+						{
+							JDialog dialog = new JDialog();
+
+							dialog.setAutoRequestFocus(false);
+							dialog.setAlwaysOnTop(true);
+							dialog.setType(Window.Type.UTILITY);
+
+							dialog.setLayout(new CardLayout());
+							dialog.add(createScrollPane(get(() -> {
+								JList<String> list = new JList<>(proposals);
+								Runnable onAction = () -> {
+									String selectedValue = list.getSelectedValue();
+									if (selectedValue != null) {
+										try {
+											((DefaultStyledDocument) textPane2.getDocument()).replace(
+												node2.get().begin,
+												node2.get().end - node2.get().begin - 1,
+												selectedValue, null);
+										} catch (BadLocationException e1) {
+											HLog.processException(e1);
+										}
+										update();
+									}
+									dialog.dispose();
+								};
+								list.addKeyListener(new KeyListener() {
+
+									@Override
+									public void keyTyped(KeyEvent e)
+									{
+
+									}
+
+									@Override
+									public void keyReleased(KeyEvent e)
+									{
+										if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+											dialog.dispose();
+										}
+										if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+											onAction.run();
+										}
+									}
+
+									@Override
+									public void keyPressed(KeyEvent e)
+									{
+
+									}
+
+								});
+								list.addMouseListener(new MouseListener() {
+
+									@Override
+									public void mouseReleased(MouseEvent e)
+									{
+
+									}
+
+									@Override
+									public void mousePressed(MouseEvent e)
+									{
+
+									}
+
+									@Override
+									public void mouseExited(MouseEvent e)
+									{
+
+									}
+
+									@Override
+									public void mouseEntered(MouseEvent e)
+									{
+
+									}
+
+									@Override
+									public void mouseClicked(MouseEvent e)
+									{
+										if (e.getClickCount() == 2) {
+											String selectedValue = list.getSelectedValue();
+											if (selectedValue != null) {
+												onAction.run();
+											}
+											dialog.dispose();
+										}
+									}
+								});
+								return list;
+							}), 200, 200));
+
+							dialog.addWindowListener(new WindowListener() {
+
+								@Override
+								public void windowOpened(WindowEvent e)
+								{
+
+								}
+
+								@Override
+								public void windowIconified(WindowEvent e)
+								{
+
+								}
+
+								@Override
+								public void windowDeiconified(WindowEvent e)
+								{
+
+								}
+
+								@Override
+								public void windowDeactivated(WindowEvent e)
+								{
+									dialog.dispose();
+								}
+
+								@Override
+								public void windowClosing(WindowEvent e)
+								{
+
+								}
+
+								@Override
+								public void windowClosed(WindowEvent e)
+								{
+
+								}
+
+								@Override
+								public void windowActivated(WindowEvent e)
+								{
+
+								}
+
+							});
+
+							{
+								Point a = textPane2.getCaret().getMagicCaretPosition();
+								Point b = textPane2.getLocationOnScreen();
+								dialog.setLocation(a.x + b.x + 10, a.y + b.y);
+							}
+							dialog.pack();
+							dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+							dialog.setVisible(true);
+						}
+					}
+
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+
+			}
+
 		});
 	}
 

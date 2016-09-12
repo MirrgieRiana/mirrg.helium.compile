@@ -16,6 +16,7 @@ import mirrg.helium.compile.oxygen.util.WithColor;
 import mirrg.helium.compile.oxygen.util.WithProposal;
 import mirrg.helium.standard.hydrogen.struct.Struct1;
 import mirrg.helium.standard.hydrogen.struct.Struct2;
+import mirrg.helium.standard.hydrogen.util.HLambda;
 
 public class Test1
 {
@@ -90,7 +91,8 @@ public class Test1
 			WithColor.withColor(regex("\\d+"), s -> Color.red),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
 		Syntax<IFormula> syntaxConstant = pack(
-			WithColor.withColor(regex("[a-zA-Z_][a-zA-Z_0-9]*"), s -> Color.blue),
+			WithProposal.withProposal(WithColor.withColor(regex("[a-zA-Z_][a-zA-Z_0-9]*"), s -> Color.blue),
+				s -> HLambda.toStream(constants.keys())),
 			s -> new FormulaVariable(s, constants));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
 		Syntax<IFormula> syntaxBrackets = map(serial(Struct1<IFormula>::new)
