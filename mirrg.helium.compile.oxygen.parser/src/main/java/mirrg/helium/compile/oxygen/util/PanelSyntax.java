@@ -1,5 +1,7 @@
 package mirrg.helium.compile.oxygen.util;
 
+import static mirrg.helium.swing.nitrogen.util.HSwing.*;
+
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Panel;
@@ -20,7 +22,7 @@ import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.standard.hydrogen.event.EventManager;
 import mirrg.helium.standard.hydrogen.util.HString;
-import mirrg.helium.swing.nitrogen.util.HSwing;
+import mirrg.helium.swing.nitrogen.wrapper.artifacts.logging.HLog;
 
 public class PanelSyntax extends Panel
 {
@@ -42,19 +44,19 @@ public class PanelSyntax extends Panel
 		this.syntax = syntax;
 
 		setLayout(new CardLayout());
-		add(HSwing.createSplitPaneVertical(
-			HSwing.createScrollPane(HSwing.get(() -> {
+		add(createSplitPaneVertical(
+			createScrollPane(get(() -> {
 				textPane1 = new JTextPane();
 				textPane1.setEditable(false);
 				return textPane1;
 			}), 600, 400),
-			HSwing.createScrollPane(textPane2 = new JTextPane(), 600, 100)));
+			createScrollPane(textPane2 = new JTextPane(), 600, 100)));
 
 		occurEvent = false;
 		set(text);
 		occurEvent = true;
 
-		HSwing.hookChange(textPane2, e -> {
+		hookChange(textPane2, e -> {
 			if (occurEvent) onUserEdit();
 		});
 	}
