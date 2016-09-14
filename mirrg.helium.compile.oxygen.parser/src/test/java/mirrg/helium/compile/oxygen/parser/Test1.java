@@ -22,7 +22,7 @@ import mirrg.helium.standard.hydrogen.util.HLambda;
 public class Test1
 {
 
-	private static final double D = 0.001;
+	public static final double D = 0.001;
 
 	@Test
 	public void test1()

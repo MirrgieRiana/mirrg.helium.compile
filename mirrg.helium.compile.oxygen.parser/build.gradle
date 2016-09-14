@@ -29,6 +29,7 @@ dependencies {
 	compile 'mirrg:mirrg.helium.standard.hydrogen.event:+'
 	compile 'mirrg:mirrg.helium.swing.nitrogen.util:0.0.2'
 	compile 'mirrg:mirrg.helium.swing.nitrogen.wrapper:0.0.1'
+	testCompile 'mirrg:mirrg.helium.math.hydrogen.complex:0.0.1'
 
 }
 
@@ -39,6 +40,7 @@ def mavenRepositories = [
 	//'http://hg.pf.osdn.jp/view/t/ta/tacticsrealize/mirrg.struct.hydrogen/raw-file/tip/maven',
 	'https://raw.githubusercontent.com/MirrgieRiana/mirrg.helium.standard/master/maven',
 	'https://raw.githubusercontent.com/MirrgieRiana/mirrg.helium.swing/master/maven',
+	'https://raw.githubusercontent.com/MirrgieRiana/mirrg.helium.math/master/maven',
 
 ]
 
