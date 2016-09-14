@@ -4,7 +4,6 @@ import static mirrg.helium.swing.nitrogen.util.HSwing.*;
 
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Panel;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -17,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
@@ -33,7 +33,7 @@ import mirrg.helium.standard.hydrogen.util.HLambda;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.swing.nitrogen.wrapper.artifacts.logging.HLog;
 
-public class PanelSyntax extends Panel
+public class PanelSyntax extends JPanel
 {
 
 	/**
