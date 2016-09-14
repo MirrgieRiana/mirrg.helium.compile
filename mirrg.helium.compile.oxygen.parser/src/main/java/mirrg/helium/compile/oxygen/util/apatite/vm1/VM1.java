@@ -65,9 +65,9 @@ public class VM1 extends VM
 		registerOperator("*", (a, b) -> a.multiply(b), COMPLEX, DOUBLE, COMPLEX);
 		registerOperator("/", (a, b) -> a.divide(b), COMPLEX, DOUBLE, COMPLEX);
 		registerOperator("+", (a, b) -> b.add(a), DOUBLE, COMPLEX, COMPLEX);
-		registerOperator("-", (a, b) -> b.subtract(a), DOUBLE, COMPLEX, COMPLEX);
+		registerOperator("-", (a, b) -> new Complex(a).subtract(b), DOUBLE, COMPLEX, COMPLEX);
 		registerOperator("*", (a, b) -> b.multiply(a), DOUBLE, COMPLEX, COMPLEX);
-		registerOperator("/", (a, b) -> b.divide(a), DOUBLE, COMPLEX, COMPLEX);
+		registerOperator("/", (a, b) -> new Complex(a).divide(b), DOUBLE, COMPLEX, COMPLEX);
 
 		registerConstant(DOUBLE, "pi", Math.PI);
 		registerConstant(DOUBLE, "e", Math.E);
