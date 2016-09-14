@@ -164,9 +164,7 @@ public class PanelSyntax extends Panel
 				int caretPosition = textPane2.getCaretPosition();
 				eventManager.post(new EventPanelSyntax.UserEdit(textPane2.getText()));
 
-				occurEvent = false;
 				update();
-				occurEvent = true;
 
 				textPane2.setCaretPosition(caretPosition);
 			});
@@ -176,12 +174,17 @@ public class PanelSyntax extends Panel
 
 	public void set(String text)
 	{
+		occurEvent = false;
 		textPane2.setText(text);
+		occurEvent = true;
+
 		update();
 	}
 
 	public void update()
 	{
+		occurEvent = false;
+
 		String text = textPane2.getText();
 
 		Node<?> node;
@@ -208,6 +211,8 @@ public class PanelSyntax extends Panel
 		} else {
 			textPane1.setText("");
 		}
+
+		occurEvent = true;
 	}
 
 	private String toString(Exception e)
