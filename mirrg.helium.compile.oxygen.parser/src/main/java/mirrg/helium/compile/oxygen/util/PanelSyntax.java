@@ -14,6 +14,7 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import javax.swing.JTextPane;
