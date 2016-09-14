@@ -31,7 +31,7 @@ public class Syntaxes
 				@Override
 				public EnumType<?> getType(VM vm)
 				{
-					return EnumType.COMPLEX;
+					return VM.COMPLEX;
 				}
 
 				@Override
@@ -47,7 +47,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> EnumType.COMPLEX.color));
+			s -> VM.COMPLEX.color));
 	}
 
 	public static Syntax<Formula> literalDoubleImaginary;
@@ -60,7 +60,7 @@ public class Syntaxes
 				@Override
 				public EnumType<?> getType(VM vm)
 				{
-					return EnumType.COMPLEX;
+					return VM.COMPLEX;
 				}
 
 				@Override
@@ -76,7 +76,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> EnumType.COMPLEX.color));
+			s -> VM.COMPLEX.color));
 	}
 
 	public static Syntax<Formula> literalInteger;
@@ -87,7 +87,7 @@ public class Syntaxes
 				@Override
 				public EnumType<?> getType(VM vm)
 				{
-					return EnumType.INTEGER;
+					return VM.INTEGER;
 				}
 
 				@Override
@@ -103,7 +103,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> EnumType.INTEGER.color));
+			s -> VM.INTEGER.color));
 	}
 
 	public static Syntax<Formula> literalDouble;
@@ -114,7 +114,7 @@ public class Syntaxes
 				@Override
 				public EnumType<?> getType(VM vm)
 				{
-					return EnumType.DOUBLE;
+					return VM.DOUBLE;
 				}
 
 				@Override
@@ -130,7 +130,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> EnumType.DOUBLE.color));
+			s -> VM.DOUBLE.color));
 	}
 
 	public static Syntax<Formula> literalString;
@@ -149,7 +149,7 @@ public class Syntaxes
 				@Override
 				public EnumType<?> getType(VM vm)
 				{
-					return EnumType.STRING;
+					return VM.STRING;
 				}
 
 				@Override
@@ -177,7 +177,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> EnumType.STRING.color));
+			s -> VM.STRING.color));
 	}
 
 	public static Syntax<Formula> literalIdentifier;
