@@ -198,7 +198,7 @@ public class PanelSyntax extends JPanel
 		}
 
 		if (node != null) {
-			eventManager.post(new EventPanelSyntax.Parsed(node, EventPanelSyntax.Parsed.TIMING_USER_EDIT));
+			eventManager.post(new EventPanelSyntax.Parsed(node, EventPanelSyntax.Parsed.TIMING_EDIT));
 
 			textPane1.setText("");
 			appendText(textPane1, text, node, 0);
