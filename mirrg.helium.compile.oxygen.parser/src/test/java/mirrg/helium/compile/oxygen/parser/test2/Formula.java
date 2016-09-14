@@ -12,7 +12,7 @@ public abstract class Formula
 	private ErrorReporter errorReporter;
 
 	/**
-	 * null以外の値を返した場合、{@link #getType(VM)}の値は未定義です。
+	 * 戻り値の{@link ErrorReporter#isValid()}がfalseの場合、{@link #getType(VM)}の値は未定義です。
 	 * このメソッドの戻り値はキャッシュされます。
 	 */
 	public ErrorReporter validate(VM vm)
