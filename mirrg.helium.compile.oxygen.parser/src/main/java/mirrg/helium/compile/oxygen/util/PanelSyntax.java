@@ -164,8 +164,8 @@ public class PanelSyntax extends Panel
 				return;
 			}
 			SwingUtilities.invokeLater(() -> {
-				int caretPosition = textPane2.getCaretPosition();
 				eventManager.post(new EventPanelSyntax.UserEdit(textPane2.getText()));
+				int caretPosition = textPane2.getCaretPosition();
 
 				update();
 
