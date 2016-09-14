@@ -11,9 +11,9 @@ public class SyntaxPack<I, O> extends Syntax<O>
 {
 
 	public final Syntax<I> syntax;
-	public final Function<I, O> function;
+	public final Function<Node<I>, O> function;
 
-	public SyntaxPack(Syntax<I> syntax, Function<I, O> function)
+	public SyntaxPack(Syntax<I> syntax, Function<Node<I>, O> function)
 	{
 		this.syntax = syntax;
 		this.function = function;
@@ -28,7 +28,7 @@ public class SyntaxPack<I, O> extends Syntax<O>
 		ArrayList<Node<?>> children = new ArrayList<>();
 		children.add(node);
 
-		return new Node<>(this, children, node.begin, node.end, function.apply(node.value));
+		return new Node<>(this, children, node.begin, node.end, function.apply(node));
 	}
 
 }

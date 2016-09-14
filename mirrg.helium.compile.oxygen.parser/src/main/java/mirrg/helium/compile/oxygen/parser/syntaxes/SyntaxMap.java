@@ -10,9 +10,9 @@ public class SyntaxMap<I, O> extends Syntax<O>
 {
 
 	public final Syntax<I> syntax;
-	public final Function<I, O> function;
+	public final Function<Node<I>, O> function;
 
-	public SyntaxMap(Syntax<I> syntax, Function<I, O> function)
+	public SyntaxMap(Syntax<I> syntax, Function<Node<I>, O> function)
 	{
 		this.syntax = syntax;
 		this.function = function;
@@ -23,7 +23,7 @@ public class SyntaxMap<I, O> extends Syntax<O>
 	{
 		Node<I> node = syntax.parse(memo, text, index);
 		if (node == null) return null;
-		return new Node<>(this, node.children, node.begin, node.end, function.apply(node.value));
+		return new Node<>(this, node.children, node.begin, node.end, function.apply(node));
 	}
 
 }

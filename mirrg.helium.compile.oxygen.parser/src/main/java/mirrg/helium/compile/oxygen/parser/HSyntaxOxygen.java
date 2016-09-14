@@ -3,6 +3,7 @@ package mirrg.helium.compile.oxygen.parser;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxExtract;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxMap;
@@ -61,10 +62,21 @@ public class HSyntaxOxygen
 	@Deprecated
 	public static <I, O> SyntaxMap<I, O> map(Syntax<I> syntax, Function<I, O> function)
 	{
+		return new SyntaxMap<>(syntax, n -> function.apply(n.value));
+	}
+
+	@Deprecated
+	public static <I, O> SyntaxMap<I, O> mapNode(Syntax<I> syntax, Function<Node<I>, O> function)
+	{
 		return new SyntaxMap<>(syntax, function);
 	}
 
 	public static <I, O> SyntaxPack<I, O> pack(Syntax<I> syntax, Function<I, O> function)
+	{
+		return new SyntaxPack<>(syntax, n -> function.apply(n.value));
+	}
+
+	public static <I, O> SyntaxPack<I, O> packNode(Syntax<I> syntax, Function<Node<I>, O> function)
 	{
 		return new SyntaxPack<>(syntax, function);
 	}
