@@ -50,4 +50,12 @@ public class Operator
 
 	}
 
+	public boolean isSameSignature(Operator other)
+	{
+		if (!token.equals(other.token)) return false;
+		if (!left.equals(other.left)) return false;
+		if (!right.equals(other.right)) return false;
+		return true;
+	}
+
 }

@@ -58,7 +58,7 @@ public class FormulaVariable extends FormulaNode
 	public Stream<Proposal> getProposals()
 	{
 		if (vm == null) return null;
-		return vm.registryVariable.variables.stream()
+		return vm.registryVariable.getVariables()
 			.map(v -> new Proposal(v.identifier) {
 
 				@Override

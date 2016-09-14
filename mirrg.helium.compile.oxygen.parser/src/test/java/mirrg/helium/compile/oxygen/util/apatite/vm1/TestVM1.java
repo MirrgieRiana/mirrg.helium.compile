@@ -20,8 +20,6 @@ import mirrg.helium.compile.oxygen.util.EventPanelSyntax;
 import mirrg.helium.compile.oxygen.util.PanelSyntax;
 import mirrg.helium.compile.oxygen.util.apatite.ErrorReporter;
 import mirrg.helium.compile.oxygen.util.apatite.Formula;
-import mirrg.helium.compile.oxygen.util.apatite.vm1.Syntaxes1;
-import mirrg.helium.compile.oxygen.util.apatite.vm1.VM1;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
 
@@ -35,6 +33,7 @@ public class TestVM1
 		JFrame frame = new JFrame();
 
 		VM1 vm = new VM1();
+		vm.registerConstant(VM1.STRING, "lineSeparator", "<br>");
 
 		frame.setLayout(new CardLayout());
 		frame.add(createSplitPaneVertical(

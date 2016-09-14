@@ -25,4 +25,10 @@ public class Variable
 		throw new NullPointerException();
 	}
 
+	public boolean isSameSignature(Variable other)
+	{
+		if (!identifier.equals(other.identifier)) return false;
+		return true;
+	}
+
 }

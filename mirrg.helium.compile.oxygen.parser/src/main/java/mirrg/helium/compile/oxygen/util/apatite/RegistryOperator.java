@@ -2,14 +2,22 @@ package mirrg.helium.compile.oxygen.util.apatite;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RegistryOperator
 {
 
-	public ArrayList<Operator> operators = new ArrayList<>();
+	private ArrayList<Operator> operators = new ArrayList<>();
 
 	public void register(Operator operator)
 	{
+		for (int i = 0; i < operators.size(); i++) {
+			if (operators.get(i).isSameSignature(operator)) {
+				operators.set(i, operator);
+				return;
+			}
+		}
+
 		operators.add(operator);
 	}
 
@@ -45,6 +53,11 @@ public class RegistryOperator
 		}
 
 		return operators3;
+	}
+
+	public Stream<Operator> getOperators()
+	{
+		return operators.stream();
 	}
 
 }
