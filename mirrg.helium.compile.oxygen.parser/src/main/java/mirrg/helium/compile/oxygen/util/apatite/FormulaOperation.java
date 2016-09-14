@@ -27,7 +27,7 @@ public class FormulaOperation extends Formula
 	}
 
 	@Override
-	protected boolean validateImpl(VM vm, ErrorReporter errorReporter)
+	public boolean validateImpl(VM vm, ErrorReporter errorReporter)
 	{
 		boolean flag = false;
 		if (!left.validateImpl(vm, errorReporter)) flag = true;

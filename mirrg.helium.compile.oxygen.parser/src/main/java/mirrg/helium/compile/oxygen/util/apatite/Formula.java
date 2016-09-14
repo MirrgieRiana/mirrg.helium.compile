@@ -27,7 +27,7 @@ public abstract class Formula
 	/**
 	 * falseを返した場合、{@link #getType(VM)}の値は未定義です。
 	 */
-	protected abstract boolean validateImpl(VM vm, ErrorReporter errorReporter);
+	public abstract boolean validateImpl(VM vm, ErrorReporter errorReporter);
 
 	public abstract Object calculate(Runtime runtime);
 

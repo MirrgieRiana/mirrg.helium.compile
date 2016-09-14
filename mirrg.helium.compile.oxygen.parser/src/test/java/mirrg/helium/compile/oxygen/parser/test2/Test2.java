@@ -20,7 +20,8 @@ import mirrg.helium.compile.oxygen.util.EventPanelSyntax;
 import mirrg.helium.compile.oxygen.util.PanelSyntax;
 import mirrg.helium.compile.oxygen.util.apatite.ErrorReporter;
 import mirrg.helium.compile.oxygen.util.apatite.Formula;
-import mirrg.helium.compile.oxygen.util.apatite.Syntaxes;
+import mirrg.helium.compile.oxygen.util.apatite.vm1.Syntaxes1;
+import mirrg.helium.compile.oxygen.util.apatite.vm1.VM1;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
 
@@ -33,14 +34,14 @@ public class Test2
 	{
 		JFrame frame = new JFrame();
 
-		VMTest2 vm = new VMTest2();
+		VM1 vm = new VM1();
 
 		frame.setLayout(new CardLayout());
 		frame.add(createSplitPaneVertical(
 			get(() -> {
-				PanelSyntax panel = new PanelSyntax(Syntaxes.root);
+				PanelSyntax panel = new PanelSyntax(Syntaxes1.root);
 				panel.eventManager.register(EventPanelSyntax.UserEdit.class, e -> {
-					Node<Formula> node = Syntaxes.root.parse(e.source);
+					Node<Formula> node = Syntaxes1.root.parse(e.source);
 					if (node != null) {
 						ErrorReporter errorReporter = node.value.validate(vm);
 
@@ -94,8 +95,8 @@ public class Test2
 	public void test1()
 	{
 		Function<String, Object> run = src -> {
-			Node<Formula> node = Syntaxes.root.parse(src);
-			VMTest2 vm = new VMTest2();
+			Node<Formula> node = Syntaxes1.root.parse(src);
+			VM1 vm = new VM1();
 			ErrorReporter errorReporter = node.value.validate(vm);
 
 			errorReporter.messages.forEach(t -> {

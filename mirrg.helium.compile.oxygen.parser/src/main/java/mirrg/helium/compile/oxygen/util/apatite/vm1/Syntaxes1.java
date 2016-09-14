@@ -1,4 +1,4 @@
-package mirrg.helium.compile.oxygen.util.apatite;
+package mirrg.helium.compile.oxygen.util.apatite.vm1;
 
 import static mirrg.helium.compile.oxygen.parser.HSyntaxOxygen.*;
 import static mirrg.helium.compile.oxygen.util.WithColor.*;
@@ -10,11 +10,18 @@ import org.apache.commons.math3.complex.Complex;
 
 import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
-import mirrg.helium.compile.oxygen.parser.test2.VMTest2;
+import mirrg.helium.compile.oxygen.util.apatite.ErrorReporter;
+import mirrg.helium.compile.oxygen.util.apatite.Formula;
+import mirrg.helium.compile.oxygen.util.apatite.FormulaNode;
+import mirrg.helium.compile.oxygen.util.apatite.FormulaOperation;
+import mirrg.helium.compile.oxygen.util.apatite.FormulaVariable;
+import mirrg.helium.compile.oxygen.util.apatite.Runtime;
+import mirrg.helium.compile.oxygen.util.apatite.Type;
+import mirrg.helium.compile.oxygen.util.apatite.VM;
 import mirrg.helium.standard.hydrogen.struct.Struct2;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
 
-public class Syntaxes
+public class Syntaxes1
 {
 
 	public static Syntax<String> $;
@@ -32,11 +39,11 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VMTest2.COMPLEX;
+					return VM1.COMPLEX;
 				}
 
 				@Override
-				protected boolean validateImpl(VM vm, ErrorReporter errorReporter)
+				public boolean validateImpl(VM vm, ErrorReporter errorReporter)
 				{
 					return true;
 				}
@@ -48,7 +55,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VMTest2.COMPLEX.color));
+			s -> VM1.COMPLEX.color));
 	}
 
 	public static Syntax<Formula> literalDoubleImaginary;
@@ -61,11 +68,11 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VMTest2.COMPLEX;
+					return VM1.COMPLEX;
 				}
 
 				@Override
-				protected boolean validateImpl(VM vm, ErrorReporter errorReporter)
+				public boolean validateImpl(VM vm, ErrorReporter errorReporter)
 				{
 					return true;
 				}
@@ -77,7 +84,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VMTest2.COMPLEX.color));
+			s -> VM1.COMPLEX.color));
 	}
 
 	public static Syntax<Formula> literalInteger;
@@ -88,11 +95,11 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VMTest2.INTEGER;
+					return VM1.INTEGER;
 				}
 
 				@Override
-				protected boolean validateImpl(VM vm, ErrorReporter errorReporter)
+				public boolean validateImpl(VM vm, ErrorReporter errorReporter)
 				{
 					return true;
 				}
@@ -104,7 +111,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VMTest2.INTEGER.color));
+			s -> VM1.INTEGER.color));
 	}
 
 	public static Syntax<Formula> literalDouble;
@@ -115,11 +122,11 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VMTest2.DOUBLE;
+					return VM1.DOUBLE;
 				}
 
 				@Override
-				protected boolean validateImpl(VM vm, ErrorReporter errorReporter)
+				public boolean validateImpl(VM vm, ErrorReporter errorReporter)
 				{
 					return true;
 				}
@@ -131,7 +138,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VMTest2.DOUBLE.color));
+			s -> VM1.DOUBLE.color));
 	}
 
 	public static Syntax<Formula> literalString;
@@ -150,11 +157,11 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VMTest2.STRING;
+					return VM1.STRING;
 				}
 
 				@Override
-				protected boolean validateImpl(VM vm, ErrorReporter errorReporter)
+				public boolean validateImpl(VM vm, ErrorReporter errorReporter)
 				{
 					return true;
 				}
@@ -178,7 +185,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VMTest2.STRING.color));
+			s -> VM1.STRING.color));
 	}
 
 	public static Syntax<Formula> literalIdentifier;
@@ -206,7 +213,7 @@ public class Syntaxes
 				}
 
 				@Override
-				protected boolean validateImpl(VM vm, ErrorReporter errorReporter)
+				public boolean validateImpl(VM vm, ErrorReporter errorReporter)
 				{
 					return s.y.validateImpl(vm, errorReporter);
 				}
@@ -336,7 +343,7 @@ public class Syntaxes
 	}
 
 	static {
-		new Syntaxes();
+		new Syntaxes1();
 	}
 
 }

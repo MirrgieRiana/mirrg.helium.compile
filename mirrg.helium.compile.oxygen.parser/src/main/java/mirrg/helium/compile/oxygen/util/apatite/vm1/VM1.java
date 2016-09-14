@@ -1,4 +1,4 @@
-package mirrg.helium.compile.oxygen.parser.test2;
+package mirrg.helium.compile.oxygen.util.apatite.vm1;
 
 import java.awt.Color;
 
@@ -7,7 +7,7 @@ import org.apache.commons.math3.complex.Complex;
 import mirrg.helium.compile.oxygen.util.apatite.Type;
 import mirrg.helium.compile.oxygen.util.apatite.VM;
 
-public class VMTest2 extends VM
+public class VM1 extends VM
 {
 
 	public static final Type<Object> OBJECT = new Type<>("OBJECT", Color.decode("#545454"));
@@ -17,7 +17,7 @@ public class VMTest2 extends VM
 	public static final Type<Boolean> BOOLEAN = new Type<>("BOOLEAN", Color.decode("#878334"), OBJECT);
 	public static final Type<Complex> COMPLEX = new Type<>("COMPLEX", Color.decode("#960002"), OBJECT);
 
-	public VMTest2()
+	public VM1()
 	{
 		registerOperator("+", (a, b) -> a + b, STRING, OBJECT, STRING);
 		registerOperator("+", (a, b) -> a + b, OBJECT, STRING, STRING);
