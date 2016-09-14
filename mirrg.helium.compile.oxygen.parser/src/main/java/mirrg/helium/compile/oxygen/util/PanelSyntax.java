@@ -125,7 +125,9 @@ public class PanelSyntax extends Panel
 							{
 								Point a = textPane2.getCaret().getMagicCaretPosition();
 								Point b = textPane2.getLocationOnScreen();
-								dialog.setLocation(a.x + b.x + 10, a.y + b.y);
+								if (a != null && b != null) {
+									dialog.setLocation(a.x + b.x, a.y + b.y + 20);
+								}
 							}
 							dialog.pack();
 							dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
