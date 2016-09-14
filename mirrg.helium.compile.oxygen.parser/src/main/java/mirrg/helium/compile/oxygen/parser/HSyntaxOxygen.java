@@ -77,4 +77,9 @@ public class HSyntaxOxygen
 		return new SyntaxSlot<>();
 	}
 
+	public static <T> SyntaxSlot<T> slot(Supplier<Syntax<T>> supplier)
+	{
+		return new SyntaxSlot<>(supplier);
+	}
+
 }
