@@ -165,11 +165,7 @@ public class PanelSyntax extends JPanel
 			}
 			SwingUtilities.invokeLater(() -> {
 				eventManager.post(new EventPanelSyntax.UserEdit(textPane2.getText()));
-				int caretPosition = textPane2.getCaretPosition();
-
 				update();
-
-				textPane2.setCaretPosition(caretPosition);
 			});
 		});
 		threadRecolor.start();
