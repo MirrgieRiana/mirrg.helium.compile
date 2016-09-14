@@ -107,13 +107,13 @@ public class Test1
 		Syntax<IFormula> syntaxTerm = wrap(operation(
 			syntaxFactor,
 			or((IFunction) null)
-				.or(map(string("*"), s -> (a, b) -> a * b))
-				.or(map(string("/"), s -> (a, b) -> a / b))));
+				.or(pack(string("*"), s -> (a, b) -> a * b))
+				.or(pack(string("/"), s -> (a, b) -> a / b))));
 		syntaxExpression.setSyntax(wrap(operation(
 			syntaxTerm,
 			or((IFunction) null)
-				.or(map(string("+"), s -> (a, b) -> a + b))
-				.or(map(string("-"), s -> (a, b) -> a - b)))));
+				.or(pack(string("+"), s -> (a, b) -> a + b))
+				.or(pack(string("-"), s -> (a, b) -> a - b)))));
 		return syntaxExpression;
 	}
 
