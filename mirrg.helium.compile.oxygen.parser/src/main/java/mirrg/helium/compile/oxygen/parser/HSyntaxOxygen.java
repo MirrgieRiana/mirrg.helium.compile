@@ -4,6 +4,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
+import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxExtract;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxMap;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOptional;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
