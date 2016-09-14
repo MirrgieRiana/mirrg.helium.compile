@@ -1,4 +1,4 @@
-package mirrg.helium.compile.oxygen.parser.test2;
+package mirrg.helium.compile.oxygen.util.apatite;
 
 import static mirrg.helium.compile.oxygen.parser.HSyntaxOxygen.*;
 import static mirrg.helium.compile.oxygen.util.WithColor.*;
@@ -10,6 +10,7 @@ import org.apache.commons.math3.complex.Complex;
 
 import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
+import mirrg.helium.compile.oxygen.parser.test2.VMTest2;
 import mirrg.helium.standard.hydrogen.struct.Struct2;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
 

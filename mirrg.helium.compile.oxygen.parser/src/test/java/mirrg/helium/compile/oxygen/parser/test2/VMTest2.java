@@ -4,6 +4,9 @@ import java.awt.Color;
 
 import org.apache.commons.math3.complex.Complex;
 
+import mirrg.helium.compile.oxygen.util.apatite.Type;
+import mirrg.helium.compile.oxygen.util.apatite.VM;
+
 public class VMTest2 extends VM
 {
 

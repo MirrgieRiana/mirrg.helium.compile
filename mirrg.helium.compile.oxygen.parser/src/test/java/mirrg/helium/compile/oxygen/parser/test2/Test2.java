@@ -18,6 +18,9 @@ import mirrg.helium.compile.oxygen.parser.Test1;
 import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.compile.oxygen.util.EventPanelSyntax;
 import mirrg.helium.compile.oxygen.util.PanelSyntax;
+import mirrg.helium.compile.oxygen.util.apatite.ErrorReporter;
+import mirrg.helium.compile.oxygen.util.apatite.Formula;
+import mirrg.helium.compile.oxygen.util.apatite.Syntaxes;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
 
