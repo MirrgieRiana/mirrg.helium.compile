@@ -12,6 +12,7 @@ import org.junit.Test;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxSlot;
+import mirrg.helium.compile.oxygen.util.Proposal;
 import mirrg.helium.compile.oxygen.util.WithColor;
 import mirrg.helium.compile.oxygen.util.WithProposal;
 import mirrg.helium.standard.hydrogen.struct.Struct1;
@@ -92,7 +93,8 @@ public class Test1
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
 		Syntax<IFormula> syntaxConstant = pack(
 			WithProposal.withProposal(WithColor.withColor(regex("[a-zA-Z_][a-zA-Z_0-9]*"), s -> Color.blue),
-				s -> HLambda.toStream(constants.keys())),
+				s -> HLambda.toStream(constants.keys())
+					.map(Proposal::new)),
 			s -> new FormulaVariable(s, constants));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
 		Syntax<IFormula> syntaxBrackets = pack(serial(Struct1<IFormula>::new)

@@ -3,6 +3,7 @@ package mirrg.helium.compile.oxygen.util;
 import static mirrg.helium.swing.nitrogen.util.HSwing.*;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -11,9 +12,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 import mirrg.helium.standard.hydrogen.event.EventManager;
 
@@ -26,11 +32,11 @@ public class DialogProposal extends JDialog
 		public static class Update extends DialogProposal.EventDialogProposal
 		{
 
-			public String value;
+			public Proposal proposal;
 
-			public Update(String value)
+			public Update(Proposal proposal)
 			{
-				this.value = value;
+				this.proposal = proposal;
 			}
 
 		}
@@ -39,7 +45,7 @@ public class DialogProposal extends JDialog
 
 	public final EventManager<DialogProposal.EventDialogProposal> eventManager = new EventManager<>();
 
-	public DialogProposal(Vector<String> proposals)
+	public DialogProposal(Stream<Proposal> stream)
 	{
 		setAutoRequestFocus(false);
 		setAlwaysOnTop(true);
@@ -47,7 +53,20 @@ public class DialogProposal extends JDialog
 
 		setLayout(new CardLayout());
 		add(createScrollPane(get(() -> {
-			JList<String> list = new JList<>(proposals);
+			Vector<Proposal> proposals = stream
+				.collect(Collectors.toCollection(Vector::new));
+			JList<Proposal> list = new JList<>(proposals);
+			list.setCellRenderer(new ListCellRenderer<Proposal>() {
+
+				@Override
+				public Component getListCellRendererComponent(JList<? extends Proposal> list, Proposal value, int index, boolean isSelected, boolean cellHasFocus)
+				{
+					JLabel label = (JLabel) new DefaultListCellRenderer().getListCellRendererComponent(list, value.text, index, isSelected, cellHasFocus);
+					proposals.get(index).decorateListCellRendererComponent(label);
+					return label;
+				}
+
+			});
 			list.addKeyListener(new KeyListener() {
 
 				@Override
@@ -157,9 +176,9 @@ public class DialogProposal extends JDialog
 		});
 	}
 
-	protected void onAction(JList<String> list)
+	protected void onAction(JList<Proposal> list)
 	{
-		String selectedValue = list.getSelectedValue();
+		Proposal selectedValue = list.getSelectedValue();
 		if (selectedValue != null) {
 			eventManager.post(new EventDialogProposal.Update(selectedValue));
 			dispose();

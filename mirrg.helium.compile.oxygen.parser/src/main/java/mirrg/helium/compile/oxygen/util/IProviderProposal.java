@@ -5,6 +5,6 @@ import java.util.stream.Stream;
 public interface IProviderProposal
 {
 
-	public Stream<String> getProposals();
+	public Stream<Proposal> getProposals();
 
 }

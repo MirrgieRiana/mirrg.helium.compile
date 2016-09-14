@@ -14,8 +14,6 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Vector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JTextPane;
@@ -106,14 +104,11 @@ public class PanelSyntax extends Panel
 
 						IProviderProposal providerProposal = (IProviderProposal) node2.get().value;
 
-						Stream<String> stream = providerProposal.getProposals();
+						Stream<Proposal> stream = providerProposal.getProposals();
 						if (stream == null) return;
 
-						Vector<String> proposals = stream
-							.collect(Collectors.toCollection(Vector::new));
-
 						{
-							DialogProposal dialog = new DialogProposal(proposals);
+							DialogProposal dialog = new DialogProposal(stream);
 
 							dialog.eventManager.register(EventDialogProposal.Update.class, e2 -> {
 
@@ -121,7 +116,7 @@ public class PanelSyntax extends Panel
 									((DefaultStyledDocument) textPane2.getDocument()).replace(
 										node2.get().begin,
 										node2.get().end - node2.get().begin - 1,
-										e2.value, null);
+										e2.proposal.text, null);
 								} catch (BadLocationException e1) {
 									HLog.processException(e1);
 								}
