@@ -21,6 +21,10 @@ public class Node<T>
 		this.begin = begin;
 		this.end = end;
 		this.value = value;
+
+		if (value instanceof IListenerNode) {
+			((IListenerNode) value).setNode(this);
+		}
 	}
 
 }
