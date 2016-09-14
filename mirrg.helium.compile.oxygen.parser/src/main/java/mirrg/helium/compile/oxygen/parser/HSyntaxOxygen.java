@@ -83,4 +83,9 @@ public class HSyntaxOxygen
 		return new SyntaxSlot<>(supplier);
 	}
 
+	public static <T> SyntaxExtract<T> extract(T dummy)
+	{
+		return new SyntaxExtract<>();
+	}
+
 }
