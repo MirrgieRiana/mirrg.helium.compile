@@ -120,7 +120,7 @@ public class PanelSyntax extends JPanel
 									HLog.processException(e1);
 								}
 
-								update();
+								update(EventPanelSyntax.Edit.TIMING_PROPOSAL);
 							});
 
 							{
@@ -164,8 +164,7 @@ public class PanelSyntax extends JPanel
 				return;
 			}
 			SwingUtilities.invokeLater(() -> {
-				eventManager.post(new EventPanelSyntax.UserEdit(textPane2.getText()));
-				update();
+				update(EventPanelSyntax.Edit.TIMING_USER_EDIT);
 			});
 		});
 		threadRecolor.start();
@@ -177,11 +176,12 @@ public class PanelSyntax extends JPanel
 		textPane2.setText(text);
 		occurEvent = true;
 
-		update();
+		update(EventPanelSyntax.Edit.TIMING_EXTERNAL_SET);
 	}
 
-	public void update()
+	public void update(int timing)
 	{
+		eventManager.post(new EventPanelSyntax.Edit(textPane2.getText(), timing));
 		occurEvent = false;
 
 		String text = textPane2.getText();

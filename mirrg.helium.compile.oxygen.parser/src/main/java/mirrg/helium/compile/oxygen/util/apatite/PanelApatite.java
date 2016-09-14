@@ -28,7 +28,7 @@ public class PanelApatite extends JPanel
 		add(createSplitPaneVertical(
 			get(() -> {
 				panelSyntax = new PanelSyntax(Syntaxes1.root);
-				panelSyntax.eventManager.register(EventPanelSyntax.UserEdit.class, e -> {
+				panelSyntax.eventManager.register(EventPanelSyntax.Edit.class, e -> {
 					Node<Formula> node = Syntaxes1.root.parse(e.source);
 					if (node != null) {
 						ErrorReporter errorReporter = node.value.validate(vm);
