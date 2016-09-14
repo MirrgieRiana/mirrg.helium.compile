@@ -1,32 +1,25 @@
 package mirrg.helium.compile.oxygen.util.apatite.vm1;
 
-import static mirrg.helium.swing.nitrogen.util.HSwing.*;
 import static org.junit.Assert.*;
 
 import java.awt.CardLayout;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.WindowConstants;
-import javax.swing.text.StyleConstants;
 
 import org.junit.Test;
 
 import mirrg.helium.compile.oxygen.parser.Test1;
 import mirrg.helium.compile.oxygen.parser.core.Node;
-import mirrg.helium.compile.oxygen.util.EventPanelSyntax;
-import mirrg.helium.compile.oxygen.util.PanelSyntax;
 import mirrg.helium.compile.oxygen.util.apatite.ErrorReporter;
 import mirrg.helium.compile.oxygen.util.apatite.Formula;
-import mirrg.helium.standard.hydrogen.util.HString;
-import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
+import mirrg.helium.compile.oxygen.util.apatite.PanelApatite;
 
 public class TestVM1
 {
 
-	private static JLabel label;
+	private static PanelApatite panel;
 
 	public static void main(String[] args)
 	{
@@ -36,52 +29,9 @@ public class TestVM1
 		vm.registerConstant(VM1.STRING, "lineSeparator", "<br>");
 
 		frame.setLayout(new CardLayout());
-		frame.add(createSplitPaneVertical(
-			get(() -> {
-				PanelSyntax panel = new PanelSyntax(Syntaxes1.root);
-				panel.eventManager.register(EventPanelSyntax.UserEdit.class, e -> {
-					Node<Formula> node = Syntaxes1.root.parse(e.source);
-					if (node != null) {
-						ErrorReporter errorReporter = node.value.validate(vm);
-
-						if (errorReporter.isValid()) {
-							label.setText("<html>" + node.value.calculate(vm.createRuntime()) + "</html>");
-						} else {
-							LineProvider lineProvider = HString.getLineProvider(e.source);
-
-							label.setText("<html>" + errorReporter.messages.stream()
-								.map(t -> {
-									int lineNumber = lineProvider.getLineNumber(t.getX().getBegin());
-									return String.format("[L: %d, C: %d] %s",
-										lineNumber,
-										t.getX().getBegin() - lineProvider.getStartIndex(lineNumber),
-										t.getY());
-								})
-								.collect(Collectors.joining("<br>")) + "</html>");
-						}
-					} else {
-						label.setText("<html>" + "構文エラーです" + "</html>");
-					}
-				});
-				panel.eventManager.register(EventPanelSyntax.Parsed.class, e -> {
-					((Node<Formula>) e.node).value.validate(vm);
-				});
-				panel.eventManager.register(EventPanelSyntax.AfterHighlight.class, e -> {
-					ErrorReporter errorReporter = ((Node<Formula>) e.node).value.validate(vm);
-					errorReporter.messages.forEach(m -> {
-						panel.setAttribute(m.getX().getBegin(), m.getX().getEnd() - m.getX().getBegin(), a -> {
-							a.addAttribute(StyleConstants.Underline, true);
-						});
-					});
-				});//pi * 200 + (3 * 4 -  3) * "214314" + pi * e - 4 * "a"
-				panel.set("pi * 200");
-				return panel;
-			}),
-			createScrollPane(get(() -> {
-				label = new JLabel("<html></html>");
-				label.setVerticalAlignment(JLabel.TOP);
-				return label;
-			}), 100, 80)));
+		frame.add(panel = new PanelApatite(vm));
+		panel.getPanelSyntax().set("pi * 200");
+		//pi * 200 + (3 * 4 -  3) * "214314" + pi * e - 4 * "a"
 
 		frame.pack();
 		frame.setLocationByPlatform(true);
