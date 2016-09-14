@@ -86,6 +86,7 @@ public class Test2
 		frame.setVisible(true);
 	}
 
+	@SuppressWarnings("unused")
 	@Test
 	public void test1()
 	{
