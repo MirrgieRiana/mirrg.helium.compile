@@ -217,6 +217,7 @@ public class PanelSyntax extends Panel
 		occurEvent = true;
 	}
 
+	// TODO mirrg
 	private String toString(Exception e)
 	{
 		ArrayList<Byte> bytes = new ArrayList<>();
