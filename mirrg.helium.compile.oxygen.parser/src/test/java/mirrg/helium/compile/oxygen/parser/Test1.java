@@ -26,7 +26,7 @@ public class Test1
 	@Test
 	public void test1()
 	{
-		Syntax<IFormula> syntaxFactor = map(
+		Syntax<IFormula> syntaxFactor = pack(
 			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
 		Syntax<IFormula> syntaxExpression = wrap(serial(FormulaOperation::new)
@@ -50,10 +50,10 @@ public class Test1
 		constants.put("pi", Math.PI);
 		constants.put("e", Math.E);
 
-		Syntax<IFormula> syntaxInteger = map(
+		Syntax<IFormula> syntaxInteger = pack(
 			regex("\\d+"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		Syntax<IFormula> syntaxConstant = map(
+		Syntax<IFormula> syntaxConstant = pack(
 			regex("[a-zA-Z_][a-zA-Z_0-9]*"),
 			s -> new FormulaLiteral(constants.get(s)));
 		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
@@ -95,7 +95,7 @@ public class Test1
 				s -> HLambda.toStream(constants.keys())),
 			s -> new FormulaVariable(s, constants));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
-		Syntax<IFormula> syntaxBrackets = map(serial(Struct1<IFormula>::new)
+		Syntax<IFormula> syntaxBrackets = pack(serial(Struct1<IFormula>::new)
 			.and(WithColor.withColor(string("("), s -> Color.green))
 			.and(syntaxExpression, Struct1::setX)
 			.and(WithColor.withColor(string(")"), s -> Color.green)),

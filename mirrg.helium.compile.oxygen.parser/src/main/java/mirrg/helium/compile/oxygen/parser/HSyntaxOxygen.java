@@ -57,6 +57,7 @@ public class HSyntaxOxygen
 		return new SyntaxOptional<>(syntax);
 	}
 
+	@Deprecated
 	public static <I, O> SyntaxMap<I, O> map(Syntax<I> syntax, Function<I, O> function)
 	{
 		return new SyntaxMap<>(syntax, function);
