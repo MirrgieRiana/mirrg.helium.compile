@@ -45,7 +45,7 @@ public class PanelSyntax extends Panel
 
 	private Thread threadRecolor;
 	private boolean occurEvent = true;
-	public final EventManager<String> eventManager = new EventManager<>();
+	public final EventManager<EventPanelSyntax> eventManager = new EventManager<>();
 
 	public PanelSyntax(Syntax<?> syntax)
 	{
@@ -80,6 +80,8 @@ public class PanelSyntax extends Panel
 
 						Node<?> node = syntax.parse(src2);
 						if (node == null) return;
+
+						eventManager.post(new EventPanelSyntax.Parsed(node, EventPanelSyntax.Parsed.TIMING_BEFORE_PROPOSAL));
 
 						ArrayList<Node<?>> hierarchy = new ArrayList<>();
 						while (true) {
@@ -160,7 +162,7 @@ public class PanelSyntax extends Panel
 			}
 			SwingUtilities.invokeLater(() -> {
 				int caretPosition = textPane2.getCaretPosition();
-				eventManager.post(textPane2.getText());
+				eventManager.post(new EventPanelSyntax.UserEdit(textPane2.getText()));
 
 				occurEvent = false;
 				update();
@@ -192,6 +194,8 @@ public class PanelSyntax extends Panel
 		}
 
 		if (node != null) {
+			eventManager.post(new EventPanelSyntax.Parsed(node, EventPanelSyntax.Parsed.TIMING_USER_EDIT));
+
 			textPane1.setText("");
 			appendText(textPane1, text, node, 0);
 
@@ -280,6 +284,12 @@ public class PanelSyntax extends Panel
 
 	private void updateText(JTextPane textPane, Node<?> node)
 	{
+		updateTextImpl(textPane, node);
+		eventManager.post(new EventPanelSyntax.AfterHighlight(textPane, node));
+	}
+
+	private void updateTextImpl(JTextPane textPane, Node<?> node)
+	{
 		if (node.value instanceof IProviderColor) {
 			SimpleAttributeSet attr = new SimpleAttributeSet();
 			attr.addAttribute(StyleConstants.Foreground, ((IProviderColor) node.value).getColor());
@@ -289,10 +299,9 @@ public class PanelSyntax extends Panel
 
 		if (node.children != null) {
 			for (Node<?> child : node.children) {
-				updateText(textPane, child);
+				updateTextImpl(textPane, child);
 			}
 		}
-
 	}
 
 }
