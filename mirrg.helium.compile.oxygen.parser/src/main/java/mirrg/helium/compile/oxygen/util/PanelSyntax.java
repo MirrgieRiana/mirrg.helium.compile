@@ -217,6 +217,13 @@ public class PanelSyntax extends Panel
 		occurEvent = true;
 	}
 
+	public void setAttribute(int offset, int length, Consumer<SimpleAttributeSet> consumer)
+	{
+		SimpleAttributeSet attr = new SimpleAttributeSet();
+		consumer.accept(attr);
+		((DefaultStyledDocument) textPane2.getDocument()).setCharacterAttributes(offset, length, attr, false);
+	}
+
 	// TODO mirrg
 	private String toString(Exception e)
 	{
@@ -299,10 +306,9 @@ public class PanelSyntax extends Panel
 	private void updateTextImpl(JTextPane textPane, Node<?> node)
 	{
 		if (node.value instanceof IProviderColor) {
-			SimpleAttributeSet attr = new SimpleAttributeSet();
-			attr.addAttribute(StyleConstants.Foreground, ((IProviderColor) node.value).getColor());
-			((DefaultStyledDocument) textPane.getDocument()).setCharacterAttributes(
-				node.begin, node.end - node.begin, attr, false);
+			setAttribute(node.begin, node.end - node.begin, a -> {
+				a.addAttribute(StyleConstants.Foreground, ((IProviderColor) node.value).getColor());
+			});
 		}
 
 		if (node.children != null) {
