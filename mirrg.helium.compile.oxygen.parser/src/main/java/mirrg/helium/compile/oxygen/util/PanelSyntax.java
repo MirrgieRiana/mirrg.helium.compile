@@ -204,10 +204,10 @@ public class PanelSyntax extends Panel
 			textPane1.setText("");
 			appendText(textPane1, text, node, 0);
 
+			// clear
 			SimpleAttributeSet attr = new SimpleAttributeSet();
-			attr.addAttribute(StyleConstants.Foreground, Color.black);
 			((DefaultStyledDocument) textPane2.getDocument()).setCharacterAttributes(
-				0, textPane2.getDocument().getLength(), attr, false);
+				0, textPane2.getDocument().getLength() + 1, attr, true);
 
 			updateText(textPane2, node);
 		} else {
