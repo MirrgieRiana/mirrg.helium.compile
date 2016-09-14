@@ -32,7 +32,7 @@ public class FormulaVariable extends FormulaNode
 	{
 		this.vm = vm;
 
-		Optional<Variable> variable = vm.registryVariable.get(identifier);
+		Optional<Variable> variable = vm.getVariable(identifier);
 
 		if (!variable.isPresent()) {
 			errorReporter.report(this, "そのような変数はありません: " + identifier);
@@ -58,7 +58,7 @@ public class FormulaVariable extends FormulaNode
 	public Stream<Proposal> getProposals()
 	{
 		if (vm == null) return null;
-		return vm.registryVariable.getVariables()
+		return vm.getVariables()
 			.map(v -> new Proposal(v.identifier) {
 
 				@Override

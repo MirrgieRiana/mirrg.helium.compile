@@ -19,7 +19,7 @@ public class Variable
 		value = runtime.variables.get(identifier);
 		if (value != null) return value;
 
-		value = runtime.vm.variables.get(identifier);
+		value = runtime.vm.getVariableContent(identifier);
 		if (value != null) return value;
 
 		throw new NullPointerException();

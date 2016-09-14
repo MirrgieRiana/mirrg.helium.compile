@@ -34,7 +34,7 @@ public class FormulaOperation extends Formula
 		if (!right.validateImpl(vm, errorReporter)) flag = true;
 		if (flag) return false;
 
-		ArrayList<Operator> operator = vm.registryOperator.get(token, left.getType(vm), right.getType(vm));
+		ArrayList<Operator> operator = vm.getOperator(token, left.getType(vm), right.getType(vm));
 
 		if (operator.isEmpty()) {
 			errorReporter.report(this,
