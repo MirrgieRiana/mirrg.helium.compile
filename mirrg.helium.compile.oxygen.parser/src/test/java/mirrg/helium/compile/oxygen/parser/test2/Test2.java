@@ -30,7 +30,7 @@ public class Test2
 	{
 		JFrame frame = new JFrame();
 
-		VM vm = new VM();
+		VMTest2 vm = new VMTest2();
 
 		frame.setLayout(new CardLayout());
 		frame.add(createSplitPaneVertical(
@@ -92,7 +92,7 @@ public class Test2
 	{
 		Function<String, Object> run = src -> {
 			Node<Formula> node = Syntaxes.root.parse(src);
-			VM vm = new VM();
+			VMTest2 vm = new VMTest2();
 			ErrorReporter errorReporter = node.value.validate(vm);
 
 			errorReporter.messages.forEach(t -> {

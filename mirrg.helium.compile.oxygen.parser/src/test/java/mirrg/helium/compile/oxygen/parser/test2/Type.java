@@ -22,18 +22,18 @@ public class Type<T>
 
 	public boolean isAssignableFrom(Type<?> other)
 	{
-		if (this.equals(VM.DOUBLE) && other.equals(VM.INTEGER)) return true;
-		if (this.equals(VM.OBJECT) && other.equals(VM.STRING)) return true;
-		if (this.equals(VM.OBJECT) && other.equals(VM.INTEGER)) return true;
-		if (this.equals(VM.OBJECT) && other.equals(VM.DOUBLE)) return true;
-		if (this.equals(VM.OBJECT) && other.equals(VM.BOOLEAN)) return true;
-		if (this.equals(VM.OBJECT) && other.equals(VM.COMPLEX)) return true;
+		if (this.equals(VMTest2.DOUBLE) && other.equals(VMTest2.INTEGER)) return true;
+		if (this.equals(VMTest2.OBJECT) && other.equals(VMTest2.STRING)) return true;
+		if (this.equals(VMTest2.OBJECT) && other.equals(VMTest2.INTEGER)) return true;
+		if (this.equals(VMTest2.OBJECT) && other.equals(VMTest2.DOUBLE)) return true;
+		if (this.equals(VMTest2.OBJECT) && other.equals(VMTest2.BOOLEAN)) return true;
+		if (this.equals(VMTest2.OBJECT) && other.equals(VMTest2.COMPLEX)) return true;
 		return this.equals(other);
 	}
 
 	public static Object cast(Type<?> from, Type<?> to, Object value)
 	{
-		if (from.equals(VM.INTEGER) && to.equals(VM.DOUBLE)) return (double) (Integer) value;
+		if (from.equals(VMTest2.INTEGER) && to.equals(VMTest2.DOUBLE)) return (double) (Integer) value;
 		return value;
 	}
 

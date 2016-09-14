@@ -31,7 +31,7 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VM.COMPLEX;
+					return VMTest2.COMPLEX;
 				}
 
 				@Override
@@ -47,7 +47,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VM.COMPLEX.color));
+			s -> VMTest2.COMPLEX.color));
 	}
 
 	public static Syntax<Formula> literalDoubleImaginary;
@@ -60,7 +60,7 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VM.COMPLEX;
+					return VMTest2.COMPLEX;
 				}
 
 				@Override
@@ -76,7 +76,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VM.COMPLEX.color));
+			s -> VMTest2.COMPLEX.color));
 	}
 
 	public static Syntax<Formula> literalInteger;
@@ -87,7 +87,7 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VM.INTEGER;
+					return VMTest2.INTEGER;
 				}
 
 				@Override
@@ -103,7 +103,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VM.INTEGER.color));
+			s -> VMTest2.INTEGER.color));
 	}
 
 	public static Syntax<Formula> literalDouble;
@@ -114,7 +114,7 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VM.DOUBLE;
+					return VMTest2.DOUBLE;
 				}
 
 				@Override
@@ -130,7 +130,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VM.DOUBLE.color));
+			s -> VMTest2.DOUBLE.color));
 	}
 
 	public static Syntax<Formula> literalString;
@@ -149,7 +149,7 @@ public class Syntaxes
 				@Override
 				public Type<?> getType(VM vm)
 				{
-					return VM.STRING;
+					return VMTest2.STRING;
 				}
 
 				@Override
@@ -177,7 +177,7 @@ public class Syntaxes
 				}
 
 			}),
-			s -> VM.STRING.color));
+			s -> VMTest2.STRING.color));
 	}
 
 	public static Syntax<Formula> literalIdentifier;
