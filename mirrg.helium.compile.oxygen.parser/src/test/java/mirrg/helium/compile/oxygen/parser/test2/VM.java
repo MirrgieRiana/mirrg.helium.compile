@@ -9,12 +9,12 @@ import org.apache.commons.math3.complex.Complex;
 public class VM
 {
 
-	public static final EnumType<Object> OBJECT = new EnumType<>("OBJECT", Color.decode("#545454"));
-	public static final EnumType<String> STRING = new EnumType<>("STRING", Color.decode("#a64eaa"));
-	public static final EnumType<Integer> INTEGER = new EnumType<>("INTEGER", Color.decode("#424aaf"));
-	public static final EnumType<Double> DOUBLE = new EnumType<>("DOUBLE", Color.decode("#53a540"));
-	public static final EnumType<Boolean> BOOLEAN = new EnumType<>("BOOLEAN", Color.decode("#878334"));
-	public static final EnumType<Complex> COMPLEX = new EnumType<>("COMPLEX", Color.decode("#960002"));
+	public static final Type<Object> OBJECT = new Type<>("OBJECT", Color.decode("#545454"));
+	public static final Type<String> STRING = new Type<>("STRING", Color.decode("#a64eaa"));
+	public static final Type<Integer> INTEGER = new Type<>("INTEGER", Color.decode("#424aaf"));
+	public static final Type<Double> DOUBLE = new Type<>("DOUBLE", Color.decode("#53a540"));
+	public static final Type<Boolean> BOOLEAN = new Type<>("BOOLEAN", Color.decode("#878334"));
+	public static final Type<Complex> COMPLEX = new Type<>("COMPLEX", Color.decode("#960002"));
 
 	public RegistryOperator registryOperator = new RegistryOperator();
 	public RegistryVariable registryVariable = new RegistryVariable();
@@ -78,12 +78,12 @@ public class VM
 		registerConstant(STRING, "lineSeparator", System.lineSeparator());
 	}
 
-	public <A, B, R> void registerOperator(String token, BiFunction<A, B, R> function, EnumType<A> left, EnumType<B> right, EnumType<R> result)
+	public <A, B, R> void registerOperator(String token, BiFunction<A, B, R> function, Type<A> left, Type<B> right, Type<R> result)
 	{
 		registryOperator.register(new Operator(token, (a, b) -> function.apply((A) a, (B) b), left, right, result));
 	}
 
-	public <T> void registerConstant(EnumType<T> type, String identifier, T value)
+	public <T> void registerConstant(Type<T> type, String identifier, T value)
 	{
 		registryVariable.register(new Variable(type, identifier));
 		variables.put(identifier, value);

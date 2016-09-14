@@ -3,10 +3,10 @@ package mirrg.helium.compile.oxygen.parser.test2;
 public class Variable
 {
 
-	public EnumType<?> type;
+	public Type<?> type;
 	public String identifier;
 
-	public Variable(EnumType<?> type, String identifier)
+	public Variable(Type<?> type, String identifier)
 	{
 		this.type = type;
 		this.identifier = identifier;

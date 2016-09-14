@@ -7,7 +7,7 @@ public abstract class Formula
 	 * このメソッドの前に必ず{@link #validate(VM, ErrorReporter)}を実行し、
 	 * 値が真であるかを確認してください。
 	 */
-	public abstract EnumType<?> getType(VM vm);
+	public abstract Type<?> getType(VM vm);
 
 	private ErrorReporter errorReporter;
 

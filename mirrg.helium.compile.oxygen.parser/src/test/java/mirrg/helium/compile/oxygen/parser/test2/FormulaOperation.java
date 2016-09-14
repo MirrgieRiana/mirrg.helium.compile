@@ -21,7 +21,7 @@ public class FormulaOperation extends Formula
 	}
 
 	@Override
-	public EnumType<?> getType(VM vm)
+	public Type<?> getType(VM vm)
 	{
 		return operator.result;
 	}

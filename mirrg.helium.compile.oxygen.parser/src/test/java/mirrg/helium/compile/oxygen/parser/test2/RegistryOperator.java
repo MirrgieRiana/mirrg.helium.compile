@@ -13,7 +13,7 @@ public class RegistryOperator
 		operators.add(operator);
 	}
 
-	public ArrayList<Operator> get(String token, EnumType<?> left, EnumType<?> right)
+	public ArrayList<Operator> get(String token, Type<?> left, Type<?> right)
 	{
 		ArrayList<Operator> operators2 = operators.stream()
 			.filter(o -> o.token.equals(token))

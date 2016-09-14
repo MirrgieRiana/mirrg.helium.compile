@@ -22,7 +22,7 @@ public class FormulaVariable extends FormulaNode
 	}
 
 	@Override
-	public EnumType<?> getType(VM vm)
+	public Type<?> getType(VM vm)
 	{
 		return variable.type;
 	}

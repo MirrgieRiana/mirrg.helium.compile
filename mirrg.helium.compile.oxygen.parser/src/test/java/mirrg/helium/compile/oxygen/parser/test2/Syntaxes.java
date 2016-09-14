@@ -29,7 +29,7 @@ public class Syntaxes
 			s -> new FormulaNode() {
 
 				@Override
-				public EnumType<?> getType(VM vm)
+				public Type<?> getType(VM vm)
 				{
 					return VM.COMPLEX;
 				}
@@ -58,7 +58,7 @@ public class Syntaxes
 			s -> new FormulaNode() {
 
 				@Override
-				public EnumType<?> getType(VM vm)
+				public Type<?> getType(VM vm)
 				{
 					return VM.COMPLEX;
 				}
@@ -85,7 +85,7 @@ public class Syntaxes
 			s -> new FormulaNode() {
 
 				@Override
-				public EnumType<?> getType(VM vm)
+				public Type<?> getType(VM vm)
 				{
 					return VM.INTEGER;
 				}
@@ -112,7 +112,7 @@ public class Syntaxes
 			s -> new FormulaNode() {
 
 				@Override
-				public EnumType<?> getType(VM vm)
+				public Type<?> getType(VM vm)
 				{
 					return VM.DOUBLE;
 				}
@@ -147,7 +147,7 @@ public class Syntaxes
 			s -> new Formula() {
 
 				@Override
-				public EnumType<?> getType(VM vm)
+				public Type<?> getType(VM vm)
 				{
 					return VM.STRING;
 				}
@@ -199,7 +199,7 @@ public class Syntaxes
 			s -> new Formula() {
 
 				@Override
-				public EnumType<?> getType(VM vm)
+				public Type<?> getType(VM vm)
 				{
 					return s.y.getType(vm);
 				}
