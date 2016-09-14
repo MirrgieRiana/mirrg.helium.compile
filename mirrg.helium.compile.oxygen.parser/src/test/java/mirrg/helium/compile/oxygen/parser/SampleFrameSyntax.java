@@ -15,8 +15,9 @@ public class SampleFrameSyntax
 		JFrame frame = new JFrame();
 
 		frame.setLayout(new CardLayout());
-		frame.add(new PanelSyntax(Test1.test3_getSyntax(),
-			"15/(26*158+pi-27)*(e/(7+45)/61)*5-27/7"));
+		PanelSyntax panel = new PanelSyntax(Test1.test3_getSyntax());
+		panel.set("15/(26*158+pi-27)*(e/(7+45)/61)*5-27/7");
+		frame.add(panel);
 
 		frame.pack();
 		frame.setLocationByPlatform(true);

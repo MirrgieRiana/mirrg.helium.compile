@@ -47,7 +47,7 @@ public class PanelSyntax extends Panel
 	private boolean occurEvent = true;
 	public final EventManager<String> eventManager = new EventManager<>();
 
-	public PanelSyntax(Syntax<?> syntax, String text)
+	public PanelSyntax(Syntax<?> syntax)
 	{
 		this.syntax = syntax;
 
@@ -59,10 +59,6 @@ public class PanelSyntax extends Panel
 				return textPane1;
 			}), 600, 400),
 			createScrollPane(textPane2 = new JTextPane(), 600, 100)));
-
-		occurEvent = false;
-		set(text);
-		occurEvent = true;
 
 		hookChange(textPane2, e -> {
 			if (occurEvent) onUserEdit();
@@ -176,13 +172,13 @@ public class PanelSyntax extends Panel
 		threadRecolor.start();
 	}
 
-	private void set(String text)
+	public void set(String text)
 	{
 		textPane2.setText(text);
 		update();
 	}
 
-	private void update()
+	public void update()
 	{
 		String text = textPane2.getText();
 
