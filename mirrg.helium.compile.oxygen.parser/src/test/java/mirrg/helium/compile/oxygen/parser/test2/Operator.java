@@ -39,8 +39,8 @@ public class Operator
 	public Object apply(Runtime runtime, Formula formulaLeft, Formula formulaRight)
 	{
 		return function.apply(
-			Type.cast(formulaLeft.getType(runtime.vm), left, formulaLeft.calculate(runtime)),
-			Type.cast(formulaRight.getType(runtime.vm), right, formulaRight.calculate(runtime)));
+			Type.cast(left, formulaLeft.getType(runtime.vm), formulaLeft.calculate(runtime)),
+			Type.cast(right, formulaRight.getType(runtime.vm), formulaRight.calculate(runtime)));
 	}
 
 	public static interface IFunction
