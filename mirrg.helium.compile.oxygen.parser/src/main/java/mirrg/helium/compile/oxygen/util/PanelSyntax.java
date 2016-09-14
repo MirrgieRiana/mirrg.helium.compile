@@ -259,17 +259,17 @@ public class PanelSyntax extends Panel
 		appendText(textPane, "" + node.end, Color.magenta);
 		appendText(textPane, ", s=", Color.gray);
 		{
-			if (node.children == null) {
-				Color color = null;
-				if (node.value instanceof IProviderColor) {
-					color = ((IProviderColor) node.value).getColor();
-				} else {
-					color = Color.black;
-				}
-				appendText(textPane, text.substring(node.begin, node.end), color);
+			Color color = null;
+			if (node.value instanceof IProviderColor) {
+				color = ((IProviderColor) node.value).getColor();
 			} else {
-				appendText(textPane, text.substring(node.begin, node.end), Color.gray);
+				if (node.children == null) {
+					color = Color.black;
+				} else {
+					color = Color.gray;
+				}
 			}
+			appendText(textPane, text.substring(node.begin, node.end), color);
 		}
 		appendText(textPane, ", v=", Color.gray);
 		if (node.value != null) {
