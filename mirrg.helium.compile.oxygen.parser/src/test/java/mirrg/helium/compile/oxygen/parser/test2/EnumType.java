@@ -40,10 +40,10 @@ public class EnumType<T>
 		return this.equals(other);
 	}
 
-	public static <I, O> O cast(EnumType<I> from, EnumType<O> to, I value)
+	public static Object cast(EnumType<?> from, EnumType<?> to, Object value)
 	{
-		if (from.equals(INTEGER) && to.equals(DOUBLE)) return (O) (Double) (double) (Integer) value;
-		return (O) value;
+		if (from.equals(INTEGER) && to.equals(DOUBLE)) return (double) (Integer) value;
+		return value;
 	}
 
 }

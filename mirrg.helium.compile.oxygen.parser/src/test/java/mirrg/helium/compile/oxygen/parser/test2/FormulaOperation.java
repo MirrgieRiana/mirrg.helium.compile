@@ -11,7 +11,7 @@ public class FormulaOperation extends Formula
 	public final Formula left;
 	public final Formula right;
 
-	protected Operator<?, ?, ?> operator;
+	protected Operator operator;
 
 	public FormulaOperation(String token, Formula left, Formula right)
 	{
@@ -34,7 +34,7 @@ public class FormulaOperation extends Formula
 		if (!right.validateImpl(vm, errorReporter)) flag = true;
 		if (flag) return false;
 
-		ArrayList<Operator<?, ?, ?>> operator = vm.registryOperator.get(token, left.getType(vm), right.getType(vm));
+		ArrayList<Operator> operator = vm.registryOperator.get(token, left.getType(vm), right.getType(vm));
 
 		if (operator.isEmpty()) {
 			errorReporter.report(this,
@@ -58,7 +58,7 @@ public class FormulaOperation extends Formula
 	@Override
 	public Object calculate(Runtime runtime)
 	{
-		return ((Operator) operator).apply(runtime, left, right);
+		return operator.apply(runtime, left, right);
 	}
 
 	public static Formula chainLeft(Formula head, ArrayList<Struct2<String, Formula>> tail)

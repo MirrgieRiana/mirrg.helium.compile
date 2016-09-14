@@ -13,7 +13,7 @@ public class FormulaVariable extends FormulaNode
 
 	public final String identifier;
 
-	protected Variable<?> variable;
+	protected Variable variable;
 	protected VM vm;
 
 	public FormulaVariable(String identifier)
@@ -32,7 +32,7 @@ public class FormulaVariable extends FormulaNode
 	{
 		this.vm = vm;
 
-		Optional<Variable<?>> variable = vm.registryVariable.get(identifier);
+		Optional<Variable> variable = vm.registryVariable.get(identifier);
 
 		if (!variable.isPresent()) {
 			errorReporter.report(this, "そのような変数はありません: " + identifier);
@@ -46,7 +46,7 @@ public class FormulaVariable extends FormulaNode
 	@Override
 	public Object calculate(Runtime runtime)
 	{
-		return ((Variable) variable).get(runtime);
+		return variable.get(runtime);
 	}
 
 	public Color getColor()
