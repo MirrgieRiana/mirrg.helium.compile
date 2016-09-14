@@ -70,72 +70,74 @@ public class PanelSyntax extends JPanel
 			public void keyTyped(KeyEvent e)
 			{
 				if (e.isControlDown()) {
-					e.consume();
-
-					{
-						String text = textPane2.getText();
-						int caretPosition = textPane2.getCaretPosition();
-						String left = text.substring(0, caretPosition);
-						String right = text.substring(caretPosition);
-						String src2 = left + "a" + right;
-
-						Node<?> node = syntax.parse(src2);
-						if (node == null) return;
-
-						eventManager.post(new EventPanelSyntax.Parsed(node, EventPanelSyntax.Parsed.TIMING_BEFORE_PROPOSAL));
-
-						ArrayList<Node<?>> hierarchy = new ArrayList<>();
-						while (true) {
-							hierarchy.add(node);
-							if (node.children == null) break;
-							Optional<Node<?>> node2 = node.children.stream()
-								.filter(n -> n.begin <= caretPosition)
-								.filter(n -> n.end > caretPosition)
-								.findFirst();
-							if (!node2.isPresent()) break;
-							node = node2.get();
-						}
-
-						Optional<Node<?>> node2 = HLambda.reverse(hierarchy.stream())
-							.filter(n -> n.value instanceof IProviderProposal)
-							.findFirst();
-						if (!node2.isPresent()) return;
-
-						IProviderProposal providerProposal = (IProviderProposal) node2.get().value;
-
-						Stream<Proposal> stream = providerProposal.getProposals();
-						if (stream == null) return;
+					if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+						e.consume();
 
 						{
-							DialogProposal dialog = new DialogProposal(stream);
+							String text = textPane2.getText();
+							int caretPosition = textPane2.getCaretPosition();
+							String left = text.substring(0, caretPosition);
+							String right = text.substring(caretPosition);
+							String src2 = left + "a" + right;
 
-							dialog.eventManager.register(EventDialogProposal.Update.class, e2 -> {
+							Node<?> node = syntax.parse(src2);
+							if (node == null) return;
 
-								try {
-									((DefaultStyledDocument) textPane2.getDocument()).replace(
-										node2.get().begin,
-										node2.get().end - node2.get().begin - 1,
-										e2.proposal.text, null);
-								} catch (BadLocationException e1) {
-									HLog.processException(e1);
-								}
+							eventManager.post(new EventPanelSyntax.Parsed(node, EventPanelSyntax.Parsed.TIMING_BEFORE_PROPOSAL));
 
-								update(EventPanelSyntax.Edit.TIMING_PROPOSAL);
-							});
+							ArrayList<Node<?>> hierarchy = new ArrayList<>();
+							while (true) {
+								hierarchy.add(node);
+								if (node.children == null) break;
+								Optional<Node<?>> node2 = node.children.stream()
+									.filter(n -> n.begin <= caretPosition)
+									.filter(n -> n.end > caretPosition)
+									.findFirst();
+								if (!node2.isPresent()) break;
+								node = node2.get();
+							}
+
+							Optional<Node<?>> node2 = HLambda.reverse(hierarchy.stream())
+								.filter(n -> n.value instanceof IProviderProposal)
+								.findFirst();
+							if (!node2.isPresent()) return;
+
+							IProviderProposal providerProposal = (IProviderProposal) node2.get().value;
+
+							Stream<Proposal> stream = providerProposal.getProposals();
+							if (stream == null) return;
 
 							{
-								Point a = textPane2.getCaret().getMagicCaretPosition();
-								Point b = textPane2.getLocationOnScreen();
-								if (a != null && b != null) {
-									dialog.setLocation(a.x + b.x, a.y + b.y + 20);
-								}
-							}
-							dialog.pack();
-							dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-							dialog.setVisible(true);
-						}
-					}
+								DialogProposal dialog = new DialogProposal(stream);
 
+								dialog.eventManager.register(EventDialogProposal.Update.class, e2 -> {
+
+									try {
+										((DefaultStyledDocument) textPane2.getDocument()).replace(
+											node2.get().begin,
+											node2.get().end - node2.get().begin - 1,
+											e2.proposal.text, null);
+									} catch (BadLocationException e1) {
+										HLog.processException(e1);
+									}
+
+									update(EventPanelSyntax.Edit.TIMING_PROPOSAL);
+								});
+
+								{
+									Point a = textPane2.getCaret().getMagicCaretPosition();
+									Point b = textPane2.getLocationOnScreen();
+									if (a != null && b != null) {
+										dialog.setLocation(a.x + b.x, a.y + b.y + 20);
+									}
+								}
+								dialog.pack();
+								dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+								dialog.setVisible(true);
+							}
+						}
+
+					}
 				}
 			}
 
