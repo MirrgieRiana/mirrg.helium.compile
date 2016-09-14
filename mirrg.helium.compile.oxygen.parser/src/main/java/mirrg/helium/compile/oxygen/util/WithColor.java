@@ -11,12 +11,12 @@ public class WithColor<T> implements IProviderColor
 {
 
 	public final T value;
-	public final Color supplier;
+	public final Function<T, Color> function;
 
-	public WithColor(T value, Color supplier)
+	public WithColor(T value, Function<T, Color> function)
 	{
 		this.value = value;
-		this.supplier = supplier;
+		this.function = function;
 	}
 
 	public T get()
@@ -27,12 +27,12 @@ public class WithColor<T> implements IProviderColor
 	@Override
 	public Color getColor()
 	{
-		return supplier;
+		return function.apply(value);
 	}
 
 	public static <T> Syntax<T> withColor(Syntax<T> syntax, Function<T, Color> function)
 	{
-		return pack(pack(syntax, s -> new WithColor<T>(s, function.apply(s))), s -> s.value);
+		return pack(pack(syntax, s -> new WithColor<T>(s, function)), s -> s.value);
 	}
 
 }

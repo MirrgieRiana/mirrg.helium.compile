@@ -11,23 +11,23 @@ public class WithProposal<T> implements IProviderProposal
 {
 
 	public final T value;
-	public final Stream<String> supplier;
+	public final Function<T, Stream<Proposal>> function;
 
-	public WithProposal(T value, Stream<String> supplier)
+	public WithProposal(T value, Function<T, Stream<Proposal>> function)
 	{
 		this.value = value;
-		this.supplier = supplier;
+		this.function = function;
 	}
 
 	@Override
-	public Stream<String> getProposals()
+	public Stream<Proposal> getProposals()
 	{
-		return supplier;
+		return function.apply(value);
 	}
 
-	public static <T> Syntax<T> withProposal(Syntax<T> syntax, Function<T, Stream<String>> function)
+	public static <T> Syntax<T> withProposal(Syntax<T> syntax, Function<T, Stream<Proposal>> function)
 	{
-		return pack(pack(syntax, s -> new WithProposal<T>(s, function.apply(s))), s -> s.value);
+		return pack(pack(syntax, s -> new WithProposal<T>(s, function)), s -> s.value);
 	}
 
 }
