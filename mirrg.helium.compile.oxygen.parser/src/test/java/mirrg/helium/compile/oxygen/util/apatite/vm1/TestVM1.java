@@ -29,7 +29,7 @@ public class TestVM1
 		vm.registerConstant(VM1.STRING, "lineSeparator", "<br>");
 
 		frame.setLayout(new CardLayout());
-		frame.add(panel = new PanelApatite(vm));
+		frame.add(panel = new PanelApatite(Syntaxes1.root, vm));
 		panel.getPanelSyntax().set("pi * 200");
 		//pi * 200 + (3 * 4 -  3) * "214314" + pi * e - 4 * "a"
 

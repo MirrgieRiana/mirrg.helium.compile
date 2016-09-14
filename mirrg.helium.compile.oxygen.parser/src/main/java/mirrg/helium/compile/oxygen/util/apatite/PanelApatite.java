@@ -10,9 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.text.StyleConstants;
 
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.util.EventPanelSyntax;
 import mirrg.helium.compile.oxygen.util.PanelSyntax;
-import mirrg.helium.compile.oxygen.util.apatite.vm1.Syntaxes1;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
 
@@ -22,14 +22,14 @@ public class PanelApatite extends JPanel
 	private PanelSyntax panelSyntax;
 	private JLabel labelOut;
 
-	public PanelApatite(VM vm)
+	public PanelApatite(Syntax<Formula> syntax, VM vm)
 	{
 		setLayout(new CardLayout());
 		add(createSplitPaneVertical(
 			get(() -> {
-				panelSyntax = new PanelSyntax(Syntaxes1.root);
+				panelSyntax = new PanelSyntax(syntax);
 				panelSyntax.eventManager.register(EventPanelSyntax.Edit.class, e -> {
-					Node<Formula> node = Syntaxes1.root.parse(e.source);
+					Node<Formula> node = syntax.parse(e.source);
 					if (node != null) {
 						ErrorReporter errorReporter = node.value.validate(vm);
 
