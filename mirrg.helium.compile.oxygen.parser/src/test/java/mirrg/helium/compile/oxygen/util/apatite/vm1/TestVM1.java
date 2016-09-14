@@ -1,4 +1,4 @@
-package mirrg.helium.compile.oxygen.parser.test2;
+package mirrg.helium.compile.oxygen.util.apatite.vm1;
 
 import static mirrg.helium.swing.nitrogen.util.HSwing.*;
 import static org.junit.Assert.*;
@@ -25,7 +25,7 @@ import mirrg.helium.compile.oxygen.util.apatite.vm1.VM1;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
 
-public class Test2
+public class TestVM1
 {
 
 	private static JLabel label;
