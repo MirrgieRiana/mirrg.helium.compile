@@ -218,7 +218,7 @@ public class PanelSyntax extends JPanel
 		} else {
 			LineProvider lineProvider = HString.getLineProvider(text);
 			int row = lineProvider.getLineNumber(result.getTokenProposalIndex());
-			String line = lineProvider.getLine(row);
+			String line = lineProvider.getContent(row);
 			int column = result.getTokenProposalIndex() - lineProvider.getStartIndex(row);
 
 			textPane1.setText("");
