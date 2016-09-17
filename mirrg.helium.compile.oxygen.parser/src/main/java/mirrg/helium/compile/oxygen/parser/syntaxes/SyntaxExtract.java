@@ -14,9 +14,9 @@ public class SyntaxExtract<T> extends Syntax<T>
 	public final SyntaxPack<Struct1<T>, T> syntaxPack = pack(syntaxSerial, Struct1::getX);
 
 	@Override
-	protected Node<T> parseImpl(Memo memo, String text, int index)
+	protected Node<T> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
-		return syntaxPack.parse(memo, text, index);
+		return syntaxPack.parse(memo, shouldTokenProposal, text, index);
 	}
 
 	public SyntaxExtract<T> and(Syntax<?> syntax)

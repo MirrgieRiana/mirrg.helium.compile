@@ -21,7 +21,7 @@ public class SyntaxRepeat<T> extends Syntax<ArrayList<T>>
 	}
 
 	@Override
-	protected Node<ArrayList<T>> parseImpl(Memo memo, String text, int index)
+	protected Node<ArrayList<T>> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
 		ArrayList<Node<?>> children = new ArrayList<>();
 		ArrayList<T> value = new ArrayList<>();
@@ -29,7 +29,7 @@ public class SyntaxRepeat<T> extends Syntax<ArrayList<T>>
 		int end = begin;
 
 		while (true) {
-			Node<T> node = syntax.parse(memo, text, index);
+			Node<T> node = syntax.parse(memo, shouldTokenProposal, text, index);
 			if (node == null) break;
 			children.add(node);
 			value.add(node.value);

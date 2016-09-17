@@ -18,10 +18,10 @@ public class SyntaxOr<T> extends Syntax<T>
 	}
 
 	@Override
-	protected Node<T> parseImpl(Memo memo, String text, int index)
+	protected Node<T> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
 		for (Syntax<T> syntax : syntaxex) {
-			Node<T> node = syntax.parse(memo, text, index);
+			Node<T> node = syntax.parse(memo, shouldTokenProposal, text, index);
 			if (node != null) return node;
 		}
 		return null;

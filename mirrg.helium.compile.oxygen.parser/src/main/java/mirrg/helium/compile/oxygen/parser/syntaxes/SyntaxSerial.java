@@ -36,7 +36,7 @@ public class SyntaxSerial<T> extends Syntax<T>
 	}
 
 	@Override
-	protected Node<T> parseImpl(Memo memo, String text, int index)
+	protected Node<T> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
 		T t = supplier.get();
 		ArrayList<Node<?>> children = new ArrayList<>();
@@ -44,7 +44,7 @@ public class SyntaxSerial<T> extends Syntax<T>
 		int end = begin;
 
 		for (Function<T, Syntax<?>> syntax : syntaxes) {
-			Node<?> node = syntax.apply(t).parse(memo, text, index);
+			Node<?> node = syntax.apply(t).parse(memo, shouldTokenProposal, text, index);
 			if (node == null) return null;
 			children.add(node);
 			index += node.end - node.begin;

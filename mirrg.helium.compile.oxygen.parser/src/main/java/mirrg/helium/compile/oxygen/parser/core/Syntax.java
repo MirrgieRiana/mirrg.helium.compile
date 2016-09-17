@@ -3,18 +3,46 @@ package mirrg.helium.compile.oxygen.parser.core;
 public abstract class Syntax<T>
 {
 
-	public Node<T> parse(Memo memo, String text, int index)
+	public Node<T> parse(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
-		return memo.get(this, index, () -> parseImpl(memo, text, index));
+		if (!shouldTokenProposal) return memo.get(this, index, () -> parseImpl(memo, false, text, index));
+		if (getName() == null) return memo.get(this, index, () -> parseImpl(memo, true, text, index));
+		memo.addTokenProposal(index, this);
+		return memo.get(this, index, () -> parseImpl(memo, false, text, index));
 	}
 
-	protected abstract Node<T> parseImpl(Memo memo, String text, int index);
+	protected abstract Node<T> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index);
 
 	public Node<T> parse(String text)
 	{
-		Node<T> node = parse(new Memo(), text, 0);
-		if (node == null) return null;
-		if (node.end == text.length()) return node;
+		ResultOxygen<T> result = matches(text);
+		if (result.isValid) {
+			return result.node;
+		} else {
+			return null;
+		}
+	}
+
+	public ResultOxygen<T> matches(String text)
+	{
+		return matches(text, 0, text.length());
+	}
+
+	public ResultOxygen<T> matches(String text, int begin)
+	{
+		return matches(text, begin, text.length());
+	}
+
+	public ResultOxygen<T> matches(String text, int begin, int end)
+	{
+		Memo memo = new Memo();
+		Node<T> node = parse(memo, true, text, begin);
+		if (node == null) return new ResultOxygen<>(null, memo, false);
+		return new ResultOxygen<>(node, memo, node.end == end);
+	}
+
+	public String getName()
+	{
 		return null;
 	}
 

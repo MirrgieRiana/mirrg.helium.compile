@@ -17,9 +17,9 @@ public class SyntaxOptional<T> extends Syntax<Optional<T>>
 	}
 
 	@Override
-	protected Node<Optional<T>> parseImpl(Memo memo, String text, int index)
+	protected Node<Optional<T>> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
-		Node<T> node = syntax.parse(memo, text, index);
+		Node<T> node = syntax.parse(memo, shouldTokenProposal, text, index);
 		if (node == null) return new Node<>(this, null, index, index, Optional.empty());
 		return new Node<>(this, node.children, node.begin, node.end, Optional.of(node.value));
 	}

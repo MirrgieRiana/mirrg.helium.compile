@@ -23,10 +23,10 @@ public class SyntaxSlot<T> extends Syntax<T>
 	}
 
 	@Override
-	protected Node<T> parseImpl(Memo memo, String text, int index)
+	protected Node<T> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
 		if (syntax == null) setSyntax(supplier.get());
-		return syntax.parse(memo, text, index);
+		return syntax.parse(memo, shouldTokenProposal, text, index);
 	}
 
 	public void setSyntax(Syntax<T> syntax)

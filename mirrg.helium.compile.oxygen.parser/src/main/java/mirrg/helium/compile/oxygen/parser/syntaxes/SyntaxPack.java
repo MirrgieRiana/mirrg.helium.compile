@@ -20,9 +20,9 @@ public class SyntaxPack<I, O> extends Syntax<O>
 	}
 
 	@Override
-	protected Node<O> parseImpl(Memo memo, String text, int index)
+	protected Node<O> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
-		Node<I> node = syntax.parse(memo, text, index);
+		Node<I> node = syntax.parse(memo, shouldTokenProposal, text, index);
 		if (node == null) return null;
 
 		ArrayList<Node<?>> children = new ArrayList<>();

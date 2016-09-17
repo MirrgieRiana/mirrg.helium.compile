@@ -4,6 +4,7 @@ import static mirrg.helium.swing.nitrogen.util.HSwing.*;
 
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JPanel;
@@ -26,11 +28,13 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.ResultOxygen;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.util.DialogProposal.EventDialogProposal;
 import mirrg.helium.standard.hydrogen.event.EventManager;
 import mirrg.helium.standard.hydrogen.util.HLambda;
 import mirrg.helium.standard.hydrogen.util.HString;
+import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
 import mirrg.helium.swing.nitrogen.wrapper.artifacts.logging.HLog;
 
 public class PanelSyntax extends JPanel
@@ -56,10 +60,15 @@ public class PanelSyntax extends JPanel
 		add(createSplitPaneVertical(
 			createScrollPane(get(() -> {
 				textPane1 = new JTextPane();
+				textPane1.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
 				textPane1.setEditable(false);
 				return textPane1;
 			}), 600, 400),
-			createScrollPane(textPane2 = new JTextPane(), 600, 100)));
+			createScrollPane(get(() -> {
+				textPane2 = new JTextPane();
+				textPane2.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
+				return textPane2;
+			}), 600, 100)));
 
 		hookChange(textPane2, e -> {
 			if (occurEvent) onUserEdit();
@@ -188,32 +197,46 @@ public class PanelSyntax extends JPanel
 
 		String text = textPane2.getText();
 
-		Node<?> node;
+		ResultOxygen<?> result;
 		try {
-			node = syntax.parse(text);
+			result = syntax.matches(text);
 		} catch (Exception e) {
 			textPane1.setText("");
 			appendText(textPane1, toString(e), Color.red);
 			return;
 		}
 
-		if (node != null) {
-			eventManager.post(new EventPanelSyntax.Parsed(node, EventPanelSyntax.Parsed.TIMING_EDIT));
+		if (result.isValid) {
+			eventManager.post(new EventPanelSyntax.Parsed(result.node, EventPanelSyntax.Parsed.TIMING_EDIT));
 
 			textPane1.setText("");
-			appendText(textPane1, text, node, 0);
+			appendText(textPane1, text, result.node, 0);
 
-			// clear
-			SimpleAttributeSet attr = new SimpleAttributeSet();
-			((DefaultStyledDocument) textPane2.getDocument()).setCharacterAttributes(
-				0, textPane2.getDocument().getLength() + 1, attr, true);
+			clearAttr(textPane2);
 
-			updateText(textPane2, node);
+			updateText(textPane2, result.node);
 		} else {
+			LineProvider lineProvider = HString.getLineProvider(text);
+			int row = lineProvider.getLineNumber(result.getTokenProposalIndex());
+			String line = lineProvider.getLine(row);
+			int column = result.getTokenProposalIndex() - lineProvider.getStartIndex(row);
+
 			textPane1.setText("");
+			appendText(textPane1, String.format("%s\n%s^\n==================================\n%s",
+				line,
+				HString.rept(" ", column),
+				result.getTokenProposal().stream()
+					.map(Syntax::getName)
+					.collect(Collectors.joining("\n"))), Color.red);
 		}
 
 		occurEvent = true;
+	}
+
+	private void clearAttr(JTextPane textPane)
+	{
+		((DefaultStyledDocument) textPane.getDocument()).setCharacterAttributes(
+			0, textPane.getDocument().getLength() + 1, new SimpleAttributeSet(), true);
 	}
 
 	public void setAttribute(int offset, int length, Consumer<SimpleAttributeSet> consumer)

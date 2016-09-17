@@ -18,7 +18,7 @@ public class SyntaxRegex extends Syntax<String>
 	}
 
 	@Override
-	protected Node<String> parseImpl(Memo memo, String text, int index)
+	protected Node<String> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
 		Matcher matcher = pattern.matcher(text);
 		if (matcher.find(index)) {
@@ -30,6 +30,14 @@ public class SyntaxRegex extends Syntax<String>
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public String getName()
+	{
+		String name = super.getName();
+		if (name != null) return name;
+		return pattern.pattern();
 	}
 
 }
