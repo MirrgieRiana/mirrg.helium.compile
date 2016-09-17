@@ -16,6 +16,7 @@ public class VM1 extends VM
 	public static final Type<Integer> INTEGER = new Type<>("INTEGER", Color.decode("#424aaf"), DOUBLE, i -> (double) i);
 	public static final Type<Boolean> BOOLEAN = new Type<>("BOOLEAN", Color.decode("#878334"), OBJECT);
 	public static final Type<Complex> COMPLEX = new Type<>("COMPLEX", Color.decode("#960002"), OBJECT);
+	public static final Type<Lambda> LAMBDA = new Type<>("LAMBDA", Color.decode("#009BA0"), OBJECT);
 
 	public VM1()
 	{

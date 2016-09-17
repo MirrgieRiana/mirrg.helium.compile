@@ -5,6 +5,7 @@ import static mirrg.helium.compile.oxygen.util.WithColor.*;
 import static mirrg.helium.compile.oxygen.util.WithProposal.*;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import org.apache.commons.math3.complex.Complex;
 
@@ -251,10 +252,32 @@ public class Syntaxes1
 			.or(bracket));
 	}
 
+	public static Syntax<Formula> right;
+	{
+		right = slot(() -> pack(serial(Struct2<Formula, ArrayList<Function<Formula, Formula>>>::new)
+			.and(factor, Struct2::setX)
+			.and(repeat(extract((Function<Formula, Formula>) null)
+				.and($)
+				.extract(or((Function<Formula, Formula>) null)
+					.or(extract((Function<Formula, Formula>) null)
+						.and(string("("))
+						.extract(pack(expression, f -> f2 -> new FormulaApply(f2, f)))
+						.and(string(")"))))), Struct2::setY),
+			s -> {
+				Formula formula = s.x;
+
+				for (Function<Formula, Formula> function : s.y) {
+					formula = function.apply(formula);
+				}
+
+				return formula;
+			}));
+	}
+
 	public static Syntax<Formula> mul;
 	{
 		mul = slot(() -> pack(serial(Struct2<Formula, ArrayList<Struct2<String, Formula>>>::new)
-			.and(factor, Struct2::setX)
+			.and(right, Struct2::setX)
 			.and(repeat(serial(Struct2<String, Formula>::new)
 				.and($)
 				.and(or((String) null)
@@ -263,7 +286,7 @@ public class Syntaxes1
 					.or(string("%")),
 					Struct2<String, Formula>::setX)
 				.and($)
-				.and(factor, Struct2::setY)), Struct2::setY),
+				.and(right, Struct2::setY)), Struct2::setY),
 			t -> FormulaOperation.chainLeft(t.x, t.y)));
 	}
 
@@ -329,9 +352,22 @@ public class Syntaxes1
 			t -> FormulaOperation.chainLeft(t.x, t.y)));
 	}
 
+	public static Syntax<Formula> lambda;
+	{
+		lambda = slot(() -> or((Formula) null)
+			.or(pack(serial(Struct2<String, Formula>::new)
+				.and(named(regex("[a-zA-Z_][a-zA-Z_0-9]*"), "Identifier"), Struct2::setX)
+				.and($)
+				.and(string("->"))
+				.and($)
+				.and(lambda, Struct2::setY),
+				s -> new FormulaLambda(s.y, s.x)))
+			.or(or));
+	}
+
 	public static Syntax<Formula> expression;
 	{
-		expression = slot(() -> or);
+		expression = slot(() -> lambda);
 	}
 
 	public static Syntax<Formula> root;
