@@ -26,14 +26,14 @@ public class Syntaxes1
 
 	public static Syntax<String> $;
 	{
-		$ = slot(() -> regex("[ \\t\\r\\n]*"));
+		$ = slot(() -> named(regex("[ \\t\\r\\n]*"), "Blank"));
 	}
 
-	public static Syntax<Formula> literalIntegerImaginary;
+	public static Syntax<Formula> literalImaginaryInteger;
 	{
-		literalIntegerImaginary = slot(() -> withColor(pack(extract((String) null)
+		literalImaginaryInteger = slot(() -> withColor(pack(named(extract((String) null)
 			.extract(regex("[0-9]+"))
-			.and(string("i")),
+			.and(string("i")), "ImaginaryInteger"),
 			s -> new FormulaNode() {
 
 				@Override
@@ -58,11 +58,11 @@ public class Syntaxes1
 			s -> VM1.COMPLEX.color));
 	}
 
-	public static Syntax<Formula> literalDoubleImaginary;
+	public static Syntax<Formula> literalImaginaryDouble;
 	{
-		literalDoubleImaginary = slot(() -> withColor(pack(extract((String) null)
+		literalImaginaryDouble = slot(() -> withColor(pack(named(extract((String) null)
 			.extract(regex("[0-9]+\\.[0-9]+"))
-			.and(string("i")),
+			.and(string("i")), "ImaginaryDouble"),
 			s -> new FormulaNode() {
 
 				@Override
@@ -89,7 +89,7 @@ public class Syntaxes1
 
 	public static Syntax<Formula> literalInteger;
 	{
-		literalInteger = slot(() -> withColor(pack(regex("[0-9]+"),
+		literalInteger = slot(() -> withColor(pack(named(regex("[0-9]+"), "Integer"),
 			s -> new FormulaNode() {
 
 				@Override
@@ -116,7 +116,7 @@ public class Syntaxes1
 
 	public static Syntax<Formula> literalDouble;
 	{
-		literalDouble = slot(() -> withColor(pack(regex("[0-9]+\\.[0-9]+"),
+		literalDouble = slot(() -> withColor(pack(named(regex("[0-9]+\\.[0-9]+"), "Double"),
 			s -> new FormulaNode() {
 
 				@Override
@@ -143,7 +143,7 @@ public class Syntaxes1
 
 	public static Syntax<Formula> literalString;
 	{
-		literalString = slot(() -> withColor(pack(or((Struct3<Node<?>, String, Node<?>>) null)
+		literalString = slot(() -> withColor(pack(named(or((Struct3<Node<?>, String, Node<?>>) null)
 			.or(serial(Struct3<Node<?>, String, Node<?>>::new)
 				.and(packNode(string("\""), n -> n), Struct3::setX)
 				.and(regex("[^\"]*"), Struct3::setY)
@@ -151,7 +151,7 @@ public class Syntaxes1
 			.or(serial(Struct3<Node<?>, String, Node<?>>::new)
 				.and(packNode(string("'"), n -> n), Struct3::setX)
 				.and(regex("[^']*"), Struct3::setY)
-				.and(packNode(string("'"), n -> n), Struct3::setZ)),
+				.and(packNode(string("'"), n -> n), Struct3::setZ)), "String"),
 			s -> new Formula() {
 
 				@Override
@@ -190,7 +190,7 @@ public class Syntaxes1
 
 	public static Syntax<Formula> literalIdentifier;
 	{
-		literalIdentifier = slot(() -> wrap(withProposal(withColor(pack(regex("[a-zA-Z_][a-zA-Z_0-9]*"),
+		literalIdentifier = slot(() -> wrap(withProposal(withColor(pack(named(regex("[a-zA-Z_][a-zA-Z_0-9]*"), "Identifier"),
 			s -> new FormulaVariable(s)),
 			s -> s.getColor()),
 			s -> s.getProposals())));
@@ -242,8 +242,8 @@ public class Syntaxes1
 	public static Syntax<Formula> factor;
 	{
 		factor = slot(() -> or((Formula) null)
-			.or(literalDoubleImaginary)
-			.or(literalIntegerImaginary)
+			.or(literalImaginaryDouble)
+			.or(literalImaginaryInteger)
 			.or(literalDouble)
 			.or(literalInteger)
 			.or(literalString)

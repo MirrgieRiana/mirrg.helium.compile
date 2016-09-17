@@ -3,6 +3,8 @@ package mirrg.helium.compile.oxygen.parser.core;
 public abstract class Syntax<T>
 {
 
+	public String name;
+
 	public Node<T> parse(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
 		if (!shouldTokenProposal) return memo.get(this, index, () -> parseImpl(memo, false, text, index));
@@ -39,6 +41,11 @@ public abstract class Syntax<T>
 		Node<T> node = parse(memo, true, text, begin);
 		if (node == null) return new ResultOxygen<>(null, memo, false);
 		return new ResultOxygen<>(node, memo, node.end == end);
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 
 	public String getName()

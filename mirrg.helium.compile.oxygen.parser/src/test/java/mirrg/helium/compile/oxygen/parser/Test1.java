@@ -89,10 +89,10 @@ public class Test1
 		constants.put("e", Math.E);
 
 		Syntax<IFormula> syntaxInteger = pack(
-			WithColor.withColor(regex("\\d+"), s -> Color.red),
+			WithColor.withColor(named(regex("\\d+"), "Integer"), s -> Color.red),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
 		Syntax<IFormula> syntaxConstant = pack(
-			WithProposal.withProposal(WithColor.withColor(regex("[a-zA-Z_][a-zA-Z_0-9]*"), s -> Color.blue),
+			WithProposal.withProposal(WithColor.withColor(named(regex("[a-zA-Z_][a-zA-Z_0-9]*"), "Constant"), s -> Color.blue),
 				s -> HLambda.toStream(constants.keys())
 					.map(Proposal::new)),
 			s -> new FormulaVariable(s, constants));

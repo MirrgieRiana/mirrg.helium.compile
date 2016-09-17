@@ -7,6 +7,7 @@ import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxExtract;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxMap;
+import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxNamed;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOptional;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxPack;
@@ -99,6 +100,11 @@ public class HSyntaxOxygen
 	public static <T> SyntaxExtract<T> extract(T dummy)
 	{
 		return new SyntaxExtract<>();
+	}
+
+	public static <T> SyntaxNamed<T> named(Syntax<T> syntax, String name)
+	{
+		return new SyntaxNamed<>(syntax, name);
 	}
 
 }
