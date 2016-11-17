@@ -3,7 +3,6 @@ package mirrg.helium.compile.oxygen.parser;
 import static mirrg.helium.compile.oxygen.parser.HSyntaxOxygen.*;
 import static org.junit.Assert.*;
 
-import java.awt.Color;
 import java.util.Hashtable;
 import java.util.function.ToDoubleFunction;
 
@@ -12,12 +11,8 @@ import org.junit.Test;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxSlot;
-import mirrg.helium.compile.oxygen.util.Proposal;
-import mirrg.helium.compile.oxygen.util.WithColor;
-import mirrg.helium.compile.oxygen.util.WithProposal;
 import mirrg.helium.standard.hydrogen.struct.Struct1;
 import mirrg.helium.standard.hydrogen.struct.Struct2;
-import mirrg.helium.standard.hydrogen.util.HLambda;
 
 public class Test1
 {
@@ -88,19 +83,15 @@ public class Test1
 		constants.put("pi", Math.PI);
 		constants.put("e", Math.E);
 
-		Syntax<IFormula> syntaxInteger = pack(
-			WithColor.withColor(named(regex("\\d+"), "Integer"), s -> Color.red),
+		Syntax<IFormula> syntaxInteger = pack(named(regex("\\d+"), "Integer"),
 			s -> new FormulaLiteral(Integer.parseInt(s, 10)));
-		Syntax<IFormula> syntaxConstant = pack(
-			WithProposal.withProposal(WithColor.withColor(named(regex("[a-zA-Z_][a-zA-Z_0-9]*"), "Constant"), s -> Color.blue),
-				s -> HLambda.toStream(constants.keys())
-					.map(Proposal::new)),
+		Syntax<IFormula> syntaxConstant = pack(named(regex("[a-zA-Z_][a-zA-Z_0-9]*"), "Constant"),
 			s -> new FormulaVariable(s, constants));
 		SyntaxSlot<IFormula> syntaxExpression = slot();
 		Syntax<IFormula> syntaxBrackets = pack(serial(Struct1<IFormula>::new)
-			.and(WithColor.withColor(string("("), s -> Color.green))
+			.and(string("("))
 			.and(syntaxExpression, Struct1::setX)
-			.and(WithColor.withColor(string(")"), s -> Color.green)),
+			.and(string(")")),
 			Struct1::getX);
 		SyntaxOr<IFormula> syntaxFactor = or((IFormula) null)
 			.or(syntaxInteger)
