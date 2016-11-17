@@ -1,5 +1,7 @@
 package mirrg.helium.compile.oxygen.editor;
 
+import mirrg.helium.compile.oxygen.parser.core.ResultOxygen;
+
 public class EventTextPaneOxygen
 {
 
@@ -28,21 +30,53 @@ public class EventTextPaneOxygen
 
 		}
 
-		public static class Failure extends Syntax
+		public static class NoError extends Syntax
 		{
+
+			public final ResultOxygen<?> result;
+
+			public NoError(ResultOxygen<?> result)
+			{
+				this.result = result;
+			}
 
 		}
 
-		public static class Success extends Syntax
+		public static class Failure extends NoError
 		{
+
+			public Failure(ResultOxygen<?> result)
+			{
+				super(result);
+			}
+
+		}
+
+		public static class Success extends NoError
+		{
+
+			public Success(ResultOxygen<?> result)
+			{
+				super(result);
+			}
 
 			public static class Main extends Success
 			{
+
+				public Main(ResultOxygen<?> result)
+				{
+					super(result);
+				}
 
 			}
 
 			public static class Proposal extends Success
 			{
+
+				public Proposal(ResultOxygen<?> result)
+				{
+					super(result);
+				}
 
 			}
 

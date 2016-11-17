@@ -88,11 +88,11 @@ public class TextPaneOxygen<T> extends JTextPane
 			}
 
 			if (!result.isValid) {
-				event().post(new EventTextPaneOxygen.Syntax.Failure());
+				event().post(new EventTextPaneOxygen.Syntax.Failure(result));
 				return;
 			}
 
-			event().post(new EventTextPaneOxygen.Syntax.Success.Main());
+			event().post(new EventTextPaneOxygen.Syntax.Success.Main(result));
 		});
 
 		// ハイライト
@@ -188,20 +188,20 @@ public class TextPaneOxygen<T> extends JTextPane
 		String right = text.substring(caretPosition);
 		String src2 = left + "a" + right; // カーソル位置にaを入れた文字列
 
-		Node<T> node;
+		ResultOxygen<T> result;
 		try {
-			node = syntax.parse(src2);
+			result = syntax.matches(src2);
 		} catch (RuntimeException e) {
 			return;
 		}
-		if (node == null) return;
+		if (!result.isValid) return;
 
 		// 候補表示可能
 
-		event().post(new EventTextPaneOxygen.Syntax.Success.Proposal());
+		event().post(new EventTextPaneOxygen.Syntax.Success.Proposal(result));
 
 		// 最も内側の候補プロバイダ取得
-		ArrayList<Node<?>> hierarchy = getHierarchy(caretPosition, node);
+		ArrayList<Node<?>> hierarchy = getHierarchy(caretPosition, result.node);
 		Optional<Node<?>> node2 = HLambda.reverse(hierarchy.stream())
 			.filter(n -> n.value instanceof IProviderProposal)
 			.findFirst();
