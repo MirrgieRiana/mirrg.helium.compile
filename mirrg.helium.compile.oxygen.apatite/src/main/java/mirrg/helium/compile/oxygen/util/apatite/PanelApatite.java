@@ -13,6 +13,7 @@ import javax.swing.text.StyleConstants;
 import mirrg.helium.compile.oxygen.editor.EventTextPaneOxygen;
 import mirrg.helium.compile.oxygen.editor.TextPaneOxygen;
 import mirrg.helium.compile.oxygen.parser.core.Node;
+import mirrg.helium.compile.oxygen.parser.core.ResultOxygen;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.standard.hydrogen.util.HString;
 import mirrg.helium.standard.hydrogen.util.HString.LineProvider;
@@ -80,7 +81,7 @@ public class PanelApatite extends JPanel
 				}
 			});
 			event().register(EventTextPaneOxygen.Syntax.Success.class, e -> {
-				getValue().validate(vm);
+				((ResultOxygen<Formula>) e.result).node.value.validate(vm);
 			});
 			event().register(EventTextPaneOxygen.Highlight.Post.class, e -> {
 				ErrorReporter errorReporter = getValue().validate(vm);
