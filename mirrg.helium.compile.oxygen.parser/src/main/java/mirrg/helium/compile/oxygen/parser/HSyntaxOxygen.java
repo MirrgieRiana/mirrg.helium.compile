@@ -89,7 +89,8 @@ public class HSyntaxOxygen
 
 	/**
 	 * ノードの値を書き換えます。
-	 * このAPIは非推奨です。代わりに{@link #pack(Syntax, Function)}を用いてください。
+	 * このAPIでノードの値を書き換えることは推奨されません。
+	 * 代わりに{@link #pack(Syntax, Function)}を用いてください。
 	 * このAPIはノードを生成しません。
 	 */
 	@Deprecated
@@ -99,8 +100,9 @@ public class HSyntaxOxygen
 	}
 
 	/**
-	 * ノード自体を異なる値に書き換えます。
-	 * このAPIは非推奨です。代わりに{@link #packNode(Syntax, Function)}を用いてください。
+	 * ノード自体を異なる値に置き換えます。
+	 * このAPIでノードを置き換えることは推奨されません。
+	 * 代わりに{@link #pack(Syntax, Function)}を用いてください。
 	 * このAPIはノードを生成しません。
 	 */
 	@Deprecated
