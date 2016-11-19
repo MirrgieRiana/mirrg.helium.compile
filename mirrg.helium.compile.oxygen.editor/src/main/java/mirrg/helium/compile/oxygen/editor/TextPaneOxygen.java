@@ -99,6 +99,7 @@ public class TextPaneOxygen<T> extends JTextPane
 		Timer timer = new Timer(300, e -> {
 			if (result.isValid) updateHighlight();
 		});
+		timer.setRepeats(false);
 		event().register(EventTextPaneOxygen.Syntax.class, e -> {
 			timer.start();
 		});
