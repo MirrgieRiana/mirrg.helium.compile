@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -201,48 +202,55 @@ public class TextPaneOxygen<T> extends JTextPane
 		String left = text.substring(0, caretPosition);
 		String right = text.substring(caretPosition);
 
-		ResultOxygen<T> result = null;
+		Hashtable<Proposal, Node<?>> tableProposalNode = new Hashtable<>();
+		ArrayList<Proposal> proposals = new ArrayList<>();
+
 		for (String proposalString : getProposalStrings()) {
-			ResultOxygen<T> result2;
+			ResultOxygen<T> result;
 			try {
-				result2 = syntax.matches(left + proposalString + right); // カーソル位置に文字を入れた文字列
+				result = syntax.matches(left + proposalString + right); // カーソル位置に文字を入れた文字列
 			} catch (RuntimeException e) {
-				return;
+				continue;
 			}
-			if (result2.isValid) {
-				result = result2;
-				break;
-			}
+			if (!result.isValid) continue;
+
+			// 候補表示可能
+
+			event().post(new EventTextPaneOxygen.Syntax.Success(EventTextPaneOxygen.Syntax.TIMING_PROPOSAL, result));
+
+			// 最も内側の候補プロバイダ取得
+			ArrayList<Node<?>> hierarchy = getHierarchy(caretPosition, result.node);
+			Optional<Node<?>> node2 = HLambda.reverse(hierarchy.stream())
+				.filter(n -> n.value instanceof IProviderProposal)
+				.findFirst();
+			if (!node2.isPresent()) return;
+
+			// プロバイダがあった
+
+			IProviderProposal providerProposal = (IProviderProposal) node2.get().value;
+			Stream<Proposal> stream = providerProposal.getProposals();
+			if (stream == null) return;
+
+			// 候補が取得できた
+
+			stream.forEach(t -> {
+				tableProposalNode.put(t, node2.get());
+				proposals.add(t);
+			});
+
 		}
-		if (result == null) return;
 
-		// 候補表示可能
-
-		event().post(new EventTextPaneOxygen.Syntax.Success(EventTextPaneOxygen.Syntax.TIMING_PROPOSAL, result));
-
-		// 最も内側の候補プロバイダ取得
-		ArrayList<Node<?>> hierarchy = getHierarchy(caretPosition, result.node);
-		Optional<Node<?>> node2 = HLambda.reverse(hierarchy.stream())
-			.filter(n -> n.value instanceof IProviderProposal)
-			.findFirst();
-		if (!node2.isPresent()) return;
-
-		// プロバイダがあった
-
-		IProviderProposal providerProposal = (IProviderProposal) node2.get().value;
-		Stream<Proposal> stream = providerProposal.getProposals();
-		if (stream == null) return;
-
-		// 候補が取得できた
+		if (proposals.size() == 0) return;
 
 		{
-			DialogProposal dialog = new DialogProposal(stream);
+			DialogProposal dialog = new DialogProposal(proposals.stream());
 
 			dialog.eventManager.register(EventDialogProposal.Update.class, e2 -> {
 				try {
+					Node<?> node2 = tableProposalNode.get(e2.proposal);
 					((DefaultStyledDocument) getDocument()).replace(
-						node2.get().begin,
-						node2.get().end - node2.get().begin - 1,
+						node2.begin,
+						node2.end - node2.begin - 1,
 						e2.proposal.text, null);
 				} catch (BadLocationException e) {
 					e.printStackTrace();
