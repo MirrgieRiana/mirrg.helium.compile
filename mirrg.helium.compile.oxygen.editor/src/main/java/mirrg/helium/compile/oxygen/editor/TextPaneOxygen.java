@@ -223,13 +223,13 @@ public class TextPaneOxygen<T> extends JTextPane
 			Optional<Node<?>> node2 = HLambda.reverse(hierarchy.stream())
 				.filter(n -> n.value instanceof IProviderProposal)
 				.findFirst();
-			if (!node2.isPresent()) return;
+			if (!node2.isPresent()) continue;
 
 			// プロバイダがあった
 
 			IProviderProposal providerProposal = (IProviderProposal) node2.get().value;
 			Stream<Proposal> stream = providerProposal.getProposals();
-			if (stream == null) return;
+			if (stream == null) continue;
 
 			// 候補が取得できた
 
