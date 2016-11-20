@@ -13,7 +13,7 @@ public interface IProviderChildren
 	public static List<Node<?>> getChildren(Node<?> node)
 	{
 		if (node.value instanceof IProviderChildren) {
-			return ((IProviderChildren) node).getChildren();
+			return ((IProviderChildren) node.value).getChildren();
 		} else if (node.children != null) {
 			return node.children;
 		} else {
