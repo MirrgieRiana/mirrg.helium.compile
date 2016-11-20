@@ -177,6 +177,21 @@ public class TextPaneOxygen<T> extends JTextPane
 		((DefaultStyledDocument) getDocument()).setCharacterAttributes(offset, length, attr, false);
 	}
 
+	protected ArrayList<String> proposalStrings = new ArrayList<>();
+	{
+		addProposalString("a");
+	}
+
+	public void addProposalString(String proposalString)
+	{
+		proposalStrings.add(proposalString);
+	}
+
+	public ArrayList<String> getProposalStrings()
+	{
+		return proposalStrings;
+	}
+
 	public void openProposal()
 	{
 		if (syntax == null) return;
@@ -185,15 +200,21 @@ public class TextPaneOxygen<T> extends JTextPane
 		int caretPosition = getCaretPosition();
 		String left = text.substring(0, caretPosition);
 		String right = text.substring(caretPosition);
-		String src2 = left + "a" + right; // カーソル位置にaを入れた文字列
 
-		ResultOxygen<T> result;
-		try {
-			result = syntax.matches(src2);
-		} catch (RuntimeException e) {
-			return;
+		ResultOxygen<T> result = null;
+		for (String proposalString : getProposalStrings()) {
+			ResultOxygen<T> result2;
+			try {
+				result2 = syntax.matches(left + proposalString + right); // カーソル位置に文字を入れた文字列
+			} catch (RuntimeException e) {
+				return;
+			}
+			if (result2.isValid) {
+				result = result2;
+				break;
+			}
 		}
-		if (!result.isValid) return;
+		if (result == null) return;
 
 		// 候補表示可能
 
