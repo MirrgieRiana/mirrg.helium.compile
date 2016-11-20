@@ -83,16 +83,16 @@ public class TextPaneOxygen<T> extends JTextPane
 			try {
 				result = syntax.matches(getText());
 			} catch (RuntimeException e2) {
-				event().post(new EventTextPaneOxygen.Syntax.Error(e2));
+				event().post(new EventTextPaneOxygen.Syntax.Error(EventTextPaneOxygen.Syntax.TIMING_MAIN, e2));
 				return;
 			}
 
 			if (!result.isValid) {
-				event().post(new EventTextPaneOxygen.Syntax.Failure(result));
+				event().post(new EventTextPaneOxygen.Syntax.Failure(EventTextPaneOxygen.Syntax.TIMING_MAIN, result));
 				return;
 			}
 
-			event().post(new EventTextPaneOxygen.Syntax.Success.Main(result));
+			event().post(new EventTextPaneOxygen.Syntax.Success(EventTextPaneOxygen.Syntax.TIMING_MAIN, result));
 		});
 
 		// ハイライト
@@ -197,7 +197,7 @@ public class TextPaneOxygen<T> extends JTextPane
 
 		// 候補表示可能
 
-		event().post(new EventTextPaneOxygen.Syntax.Success.Proposal(result));
+		event().post(new EventTextPaneOxygen.Syntax.Success(EventTextPaneOxygen.Syntax.TIMING_PROPOSAL, result));
 
 		// 最も内側の候補プロバイダ取得
 		ArrayList<Node<?>> hierarchy = getHierarchy(caretPosition, result.node);

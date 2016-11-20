@@ -18,13 +18,24 @@ public class EventTextPaneOxygen
 	public static class Syntax extends EventTextPaneOxygen
 	{
 
+		public static final int TIMING_MAIN = 0;
+		public static final int TIMING_PROPOSAL = 1;
+
+		public final int timing;
+
+		public Syntax(int timing)
+		{
+			this.timing = timing;
+		}
+
 		public static class Error extends Syntax
 		{
 
 			public final Exception exception;
 
-			public Error(Exception exception)
+			public Error(int timing, Exception exception)
 			{
+				super(timing);
 				this.exception = exception;
 			}
 
@@ -35,8 +46,9 @@ public class EventTextPaneOxygen
 
 			public final ResultOxygen<?> result;
 
-			public NoError(ResultOxygen<?> result)
+			public NoError(int timing, ResultOxygen<?> result)
 			{
+				super(timing);
 				this.result = result;
 			}
 
@@ -45,9 +57,9 @@ public class EventTextPaneOxygen
 		public static class Failure extends NoError
 		{
 
-			public Failure(ResultOxygen<?> result)
+			public Failure(int timing, ResultOxygen<?> result)
 			{
-				super(result);
+				super(timing, result);
 			}
 
 		}
@@ -55,29 +67,9 @@ public class EventTextPaneOxygen
 		public static class Success extends NoError
 		{
 
-			public Success(ResultOxygen<?> result)
+			public Success(int timing, ResultOxygen<?> result)
 			{
-				super(result);
-			}
-
-			public static class Main extends Success
-			{
-
-				public Main(ResultOxygen<?> result)
-				{
-					super(result);
-				}
-
-			}
-
-			public static class Proposal extends Success
-			{
-
-				public Proposal(ResultOxygen<?> result)
-				{
-					super(result);
-				}
-
+				super(timing, result);
 			}
 
 		}

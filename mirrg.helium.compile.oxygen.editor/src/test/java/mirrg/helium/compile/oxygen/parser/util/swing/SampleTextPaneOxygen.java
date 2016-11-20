@@ -150,13 +150,15 @@ public class SampleTextPaneOxygen
 						textPaneOxygen = new TextPaneOxygen<>(getSyntax());
 						textPaneOxygen.setText("1 + 2 * (4 + 6)");
 						textPaneOxygen.setPreferredSize(new Dimension(500, 100));
-						textPaneOxygen.event().register(EventTextPaneOxygen.Syntax.Success.Main.class, e -> {
-							if (textPaneOut == null) return;
+						textPaneOxygen.event().register(EventTextPaneOxygen.Syntax.Success.class, e -> {
+							if (e.timing == EventTextPaneOxygen.Syntax.Success.TIMING_MAIN) {
+								if (textPaneOut == null) return;
 
-							textPaneTree.setText("");
-							appendText(textPaneTree, textPaneOxygen.getText(), textPaneOxygen.getResult().node, 0);
+								textPaneTree.setText("");
+								appendText(textPaneTree, textPaneOxygen.getText(), textPaneOxygen.getResult().node, 0);
 
-							textPaneOut.setText("" + textPaneOxygen.getValue());
+								textPaneOut.setText("" + textPaneOxygen.getValue());
+							}
 						});
 						textPaneOxygen.event().register(EventTextPaneOxygen.Syntax.Failure.class, e -> {
 							if (textPaneOut == null) return;
