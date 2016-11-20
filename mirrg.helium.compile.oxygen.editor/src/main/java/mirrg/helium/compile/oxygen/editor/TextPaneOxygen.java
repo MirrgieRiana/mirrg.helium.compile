@@ -159,10 +159,8 @@ public class TextPaneOxygen<T> extends JTextPane
 			});
 		}
 
-		if (node.children != null) {
-			for (Node<?> child : node.children) {
-				updateHighlightImpl(child);
-			}
+		for (Node<?> child : IProviderChildren.getChildren(node)) {
+			updateHighlightImpl(child);
 		}
 	}
 
@@ -249,8 +247,7 @@ public class TextPaneOxygen<T> extends JTextPane
 		ArrayList<Node<?>> hierarchy = new ArrayList<>();
 		while (true) {
 			hierarchy.add(node);
-			if (node.children == null) break;
-			Optional<Node<?>> node2 = node.children.stream()
+			Optional<Node<?>> node2 = IProviderChildren.getChildren(node).stream()
 				.filter(n -> n.begin <= caretPosition)
 				.filter(n -> n.end > caretPosition)
 				.findFirst();
