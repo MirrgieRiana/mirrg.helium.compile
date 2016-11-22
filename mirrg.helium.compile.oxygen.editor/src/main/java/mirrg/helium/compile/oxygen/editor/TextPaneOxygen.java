@@ -24,6 +24,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument.DefaultDocumentEvent;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
@@ -49,6 +50,7 @@ public class TextPaneOxygen<T> extends JTextPane
 		this.syntax = syntax;
 
 		setFont(new Font(Font.MONOSPACED, getFont().getStyle(), getFont().getSize()));
+		((DefaultStyledDocument) getDocument()).putProperty(DefaultEditorKit.EndOfLineStringProperty, System.lineSeparator());
 
 		applyUndo(this);
 
