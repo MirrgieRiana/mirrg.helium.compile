@@ -247,15 +247,10 @@ public class SampleTextPaneOxygen
 			appendText(textPane, "" + node.end, Color.magenta);
 			appendText(textPane, ", s=", Color.gray);
 			{
-				Color color = null;
+				Color color = node.children == null ? Color.black : Color.gray;
 				if (node.value instanceof IProviderColor) {
-					color = ((IProviderColor) node.value).getColor();
-				} else {
-					if (node.children == null) {
-						color = Color.black;
-					} else {
-						color = Color.gray;
-					}
+					Color color2 = ((IProviderColor) node.value).getColor();
+					if (color2 != null) color = color2;
 				}
 				appendText(textPane, text.substring(node.begin, node.end), color);
 			}

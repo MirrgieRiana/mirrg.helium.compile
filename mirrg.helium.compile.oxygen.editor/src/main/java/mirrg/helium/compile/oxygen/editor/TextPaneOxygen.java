@@ -1,5 +1,6 @@
 package mirrg.helium.compile.oxygen.editor;
 
+import java.awt.Color;
 import java.awt.Event;
 import java.awt.Font;
 import java.awt.Point;
@@ -157,9 +158,12 @@ public class TextPaneOxygen<T> extends JTextPane
 	protected void updateHighlightImpl(Node<?> node)
 	{
 		if (node.value instanceof IProviderColor) {
-			setAttribute(node.begin, node.end - node.begin, a -> {
-				a.addAttribute(StyleConstants.Foreground, ((IProviderColor) node.value).getColor());
-			});
+			Color color = ((IProviderColor) node.value).getColor();
+			if (color != null) {
+				setAttribute(node.begin, node.end - node.begin, a -> {
+					a.addAttribute(StyleConstants.Foreground, color);
+				});
+			}
 		}
 
 		for (Node<?> child : IProviderChildren.getChildren(node)) {

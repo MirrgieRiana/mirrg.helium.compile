@@ -12,16 +12,10 @@ public interface IProviderChildren
 
 	public static List<Node<?>> getChildren(Node<?> node)
 	{
-		if (node.value instanceof IProviderChildren) {
-			ArrayList<Node<?>> list = new ArrayList<>();
-			list.addAll(((IProviderChildren) node.value).getChildren());
-			list.addAll(node.children);
-			return list;
-		} else if (node.children != null) {
-			return node.children;
-		} else {
-			return new ArrayList<>();
-		}
+		ArrayList<Node<?>> list = new ArrayList<>();
+		if (node.value instanceof IProviderChildren) list.addAll(((IProviderChildren) node.value).getChildren());
+		if (node.children != null) list.addAll(node.children);
+		return list;
 	}
 
 }
