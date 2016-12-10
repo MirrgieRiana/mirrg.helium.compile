@@ -16,6 +16,7 @@ import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxRepeat;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxSerial;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxSlot;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxString;
+import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxTunnel;
 
 public class HSyntaxOxygen
 {
@@ -89,9 +90,11 @@ public class HSyntaxOxygen
 
 	/**
 	 * ノードの値を書き換えます。
-	 * このAPIでノードの値を書き換えることは推奨されません。
-	 * 代わりに{@link #pack(Syntax, Function)}を用いてください。
 	 * このAPIはノードを生成しません。
+	 *
+	 * @deprecated
+	 * 			このAPIでノードの値を書き換えることは推奨されません。
+	 *             代わりに{@link #pack(Syntax, Function)}を用いてください。
 	 */
 	@Deprecated
 	public static <I, O> SyntaxMap<I, O> map(Syntax<I> syntax, Function<I, O> function)
@@ -101,9 +104,11 @@ public class HSyntaxOxygen
 
 	/**
 	 * ノード自体を異なる値に置き換えます。
-	 * このAPIでノードを置き換えることは推奨されません。
-	 * 代わりに{@link #pack(Syntax, Function)}を用いてください。
 	 * このAPIはノードを生成しません。
+	 *
+	 * @deprecated
+	 * 			このAPIでノードの値を書き換えることは推奨されません。
+	 *             代わりに{@link #pack(Syntax, Function)}を用いてください。
 	 */
 	@Deprecated
 	public static <I, O> SyntaxMap<I, O> mapNode(Syntax<I> syntax, Function<Node<I>, O> function)
@@ -161,10 +166,27 @@ public class HSyntaxOxygen
 	 *
 	 * @param dummy
 	 *            型引数Tを与えるためだけの引数です。通常はnullをキャストして指定します。
+	 * @deprecated
+	 * 			このAPIは内部のextract節で指定されたノードのタグが支配する範囲を拡張し、
+	 *             想定外の範囲でタグの特殊効果を引き起こします。
+	 *             代わりに{@link #tunnel}を使うことが推奨されます。
 	 */
+	@Deprecated
 	public static <T> SyntaxExtract<T> extract(T dummy)
 	{
 		return new SyntaxExtract<>();
+	}
+
+	/**
+	 * 基本的な動作は{@link #extract}に準じますが、
+	 * このAPIは抽出されるタグの支配範囲を拡張しません。
+	 *
+	 * @param dummy
+	 *            型引数Tを与えるためだけの引数です。通常はnullをキャストして指定します。
+	 */
+	public static <T> SyntaxTunnel<T> tunnel(T dummy)
+	{
+		return new SyntaxTunnel<>();
 	}
 
 	/**

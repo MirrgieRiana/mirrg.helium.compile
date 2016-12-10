@@ -26,6 +26,7 @@ public class SyntaxSerial<T> extends Syntax<T>
 		return and(syntax, (t, t2) -> {});
 	}
 
+	@SuppressWarnings("deprecation")
 	public <T2> SyntaxSerial<T> and(Syntax<T2> syntax, BiConsumer<T, T2> function)
 	{
 		syntaxes.add(t -> HSyntaxOxygen.map(syntax, t2 -> {
