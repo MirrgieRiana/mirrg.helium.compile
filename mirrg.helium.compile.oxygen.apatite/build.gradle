@@ -22,10 +22,10 @@ dependencies {
 	testCompile group: 'junit', name: 'junit', version: '4.+'
 
 	//compile group: 'mirrg', name: 'mirrg.struct.hydrogen', version: '2.0.0'
-	//compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
 	//compile group: 'mirrg', name: 'mirrg.struct.hydrogen-1.0', version: '+'
-	compile 'mirrg:mirrg.helium.compile.oxygen.parser:+'
-	compile 'mirrg:mirrg.helium.compile.oxygen.editor:0.0.2+'
+	compile 'mirrg:mirrg.helium.compile.oxygen.parser:1.1.2+'
+	compile 'mirrg:mirrg.helium.compile.oxygen.editor:1.0.5+'
 
 }
 
