@@ -15,7 +15,6 @@ import mirrg.helium.compile.oxygen.apatite2.nodes.LiteralInteger;
 import mirrg.helium.compile.oxygen.apatite2.nodes.LiteralString;
 import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;
 import mirrg.helium.compile.oxygen.apatite2.nodes.NodeIdentifier;
-import mirrg.helium.compile.oxygen.apatite2.util.SyntaxRegexMatcher;
 import mirrg.helium.compile.oxygen.editor.WithColor;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
@@ -59,7 +58,7 @@ public class ApatiteScript
 			.or(pack(string("\\r"), t -> "\r"))
 			.or(pack(string("\\n"), t -> "\n"))
 			.or(pack(string("\\t"), t -> "\t"))
-			.or(pack(new SyntaxRegexMatcher("\\\\(.)"), t -> t.group(1)));
+			.or(pack(regexMatcher("\\\\(.)"), t -> t.group(1)));
 
 		literalString = named(packNode(tunnel((String) null)
 			.and(string("\""))

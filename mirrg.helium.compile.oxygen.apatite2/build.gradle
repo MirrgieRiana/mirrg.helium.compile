@@ -24,7 +24,7 @@ dependencies {
 	//compile group: 'mirrg', name: 'mirrg.struct.hydrogen', version: '2.0.0'
 	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
 	//compile group: 'mirrg', name: 'mirrg.struct.hydrogen-1.0', version: '+'
-	compile 'mirrg:mirrg.helium.compile.oxygen.parser:1.1.3+'
+	compile 'mirrg:mirrg.helium.compile.oxygen.parser:1.1.4+'
 	compile 'mirrg:mirrg.helium.compile.oxygen.editor:1.0.6+'
 
 }
