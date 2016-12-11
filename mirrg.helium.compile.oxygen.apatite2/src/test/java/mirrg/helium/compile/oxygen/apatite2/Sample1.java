@@ -8,6 +8,7 @@ import javax.swing.WindowConstants;
 import mirrg.helium.compile.oxygen.apatite2.loader.Loader;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
+import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;
 import mirrg.helium.compile.oxygen.apatite2.type.Type;
 import mirrg.helium.compile.oxygen.apatite2.util.EventFrameApatite;
 import mirrg.helium.compile.oxygen.apatite2.util.FrameApatite;
@@ -140,6 +141,26 @@ public class Sample1
 				}
 
 			}, "depointer", "_leftAsterisk");
+
+			vm.registerMetaFunction(new IApatiteMetaFunctionProvider() {
+
+				@Override
+				public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
+				{
+
+					return Optional.of(new IApatiteMetaFunctionEntity() {
+
+						@Override
+						public Optional<IApatiteScript> validate(int begin, int end, ApatiteVM vm)
+						{
+							return new NodeFunction("_leftAmpersand", begin, end, codes).validate(vm);
+						}
+
+					});
+				}
+
+			}, "tree");
+
 		}
 
 	}
