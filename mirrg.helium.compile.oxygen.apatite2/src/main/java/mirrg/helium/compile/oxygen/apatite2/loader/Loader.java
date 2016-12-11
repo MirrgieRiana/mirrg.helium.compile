@@ -8,11 +8,11 @@ import org.apache.commons.math3.util.FastMath;
 
 import mirrg.helium.compile.oxygen.apatite2.ApatiteConstant;
 import mirrg.helium.compile.oxygen.apatite2.ApatiteFunction;
-import mirrg.helium.compile.oxygen.apatite2.ApatiteFunctionProviderBase;
-import mirrg.helium.compile.oxygen.apatite2.ApatiteMetaFunctionProviderBase;
 import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.IApatiteFunctionEntity;
+import mirrg.helium.compile.oxygen.apatite2.IApatiteFunctionProvider;
 import mirrg.helium.compile.oxygen.apatite2.IApatiteMetaFunctionEntity;
+import mirrg.helium.compile.oxygen.apatite2.IApatiteMetaFunctionProvider;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;
@@ -81,7 +81,7 @@ public class Loader
 		rf1("cos", D, D, Math::cos);
 		rf1("tan", D, D, Math::tan);
 
-		vm.registerMetaFunction(new ApatiteMetaFunctionProviderBase("type") {
+		vm.registerMetaFunction(new IApatiteMetaFunctionProvider() {
 
 			@Override
 			public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
@@ -116,9 +116,9 @@ public class Loader
 				});
 			}
 
-		});
+		}, "type");
 
-		vm.registerMetaFunction(new ApatiteMetaFunctionProviderBase("_rightBracketsRound") {
+		vm.registerMetaFunction(new IApatiteMetaFunctionProvider() {
 
 			@Override
 			public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
@@ -140,7 +140,7 @@ public class Loader
 				return Optional.of((begin, end, vm) -> new NodeFunction(name, begin, end, codes2).validate(vm));
 			}
 
-		});
+		}, "_rightBracketsRound");
 
 		rf1("_leftPlus", I, I, a -> a);
 		rf1("_leftPlus", D, D, a -> a);
@@ -189,7 +189,7 @@ public class Loader
 		rf2("_operatorAmpersandAmpersand", B, B, B, (a, b) -> a && b);
 		rf2("_operatorPipePipe", B, B, B, (a, b) -> a || b);
 
-		vm.registerFunction(new ApatiteFunctionProviderBase("_ternaryQuestionColon") {
+		vm.registerFunction(new IApatiteFunctionProvider() {
 
 			@Override
 			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(Type<?>... types)
@@ -215,8 +215,8 @@ public class Loader
 				}));
 			}
 
-		});
-		vm.registerFunction(new ApatiteFunctionProviderBase("_operatorQuestionColon") {
+		}, "_ternaryQuestionColon");
+		vm.registerFunction(new IApatiteFunctionProvider() {
 
 			@Override
 			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(Type<?>... types)
@@ -242,7 +242,7 @@ public class Loader
 				}));
 			}
 
-		});
+		}, "_operatorQuestionColon");
 
 	}
 
@@ -253,7 +253,7 @@ public class Loader
 
 	protected <O> void rf0(String name, Type<O> out, IRF0<O> function)
 	{
-		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply()));
+		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply()), name);
 	}
 
 	public static interface IRF0<O>
@@ -266,7 +266,7 @@ public class Loader
 	@SuppressWarnings("unchecked")
 	protected <O, I1> void rf1(String name, Type<O> out, Type<I1> in1, IRF1<I1, O> function)
 	{
-		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply((I1) a[0]), in1));
+		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply((I1) a[0]), in1), name);
 	}
 
 	public static interface IRF1<I1, O>
@@ -279,7 +279,7 @@ public class Loader
 	@SuppressWarnings("unchecked")
 	protected <O, I1, I2> void rf2(String name, Type<O> out, Type<I1> in1, Type<I2> in2, IRF2<I1, I2, O> function)
 	{
-		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply((I1) a[0], (I2) a[1]), in1, in2));
+		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply((I1) a[0], (I2) a[1]), in1, in2), name);
 	}
 
 	public static interface IRF2<I1, I2, O>
@@ -292,7 +292,7 @@ public class Loader
 	@SuppressWarnings("unchecked")
 	protected <O, I1, I2, I3> void rf3(String name, Type<O> out, Type<I1> in1, Type<I2> in2, Type<I3> in3, IRF3<I1, I2, I3, O> function)
 	{
-		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply((I1) a[0], (I2) a[1], (I3) a[2]), in1, in2, in3));
+		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply((I1) a[0], (I2) a[1], (I3) a[2]), in1, in2, in3), name);
 	}
 
 	public static interface IRF3<I1, I2, I3, O>

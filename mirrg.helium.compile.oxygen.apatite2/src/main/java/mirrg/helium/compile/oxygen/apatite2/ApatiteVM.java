@@ -3,8 +3,10 @@ package mirrg.helium.compile.oxygen.apatite2;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.type.Type;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
+import mirrg.helium.standard.hydrogen.struct.Tuple;
 import mirrg.helium.standard.hydrogen.struct.Tuple3;
 
 public class ApatiteVM
@@ -24,28 +26,42 @@ public class ApatiteVM
 
 	//
 
-	private ArrayList<IApatiteMetaFunctionProvider> metaFunctions = new ArrayList<>();
+	private ArrayList<Tuple<String, IApatiteMetaFunctionProvider>> metaFunctions = new ArrayList<>();
 
-	public void registerMetaFunction(IApatiteMetaFunctionProvider metaFunction)
+	public void registerMetaFunction(IApatiteMetaFunctionProvider metaFunction, String... names)
 	{
-		metaFunctions.add(metaFunction);
+		for (String name : names) {
+			metaFunctions.add(new Tuple<>(name, metaFunction));
+		}
 	}
 
-	public ArrayList<IApatiteMetaFunctionProvider> getMetaFunctions()
+	public ArrayList<Tuple<String, IApatiteMetaFunctionProvider>> getMetaFunctions()
 	{
 		return metaFunctions;
 	}
 
-	//
-
-	private ArrayList<IApatiteFunctionProvider> functions = new ArrayList<>();
-
-	public void registerFunction(IApatiteFunctionProvider function)
+	public Optional<IApatiteMetaFunctionEntity> getMetaFunction(String name, IApatiteCode[] codes)
 	{
-		functions.add(function);
+		return getMetaFunctions().stream()
+			.filter(t -> t.getX().equals(name))
+			.map(t -> t.getY().matches(codes))
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.findFirst();
 	}
 
-	public ArrayList<IApatiteFunctionProvider> getFunctions()
+	//
+
+	private ArrayList<Tuple<String, IApatiteFunctionProvider>> functions = new ArrayList<>();
+
+	public void registerFunction(IApatiteFunctionProvider function, String... names)
+	{
+		for (String name : names) {
+			functions.add(new Tuple<>(name, function));
+		}
+	}
+
+	public ArrayList<Tuple<String, IApatiteFunctionProvider>> getFunctions()
 	{
 		return functions;
 	}
@@ -53,8 +69,8 @@ public class ApatiteVM
 	public Optional<IApatiteFunctionEntity> getFunction(String name, Type<?>[] types)
 	{
 		return getFunctions().stream()
-			.filter(f -> f.getName().equals(name))
-			.map(f -> f.matches(types))
+			.filter(t -> t.getX().equals(name))
+			.map(t -> t.getY().matches(types))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.sorted((a, b) -> a.x != b.x ? a.x - b.x : a.y - b.y)

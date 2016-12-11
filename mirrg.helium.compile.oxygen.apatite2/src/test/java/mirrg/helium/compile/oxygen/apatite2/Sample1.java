@@ -20,7 +20,7 @@ public class Sample1
 	{
 		FrameApatite frame = new FrameApatite(ApatiteScript.getSyntax(), ""
 			+ "\"[\" + atan2(10, -10) / 3.141592 + \", \" + sample + \"]\""
-			+ "\n+ \"\\n\" + depointer(pointer(20 + 30))"
+			+ "\n+ \"\\n\" + *&(20 + 30)"
 			+ "\n+ \"\\n\" + depointer(pointer(false))"
 			+ "\n+ \"\\n\" + depointer(pointer(keyword))"
 			+ "\n+ \"\\n\" + type(pointer(keyword))") {
@@ -60,7 +60,7 @@ public class Sample1
 			rc("sample", I, -4142);
 			rf2("atan2", D, D, D, Math::atan2);
 
-			vm.registerMetaFunction(new ApatiteMetaFunctionProviderBase("pointer") {
+			vm.registerMetaFunction(new IApatiteMetaFunctionProvider() {
 
 				@Override
 				public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
@@ -97,8 +97,9 @@ public class Sample1
 					});
 				}
 
-			});
-			vm.registerMetaFunction(new ApatiteMetaFunctionProviderBase("depointer") {
+			}, "pointer", "_leftAmpersand");
+
+			vm.registerMetaFunction(new IApatiteMetaFunctionProvider() {
 
 				@Override
 				public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
@@ -115,6 +116,7 @@ public class Sample1
 
 							if (!(script.get().getType() instanceof TypePointer)) {
 								vm.reportError(begin, end, "Only pointer can be depointered: " + script.get().getType());
+								return Optional.empty();
 							}
 
 							return Optional.of(new IApatiteScript() {
@@ -137,7 +139,7 @@ public class Sample1
 					});
 				}
 
-			});
+			}, "depointer", "_leftAsterisk");
 		}
 
 	}

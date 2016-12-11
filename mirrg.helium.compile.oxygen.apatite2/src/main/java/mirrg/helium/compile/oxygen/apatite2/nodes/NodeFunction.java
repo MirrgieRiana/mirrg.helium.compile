@@ -35,12 +35,7 @@ public class NodeFunction extends ApatiteCodeBase implements IProviderChildren
 
 		// メタ関数呼び出し
 
-		Optional<IApatiteMetaFunctionEntity> oMetaFunction = vm.getMetaFunctions().stream()
-			.filter(f -> f.getName().equals(name))
-			.map(f -> f.matches(codes))
-			.filter(Optional::isPresent)
-			.map(Optional::get)
-			.findFirst();
+		Optional<IApatiteMetaFunctionEntity> oMetaFunction = vm.getMetaFunction(name, codes);
 
 		if (oMetaFunction.isPresent()) {
 			Optional<IApatiteScript> oMetaFunctionScript = oMetaFunction.get().validate(begin, end, vm);

@@ -102,6 +102,8 @@ public class ApatiteScript
 		c.accept(unary("-", "_leftMinus"));
 		c.accept(unary("!", "_leftExclamation"));
 		c.accept(unary("$", "_leftDollar"));
+		c.accept(unary("*", "_leftAsterisk"));
+		c.accept(unary("&", "_leftAmpersand"));
 	});
 
 	public Syntax<IApatiteCode> operatorPow = createOperatorRight(operatorLeft, c -> {

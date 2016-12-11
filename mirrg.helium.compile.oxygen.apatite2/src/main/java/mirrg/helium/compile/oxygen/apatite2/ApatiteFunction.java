@@ -7,16 +7,15 @@ import mirrg.helium.compile.oxygen.apatite2.type.Type;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
 import mirrg.helium.standard.hydrogen.struct.Tuple;
 
-public class ApatiteFunction<T> extends ApatiteFunctionProviderBase
+public class ApatiteFunction<T> implements IApatiteFunctionProvider
 {
 
 	private final Type<T> type;
 	private final Type<?>[] argumentTypes;
 	private final Function<Object[], T> function;
 
-	public ApatiteFunction(Type<T> type, String name, Function<Object[], T> function, Type<?>... argumentTypes)
+	public ApatiteFunction(Type<T> type, Function<Object[], T> function, Type<?>... argumentTypes)
 	{
-		super(name);
 		this.type = type;
 		this.argumentTypes = argumentTypes;
 		this.function = function;
