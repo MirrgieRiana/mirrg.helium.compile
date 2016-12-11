@@ -30,8 +30,8 @@ public class FrameApatite extends JFrame
 	public TextPaneApatite textPaneIn;
 	public JTextPane textPaneOut;
 
-	protected ApatiteVM vm;
-	protected Optional<IApatiteScript> script;
+	private ApatiteVM vm;
+	private Optional<IApatiteScript> script;
 
 	public FrameApatite(Syntax<IApatiteCode> syntax, String source)
 	{
@@ -58,7 +58,7 @@ public class FrameApatite extends JFrame
 				event().post(new EventFrameApatite.ChangeSource(textPaneIn, textPaneOut, textPaneIn.getText()));
 			});
 			textPaneIn.event().register(EventTextPaneOxygen.Syntax.Success.class, e -> {
-				ApatiteVM vm = Loader.createVM();
+				ApatiteVM vm = createVM();
 				Optional<IApatiteScript> script = textPaneIn.getValue().validate(vm);
 
 				if (e.timing == EventTextPaneOxygen.Syntax.Success.TIMING_MAIN) {
@@ -152,6 +152,11 @@ public class FrameApatite extends JFrame
 		}
 
 		textPaneIn.update();
+	}
+
+	protected ApatiteVM createVM()
+	{
+		return Loader.createVM();
 	}
 
 	//
