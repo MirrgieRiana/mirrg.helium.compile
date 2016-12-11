@@ -7,7 +7,7 @@ import mirrg.helium.compile.oxygen.parser.core.Memo;
 import mirrg.helium.compile.oxygen.parser.core.Node;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 
-public class SyntaxRegex extends Syntax<String>
+public class SyntaxRegex extends Syntax<Matcher>
 {
 
 	public final Pattern pattern;
@@ -18,12 +18,12 @@ public class SyntaxRegex extends Syntax<String>
 	}
 
 	@Override
-	protected Node<String> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
+	protected Node<Matcher> parseImpl(Memo memo, boolean shouldTokenProposal, String text, int index)
 	{
 		Matcher matcher = pattern.matcher(text);
 		if (matcher.find(index)) {
 			if (matcher.start() == index) {
-				return new Node<>(this, null, index, matcher.end(), matcher.group());
+				return new Node<>(this, null, index, matcher.end(), matcher);
 			} else {
 				return null;
 			}

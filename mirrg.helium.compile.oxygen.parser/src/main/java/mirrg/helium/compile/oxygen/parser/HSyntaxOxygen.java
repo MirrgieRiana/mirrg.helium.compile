@@ -22,9 +22,17 @@ public class HSyntaxOxygen
 {
 
 	/**
-	 * 正規表現にマッチする最長の部分を切り出す末端のノードです。
+	 * 正規表現にマッチする最長の部分を切り出す末端ノードです。
 	 */
-	public static SyntaxRegex regex(String regex)
+	public static Syntax<String> regex(String regex)
+	{
+		return pack(new SyntaxRegex(regex), t -> t.group());
+	}
+
+	/**
+	 * 正規表現にマッチする部分のMatcherを得る末端ノードです。
+	 */
+	public static SyntaxRegex regexMatcher(String regex)
 	{
 		return new SyntaxRegex(regex);
 	}

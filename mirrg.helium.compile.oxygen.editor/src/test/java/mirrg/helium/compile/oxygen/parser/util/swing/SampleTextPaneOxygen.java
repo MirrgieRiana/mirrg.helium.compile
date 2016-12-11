@@ -165,7 +165,7 @@ public class SampleTextPaneOxygen
 
 							LineProvider lineProvider = HString.getLineProvider(textPaneOxygen.getText());
 							int index = textPaneOxygen.getResult().getTokenProposalIndex();
-							textPaneOut.setText(String.format("[SyntaxError%s] expected: %s\n%s",
+							textPaneOut.setText(String.format("[SyntaxError %s] expected: %s\n%s",
 								toPosition(lineProvider, index),
 								textPaneOxygen.getResult().getTokenProposal().stream()
 									.map(p -> p.getName())
