@@ -10,7 +10,6 @@ import mirrg.helium.standard.hydrogen.struct.Tuple;
 public class Type<T>
 {
 
-	public final String name;
 	public final Color color;
 	private Hashtable<Type<?>, Tuple<Integer, Function<?, ?>>> distanceTable = new Hashtable<>();
 
@@ -22,7 +21,7 @@ public class Type<T>
 
 	public Optional<Tuple<Integer, Function<?, ?>>> getDistance(Type<?> parent)
 	{
-		if (parent == this) return Optional.of(new Tuple<>(0, null));
+		if (parent.equals(this)) return Optional.of(new Tuple<>(0, null));
 		if (!distanceTable.containsKey(parent)) return Optional.empty();
 		return Optional.of(distanceTable.get(parent));
 	}
@@ -40,7 +39,21 @@ public class Type<T>
 	@Override
 	public String toString()
 	{
-		return "Type[" + name + "]";
+		return "Type[" + getName() + "]";
+	}
+
+	public boolean equals(Type<?> type)
+	{
+		return getName().equals(type.getName());
+	}
+
+	//
+
+	private final String name;
+
+	public String getName()
+	{
+		return name;
 	}
 
 }

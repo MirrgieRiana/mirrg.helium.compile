@@ -2,9 +2,6 @@ package mirrg.helium.compile.oxygen.apatite2.loader;
 
 import java.awt.Color;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apache.commons.math3.util.FastMath;
@@ -17,6 +14,7 @@ import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.IApatiteFunctionEntity;
 import mirrg.helium.compile.oxygen.apatite2.IApatiteMetaFunctionEntity;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
+import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;
 import mirrg.helium.compile.oxygen.apatite2.nodes.NodeIdentifier;
 import mirrg.helium.compile.oxygen.apatite2.type.Type;
@@ -83,11 +81,42 @@ public class Loader
 		rf1("cos", D, D, Math::cos);
 		rf1("tan", D, D, Math::tan);
 
-		rf1("type", T, I, a -> I);
-		rf1("type", T, D, a -> D);
-		rf1("type", T, S, a -> S);
-		rf1("type", T, B, a -> B);
-		rf1("type", T, T, a -> T);
+		vm.registerMetaFunction(new ApatiteMetaFunctionProviderBase("type") {
+
+			@Override
+			public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
+			{
+				if (codes.length != 1) return Optional.empty();
+
+				return Optional.of(new IApatiteMetaFunctionEntity() {
+
+					@Override
+					public Optional<IApatiteScript> validate(int begin, int end, ApatiteVM vm)
+					{
+						Optional<IApatiteScript> script = codes[0].validate(vm);
+						if (!script.isPresent()) return Optional.empty();
+
+						return Optional.of(new IApatiteScript() {
+
+							@Override
+							public mirrg.helium.compile.oxygen.apatite2.type.Type<?> getType()
+							{
+								return TYPE;
+							}
+
+							@Override
+							public Object invoke()
+							{
+								return script.get().getType();
+							}
+
+						});
+					}
+
+				});
+			}
+
+		});
 
 		vm.registerMetaFunction(new ApatiteMetaFunctionProviderBase("_rightBracketsRound") {
 
@@ -119,8 +148,8 @@ public class Loader
 		rf1("_leftMinus", D, D, a -> -a);
 		rf1("_leftExclamation", B, B, a -> !a);
 
-		rf2("_operatorHat", D, D, I, (a, b) -> FastMath.pow(a, b));
-		rf2("_operatorHat", D, D, D, (a, b) -> FastMath.pow(a, b));
+		rf2("_operatorHat", D, D, I, FastMath::pow);
+		rf2("_operatorHat", D, D, D, FastMath::pow);
 
 		rf2("_operatorAsterisk", I, I, I, (a, b) -> a * b);
 		rf2("_operatorAsterisk", D, D, D, (a, b) -> a * b);
@@ -166,8 +195,8 @@ public class Loader
 			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(Type<?>... types)
 			{
 				if (types.length != 3) return Optional.empty();
-				if (types[0] != BOOLEAN) return Optional.empty();
-				if (types[1] != types[2]) return Optional.empty();
+				if (!types[0].equals(BOOLEAN)) return Optional.empty();
+				if (!types[1].equals(types[2])) return Optional.empty();
 
 				return Optional.of(new Struct3<>(0, 0, new IApatiteFunctionEntity() {
 
@@ -193,8 +222,8 @@ public class Loader
 			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(Type<?>... types)
 			{
 				if (types.length != 2) return Optional.empty();
-				if (types[0] != BOOLEAN) return Optional.empty();
-				if (types[0] != types[1]) return Optional.empty();
+				if (!types[0].equals(BOOLEAN)) return Optional.empty();
+				if (!types[0].equals(types[1])) return Optional.empty();
 
 				return Optional.of(new Struct3<>(0, 0, new IApatiteFunctionEntity() {
 
@@ -222,21 +251,55 @@ public class Loader
 		vm.registerConstant(new ApatiteConstant<>(out, name, value));
 	}
 
-	protected <O> void rf0(String name, Type<O> out, Supplier<O> function)
+	protected <O> void rf0(String name, Type<O> out, IRF0<O> function)
 	{
-		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.get()));
+		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply()));
+	}
+
+	public static interface IRF0<O>
+	{
+
+		public O apply();
+
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <O, I1> void rf1(String name, Type<O> out, Type<I1> in1, Function<I1, O> function)
+	protected <O, I1> void rf1(String name, Type<O> out, Type<I1> in1, IRF1<I1, O> function)
 	{
 		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply((I1) a[0]), in1));
 	}
 
+	public static interface IRF1<I1, O>
+	{
+
+		public O apply(I1 a);
+
+	}
+
 	@SuppressWarnings("unchecked")
-	protected <O, I1, I2> void rf2(String name, Type<O> out, Type<I1> in1, Type<I2> in2, BiFunction<I1, I2, O> function)
+	protected <O, I1, I2> void rf2(String name, Type<O> out, Type<I1> in1, Type<I2> in2, IRF2<I1, I2, O> function)
 	{
 		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply((I1) a[0], (I2) a[1]), in1, in2));
+	}
+
+	public static interface IRF2<I1, I2, O>
+	{
+
+		public O apply(I1 a, I2 b);
+
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <O, I1, I2, I3> void rf3(String name, Type<O> out, Type<I1> in1, Type<I2> in2, Type<I3> in3, IRF3<I1, I2, I3, O> function)
+	{
+		vm.registerFunction(new ApatiteFunction<>(out, name, a -> function.apply((I1) a[0], (I2) a[1], (I3) a[2]), in1, in2, in3));
+	}
+
+	public static interface IRF3<I1, I2, I3, O>
+	{
+
+		public O apply(I1 a, I2 b, I3 c);
+
 	}
 
 }

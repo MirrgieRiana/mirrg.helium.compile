@@ -73,7 +73,7 @@ public class NodeFunction extends ApatiteCodeBase implements IProviderChildren
 		if (oFunction.isPresent()) return success(oFunction.get(), scripts);
 
 		vm.reportError(begin, end, "No such function: " + name + "(" + Stream.of(scripts)
-			.map(s -> s.getType().name)
+			.map(s -> s.getType().getName())
 			.collect(Collectors.joining(", ")) + ")");
 		return failure();
 	}
