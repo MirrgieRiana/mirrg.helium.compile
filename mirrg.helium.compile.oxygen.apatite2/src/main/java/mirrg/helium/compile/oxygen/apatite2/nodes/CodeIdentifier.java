@@ -10,12 +10,12 @@ import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.type.Type;
 
-public class NodeIdentifier extends ApatiteCodeBase
+public class CodeIdentifier extends ApatiteCodeBase
 {
 
 	public String name;
 
-	public NodeIdentifier(String name, int begin, int end)
+	public CodeIdentifier(String name, int begin, int end)
 	{
 		super(begin, end);
 		this.name = name;

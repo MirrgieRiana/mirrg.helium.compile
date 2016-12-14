@@ -15,8 +15,8 @@ import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionEntity;
 import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionProvider;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
-import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;
-import mirrg.helium.compile.oxygen.apatite2.nodes.NodeIdentifier;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeFunction;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeIdentifier;
 import mirrg.helium.compile.oxygen.apatite2.type.Type;
 import mirrg.helium.math.hydrogen.complex.StructureComplex;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
@@ -124,20 +124,20 @@ public class ApatiteLoader
 			public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
 			{
 				if (codes.length < 1) return Optional.empty();
-				if (!(codes[0] instanceof NodeIdentifier)) return Optional.empty();
-				String name = ((NodeIdentifier) codes[0]).name;
+				if (!(codes[0] instanceof CodeIdentifier)) return Optional.empty();
+				String name = ((CodeIdentifier) codes[0]).name;
 
 				IApatiteCode[] codes2 = Stream.of(codes)
 					.skip(1)
 					.flatMap(c -> {
-						if ((c instanceof NodeFunction) && ((NodeFunction) c).name.equals("_enumerateComma")) {
-							return Stream.of(((NodeFunction) c).codes);
+						if ((c instanceof CodeFunction) && ((CodeFunction) c).name.equals("_enumerateComma")) {
+							return Stream.of(((CodeFunction) c).codes);
 						}
 						return Stream.of(c);
 					})
 					.toArray(IApatiteCode[]::new);
 
-				return Optional.of((begin, end, vm) -> new NodeFunction(name, begin, end, codes2).validate(vm));
+				return Optional.of((begin, end, vm) -> new CodeFunction(name, begin, end, codes2).validate(vm));
 			}
 
 		}, "_rightBracketsRound");

@@ -16,13 +16,13 @@ import mirrg.helium.compile.oxygen.apatite2.type.Type;
 import mirrg.helium.compile.oxygen.editor.IProviderChildren;
 import mirrg.helium.compile.oxygen.parser.core.Node;
 
-public class NodeFunction extends ApatiteCodeBase implements IProviderChildren
+public class CodeFunction extends ApatiteCodeBase implements IProviderChildren
 {
 
 	public String name;
 	public IApatiteCode[] codes;
 
-	public NodeFunction(String name, int begin, int end, IApatiteCode... codes)
+	public CodeFunction(String name, int begin, int end, IApatiteCode... codes)
 	{
 		super(begin, end);
 		this.name = name;

@@ -7,12 +7,12 @@ import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 
-public class LiteralInteger extends ApatiteCodeBase
+public class CodeLiteralDouble extends ApatiteCodeBase
 {
 
 	public String expression;
 
-	public LiteralInteger(int begin, int end, String expression)
+	public CodeLiteralDouble(int begin, int end, String expression)
 	{
 		super(begin, end);
 		this.expression = expression;
@@ -22,15 +22,15 @@ public class LiteralInteger extends ApatiteCodeBase
 	public Optional<IApatiteScript> validateImpl(ApatiteVM vm)
 	{
 
-		int value;
+		double value;
 		try {
-			value = Integer.parseInt(expression, 10);
+			value = Double.parseDouble(expression);
 		} catch (NumberFormatException e) {
-			vm.reportError(begin, end, "Illegal integer range: " + expression);
+			vm.reportError(begin, end, "Illegal double range: " + expression);
 			return failure();
 		}
 
-		return success(ApatiteLoader.INTEGER, () -> value);
+		return success(ApatiteLoader.DOUBLE, () -> value);
 	}
 
 }

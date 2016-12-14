@@ -7,12 +7,12 @@ import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 
-public class LiteralString extends ApatiteCodeBase
+public class CodeLiteralInteger extends ApatiteCodeBase
 {
 
 	public String expression;
 
-	public LiteralString(int begin, int end, String expression)
+	public CodeLiteralInteger(int begin, int end, String expression)
 	{
 		super(begin, end);
 		this.expression = expression;
@@ -21,7 +21,16 @@ public class LiteralString extends ApatiteCodeBase
 	@Override
 	public Optional<IApatiteScript> validateImpl(ApatiteVM vm)
 	{
-		return success(ApatiteLoader.STRING, () -> expression);
+
+		int value;
+		try {
+			value = Integer.parseInt(expression, 10);
+		} catch (NumberFormatException e) {
+			vm.reportError(begin, end, "Illegal integer range: " + expression);
+			return failure();
+		}
+
+		return success(ApatiteLoader.INTEGER, () -> value);
 	}
 
 }

@@ -10,11 +10,11 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
-import mirrg.helium.compile.oxygen.apatite2.nodes.LiteralDouble;
-import mirrg.helium.compile.oxygen.apatite2.nodes.LiteralInteger;
-import mirrg.helium.compile.oxygen.apatite2.nodes.LiteralString;
-import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;
-import mirrg.helium.compile.oxygen.apatite2.nodes.NodeIdentifier;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeLiteralDouble;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeLiteralInteger;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeLiteralString;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeFunction;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeIdentifier;
 import mirrg.helium.compile.oxygen.editor.WithColor;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
@@ -47,10 +47,10 @@ public class ApatiteScript
 	public Syntax<IApatiteCode> literalDouble = named(packNode(or((String) null)
 		.or(regex("[0-9]+(\\.[0-9]+)([eE]-?[0-9]+)?"))
 		.or(regex("[0-9]+([eE]-?[0-9]+)")),
-		n -> new LiteralDouble(n.begin, n.end, n.value)), "Double");
+		n -> new CodeLiteralDouble(n.begin, n.end, n.value)), "Double");
 
 	public Syntax<IApatiteCode> literalInteger = named(packNode(regex("[0-9]+"),
-		n -> new LiteralInteger(n.begin, n.end, n.value)), "Integer");
+		n -> new CodeLiteralInteger(n.begin, n.end, n.value)), "Integer");
 
 	public Syntax<IApatiteCode> literalString;
 	{
@@ -67,7 +67,7 @@ public class ApatiteScript
 				.or(specialCharacters)),
 				t -> String.join("", t)))
 			.and(string("\"")),
-			n -> new LiteralString(n.begin, n.end, n.value.get())), "String");
+			n -> new CodeLiteralString(n.begin, n.end, n.value.get())), "String");
 	}
 
 	public Syntax<IApatiteCode> brackets = pack(tunnel((IApatiteCode) null)
@@ -79,7 +79,7 @@ public class ApatiteScript
 		t -> t.get());
 
 	public Syntax<IApatiteCode> identifier = named(packNode(regex("[a-zA-Z_][a-zA-Z_0-9]*"),
-		n -> new NodeIdentifier(n.value, n.begin, n.end)), "Identifier");
+		n -> new CodeIdentifier(n.value, n.begin, n.end)), "Identifier");
 
 	{
 		factor.syntax = or((IApatiteCode) null)
@@ -155,14 +155,14 @@ public class ApatiteScript
 				.and(string(":"))
 				.and($)
 				.and(operatorIIf, Struct3::setZ),
-				n -> new NodeFunction("_ternaryQuestionColon", n.begin, n.end, n.value.x, n.value.y, n.value.z)))
+				n -> new CodeFunction("_ternaryQuestionColon", n.begin, n.end, n.value.x, n.value.y, n.value.z)))
 			.or(packNode(serial(Struct2<IApatiteCode, IApatiteCode>::new)
 				.and(operatorOr, Struct2::setX)
 				.and($)
 				.and(string("?:"))
 				.and($)
 				.and(operatorIIf, Struct2::setY),
-				n -> new NodeFunction("_operatorQuestionColon", n.begin, n.end, n.value.x, n.value.y)))
+				n -> new CodeFunction("_operatorQuestionColon", n.begin, n.end, n.value.x, n.value.y)))
 			.or(operatorOr);
 	}
 
@@ -181,7 +181,7 @@ public class ApatiteScript
 			for (int i = 0; i < n.value.y.size(); i++) {
 				codes[i + 1] = n.value.y.get(i).get();
 			}
-			return new NodeFunction("_enumerateComma", n.begin, n.end, codes);
+			return new CodeFunction("_enumerateComma", n.begin, n.end, codes);
 		});
 
 	{
@@ -203,7 +203,7 @@ public class ApatiteScript
 		String name)
 	{
 		return packNode(string(operator),
-			n -> a -> new NodeFunction(name, n.begin, a.getEnd(), a));
+			n -> a -> new CodeFunction(name, n.begin, a.getEnd(), a));
 	}
 
 	protected Syntax<UnaryOperator<IApatiteCode>> brackets(
@@ -218,7 +218,7 @@ public class ApatiteScript
 			.extract(inner)
 			.and($)
 			.and(string(right)),
-			n -> a -> new NodeFunction(name, a.getBegin(), n.end, a, n.value.get()));
+			n -> a -> new CodeFunction(name, a.getBegin(), n.end, a, n.value.get()));
 	}
 
 	protected Syntax<UnaryOperator<IApatiteCode>> bracketsVoid(
@@ -230,7 +230,7 @@ public class ApatiteScript
 			.and(string(left))
 			.and($)
 			.and(string(right)),
-			n -> a -> new NodeFunction(name, a.getBegin(), n.end, a));
+			n -> a -> new CodeFunction(name, a.getBegin(), n.end, a));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -282,7 +282,7 @@ public class ApatiteScript
 		String name)
 	{
 		return packNode(string(operator),
-			n -> (a, b) -> new NodeFunction(name, a.getBegin(), b.getEnd(), a, b));
+			n -> (a, b) -> new CodeFunction(name, a.getBegin(), b.getEnd(), a, b));
 	}
 
 	protected Syntax<IApatiteCode> createOperatorLeft(
@@ -364,7 +364,7 @@ public class ApatiteScript
 
 				IApatiteCode left = codes2[0];
 				for (int i = 1; i < codes2.length; i++) {
-					left = new NodeFunction("_operatorAmpersandAmpersand", left.getBegin(), codes2[i].getEnd(), left, codes2[i]);
+					left = new CodeFunction("_operatorAmpersandAmpersand", left.getBegin(), codes2[i].getEnd(), left, codes2[i]);
 				}
 				return left;
 			});
