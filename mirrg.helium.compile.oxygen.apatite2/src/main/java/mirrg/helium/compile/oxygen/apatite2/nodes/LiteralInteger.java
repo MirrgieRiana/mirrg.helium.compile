@@ -2,7 +2,7 @@ package mirrg.helium.compile.oxygen.apatite2.nodes;
 
 import java.util.Optional;
 
-import mirrg.helium.compile.oxygen.apatite2.Loader;
+import mirrg.helium.compile.oxygen.apatite2.ApatiteLoader;
 import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
@@ -30,7 +30,7 @@ public class LiteralInteger extends ApatiteCodeBase
 			return failure();
 		}
 
-		return success(Loader.INTEGER, () -> value);
+		return success(ApatiteLoader.INTEGER, () -> value);
 	}
 
 }

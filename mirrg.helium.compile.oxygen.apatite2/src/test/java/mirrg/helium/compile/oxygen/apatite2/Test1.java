@@ -79,9 +79,9 @@ public class Test1
 		assertSuccess(Math.sin(100.0), "sin(100.0)", 0.001);
 		assertSuccess(Math.cos(100.0), "cos(100.0)", 0.001);
 		assertSuccess(Math.tan(100.0), "tan(100.0)", 0.001);
-		assertSuccess(Loader.DOUBLE, "type(100.0)");
-		assertSuccess(Loader.STRING, "type(\"a\")");
-		assertSuccess(Loader.BOOLEAN, "type(4 > 5)");
+		assertSuccess(ApatiteLoader.DOUBLE, "type(100.0)");
+		assertSuccess(ApatiteLoader.STRING, "type(\"a\")");
+		assertSuccess(ApatiteLoader.BOOLEAN, "type(4 > 5)");
 		assertCompileError("50(100.0)");
 		assertCompileError("\"sin\"(100.0)");
 
@@ -263,7 +263,7 @@ public class Test1
 			fail();
 		}
 
-		ApatiteVM vm = Loader.createVM();
+		ApatiteVM vm = ApatiteLoader.createVM();
 		Optional<IApatiteScript> oScript = result.node.value.validate(vm);
 
 		assertTrue(!oScript.isPresent());
@@ -277,7 +277,7 @@ public class Test1
 			fail();
 		}
 
-		ApatiteVM vm = Loader.createVM();
+		ApatiteVM vm = ApatiteLoader.createVM();
 		Optional<IApatiteScript> oScript = result.node.value.validate(vm);
 
 		if (!oScript.isPresent()) {

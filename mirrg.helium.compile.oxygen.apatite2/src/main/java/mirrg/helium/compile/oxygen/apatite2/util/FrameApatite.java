@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 
-import mirrg.helium.compile.oxygen.apatite2.Loader;
+import mirrg.helium.compile.oxygen.apatite2.ApatiteLoader;
 import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
@@ -156,7 +156,7 @@ public class FrameApatite extends JFrame
 
 	protected ApatiteVM createVM()
 	{
-		return Loader.createVM();
+		return ApatiteLoader.createVM();
 	}
 
 	//

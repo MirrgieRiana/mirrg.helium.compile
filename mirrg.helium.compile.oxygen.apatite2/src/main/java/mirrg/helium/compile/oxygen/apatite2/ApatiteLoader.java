@@ -21,7 +21,7 @@ import mirrg.helium.compile.oxygen.apatite2.type.Type;
 import mirrg.helium.math.hydrogen.complex.StructureComplex;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
 
-public class Loader
+public class ApatiteLoader
 {
 
 	public static final Type<Object> VALUE = new Type<>("value", Color.decode("#8888ff"));
@@ -51,14 +51,14 @@ public class Loader
 
 	public static void load(ApatiteVM vm)
 	{
-		new Loader(vm).load();
+		new ApatiteLoader(vm).load();
 	}
 
 	//
 
 	protected ApatiteVM vm;
 
-	protected Loader(ApatiteVM vm)
+	protected ApatiteLoader(ApatiteVM vm)
 	{
 		this.vm = vm;
 	}

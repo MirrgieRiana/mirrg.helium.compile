@@ -49,7 +49,7 @@ public class Sample1
 		frame.setVisible(true);
 	}
 
-	private static class Loader2 extends Loader
+	private static class Loader2 extends ApatiteLoader
 	{
 
 		protected Loader2(ApatiteVM vm)
@@ -177,7 +177,7 @@ public class Sample1
 			super("pointer", HColor.createLinearRatioColor(0.5, parent.color, Color.decode("#000000")));
 			this.parent = parent;
 
-			registerDistance(Loader.VALUE, 1, a -> a);
+			registerDistance(ApatiteLoader.VALUE, 1, a -> a);
 		}
 
 		@Override

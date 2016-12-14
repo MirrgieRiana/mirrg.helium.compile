@@ -2,7 +2,7 @@ package mirrg.helium.compile.oxygen.apatite2.nodes;
 
 import java.util.Optional;
 
-import mirrg.helium.compile.oxygen.apatite2.Loader;
+import mirrg.helium.compile.oxygen.apatite2.ApatiteLoader;
 import mirrg.helium.compile.oxygen.apatite2.core.ApatiteConstant;
 import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVariable;
@@ -34,7 +34,7 @@ public class NodeIdentifier extends ApatiteCodeBase
 		if (oConstant.isPresent()) {
 			return success(oConstant.get());
 		} else {
-			return success(Loader.KEYWORD, () -> name);
+			return success(ApatiteLoader.KEYWORD, () -> name);
 		}
 	}
 
