@@ -67,9 +67,22 @@ public abstract class TypeBase<T> implements IType<T>
 	}
 
 	@Override
+	public boolean equals(Object obj)
+	{
+		if (!(obj instanceof IType)) return false;
+		return getName().equals(((IType<?>) obj).getName());
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return getName().hashCode();
+	}
+
+	@Override
 	public String toString()
 	{
-		return "Type:" + getName();
+		return getName();
 	}
 
 }

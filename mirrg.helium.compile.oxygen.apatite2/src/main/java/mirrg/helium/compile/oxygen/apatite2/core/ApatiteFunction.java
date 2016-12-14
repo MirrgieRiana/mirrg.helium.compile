@@ -4,8 +4,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import mirrg.helium.compile.oxygen.apatite2.type.IType;
-import mirrg.helium.standard.hydrogen.struct.Struct3;
 import mirrg.helium.standard.hydrogen.struct.Tuple;
+import mirrg.helium.standard.hydrogen.struct.Tuple3;
 
 public class ApatiteFunction<T> implements IApatiteFunctionProvider
 {
@@ -22,7 +22,7 @@ public class ApatiteFunction<T> implements IApatiteFunctionProvider
 	}
 
 	@Override
-	public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
+	public Optional<Tuple3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
 	{
 		int index = 0;
 		int distance = 0;
@@ -39,7 +39,7 @@ public class ApatiteFunction<T> implements IApatiteFunctionProvider
 			}
 		}
 
-		return Optional.of(new Struct3<>(index, distance, new IApatiteFunctionEntity() {
+		return Optional.of(new Tuple3<>(index, distance, new IApatiteFunctionEntity() {
 
 			@Override
 			public IType<?> getType()

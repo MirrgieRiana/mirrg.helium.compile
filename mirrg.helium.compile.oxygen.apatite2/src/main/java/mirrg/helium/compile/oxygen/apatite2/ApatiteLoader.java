@@ -1,6 +1,7 @@
 package mirrg.helium.compile.oxygen.apatite2;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -23,7 +24,7 @@ import mirrg.helium.compile.oxygen.apatite2.type.TypeBasic;
 import mirrg.helium.compile.oxygen.apatite2.type.TypeInteger;
 import mirrg.helium.compile.oxygen.apatite2.type.TypeValue;
 import mirrg.helium.math.hydrogen.complex.StructureComplex;
-import mirrg.helium.standard.hydrogen.struct.Struct3;
+import mirrg.helium.standard.hydrogen.struct.Tuple3;
 
 public class ApatiteLoader
 {
@@ -80,6 +81,128 @@ public class ApatiteLoader
 		rf1("sin", D, D, Math::sin);
 		rf1("cos", D, D, Math::cos);
 		rf1("tan", D, D, Math::tan);
+		vm.registerFunction(new IApatiteFunctionProvider() {
+
+			@Override
+			public Optional<Tuple3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
+			{
+				if (types.length != 1) return Optional.empty();
+				if (!(types[0] instanceof TypeArray)) return Optional.empty();
+
+				return Optional.of(new Tuple3<>(0, 0, new IApatiteFunctionEntity() {
+
+					@Override
+					public IType<?> getType()
+					{
+						return INTEGER;
+					}
+
+					@Override
+					public Object invoke(Object... arguments)
+					{
+						return ((ArrayList<?>) arguments[0]).size();
+					}
+
+				}));
+			}
+
+		}, "length");
+
+		vm.registerFunction(new IApatiteFunctionProvider() {
+
+			@Override
+			public Optional<Tuple3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
+			{
+				if (types.length != 1) return Optional.empty();
+
+				return Optional.of(new Tuple3<>(0, 0, new IApatiteFunctionEntity() {
+
+					@Override
+					public IType<?> getType()
+					{
+						return types[0];
+					}
+
+					@Override
+					public Object invoke(Object... arguments)
+					{
+						return arguments[0];
+					}
+
+				}));
+			}
+
+		}, "_bracketsRound");
+		vm.registerMetaFunction(new IApatiteMetaFunctionProvider() {
+
+			@Override
+			public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
+			{
+				IApatiteCode[] codes2 = Stream.of(codes)
+					.flatMap(c -> {
+						if ((c instanceof CodeFunction) && ((CodeFunction) c).name.equals("_enumerateComma")) {
+							return Stream.of(((CodeFunction) c).codes);
+						}
+						return Stream.of(c);
+					})
+					.toArray(IApatiteCode[]::new);
+
+				if (codes2.length == 0) return Optional.empty(); // TODO
+
+				return Optional.of(new IApatiteMetaFunctionEntity() {
+
+					@Override
+					public Optional<IApatiteScript> validate(int begin, int end, ApatiteVM vm)
+					{
+						IType<?> type = null;
+						boolean flag = true;
+
+						IApatiteScript[] scripts = new IApatiteScript[codes2.length];
+						for (int i = 0; i < codes2.length; i++) {
+							Optional<IApatiteScript> oScript = codes2[i].validate(vm);
+							if (!oScript.isPresent()) {
+								flag = false;
+							} else {
+								scripts[i] = oScript.get();
+								if (type == null) {
+									type = oScript.get().getType();
+								} else {
+									if (!type.equals(oScript.get().getType())) {
+										vm.reportError(codes2[i].getBegin(), codes2[i].getEnd(),
+											"Type mismatch: " + oScript.get().getType().getName() + " != " + type.getName()); // TODO
+									}
+								}
+							}
+						}
+
+						if (!flag) return Optional.empty();
+						IType<?> type2 = type;
+
+						return Optional.of(new IApatiteScript() {
+
+							@Override
+							public IType<?> getType()
+							{
+								return ARRAY(type2);
+							}
+
+							@Override
+							public Object invoke()
+							{
+								ArrayList<Object> array = new ArrayList<>();
+								for (IApatiteScript script : scripts) {
+									array.add(script.invoke());
+								}
+								return array;
+							}
+
+						});
+					}
+
+				});
+			}
+
+		}, "_bracketsSquare");
 
 		vm.registerMetaFunction(new IApatiteMetaFunctionProvider() {
 
@@ -141,6 +264,33 @@ public class ApatiteLoader
 			}
 
 		}, "_rightBracketsRound");
+		vm.registerFunction(new IApatiteFunctionProvider() {
+
+			@Override
+			public Optional<Tuple3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
+			{
+				if (types.length != 2) return Optional.empty();
+				if (!(types[0] instanceof TypeArray)) return Optional.empty();
+				if (!(types[1].equals(INTEGER))) return Optional.empty();
+
+				return Optional.of(new Tuple3<>(0, 0, new IApatiteFunctionEntity() {
+
+					@Override
+					public IType<?> getType()
+					{
+						return ((TypeArray<?>) types[0]).type;
+					}
+
+					@Override
+					public Object invoke(Object... arguments)
+					{
+						return ((ArrayList<?>) arguments[0]).get((Integer) arguments[1]);
+					}
+
+				}));
+			}
+
+		}, "_rightBracketsSquare");
 
 		rf1("_leftPlus", I, I, a -> a);
 		rf1("_leftPlus", D, D, a -> a);
@@ -182,13 +332,13 @@ public class ApatiteLoader
 		vm.registerFunction(new IApatiteFunctionProvider() {
 
 			@Override
-			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
+			public Optional<Tuple3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
 			{
 				if (types.length != 3) return Optional.empty();
 				if (!types[0].equals(BOOLEAN)) return Optional.empty();
 				if (!types[1].equals(types[2])) return Optional.empty();
 
-				return Optional.of(new Struct3<>(0, 0, new IApatiteFunctionEntity() {
+				return Optional.of(new Tuple3<>(0, 0, new IApatiteFunctionEntity() {
 
 					@Override
 					public IType<?> getType()
@@ -209,13 +359,13 @@ public class ApatiteLoader
 		vm.registerFunction(new IApatiteFunctionProvider() {
 
 			@Override
-			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
+			public Optional<Tuple3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
 			{
 				if (types.length != 2) return Optional.empty();
 				if (!types[0].equals(BOOLEAN)) return Optional.empty();
 				if (!types[0].equals(types[1])) return Optional.empty();
 
-				return Optional.of(new Struct3<>(0, 0, new IApatiteFunctionEntity() {
+				return Optional.of(new Tuple3<>(0, 0, new IApatiteFunctionEntity() {
 
 					@Override
 					public IType<?> getType()

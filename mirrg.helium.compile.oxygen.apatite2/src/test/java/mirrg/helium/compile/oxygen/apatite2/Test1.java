@@ -1,7 +1,9 @@
 package mirrg.helium.compile.oxygen.apatite2;
 
+import static mirrg.helium.compile.oxygen.apatite2.ApatiteLoader.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -68,6 +70,16 @@ public class Test1
 	}
 
 	@Test
+	public void testLiteralArray()
+	{
+		assertSuccess(a -> assertTrue(array(1, 2, 3).equals(a)), "[1, 2, 3]");
+		assertSuccess(a -> assertFalse(array(1, 2, 5).equals(a)), "[1, 2, 3]");
+		assertSuccess(1, "[1, 2, 3][0]");
+		assertSuccess(ARRAY(INTEGER), "type([1, 2, 3])");
+		assertSuccess(3, "length([1, 2, 3])");
+	}
+
+	@Test
 	public void testLiteralFactor()
 	{
 		assertSuccess(3, "(((3)))");
@@ -79,9 +91,9 @@ public class Test1
 		assertSuccess(Math.sin(100.0), "sin(100.0)", 0.001);
 		assertSuccess(Math.cos(100.0), "cos(100.0)", 0.001);
 		assertSuccess(Math.tan(100.0), "tan(100.0)", 0.001);
-		assertSuccess(ApatiteLoader.DOUBLE, "type(100.0)");
-		assertSuccess(ApatiteLoader.STRING, "type(\"a\")");
-		assertSuccess(ApatiteLoader.BOOLEAN, "type(4 > 5)");
+		assertSuccess(DOUBLE, "type(100.0)");
+		assertSuccess(STRING, "type(\"a\")");
+		assertSuccess(BOOLEAN, "type(4 > 5)");
 		assertCompileError("50(100.0)");
 		assertCompileError("\"sin\"(100.0)");
 
@@ -90,7 +102,7 @@ public class Test1
 		assertSuccess(5, "_ternaryQuestionColon(true, 5, 6)");
 		assertSuccess(a -> assertEquals((double) System.currentTimeMillis(), (Double) a, 100), "now()");
 		assertSuccess(Math.sin(100.0), "_rightBracketsRound(sin, 100.0)");
-		assertSuccess(Math.sin(100.0), "_rightBracketsRound(_rightBracketsRound, (_rightBracketsRound, (sin, 100.0)))");
+		assertSuccess(Math.sin(100.0), "_rightBracketsRound(_rightBracketsRound, _rightBracketsRound, sin, 100.0)");
 	}
 
 	@Test
@@ -252,10 +264,10 @@ public class Test1
 	public void testFunctionType()
 	{
 		assertCompileError("type()");
-		assertSuccess(ApatiteLoader.INTEGER, "type(5)");
+		assertSuccess(INTEGER, "type(5)");
 		assertCompileError("type(1, 2)");
 
-		assertSuccess(ApatiteLoader.DOUBLE, "type(5.0)");
+		assertSuccess(DOUBLE, "type(5.0)");
 	}
 
 	private void assertSyntaxError(String source)
@@ -270,10 +282,10 @@ public class Test1
 		ResultOxygen<IApatiteCode> result = ApatiteScript.getSyntax().matches(source);
 
 		if (!result.isValid) {
-			fail();
+			fail("syntax error");
 		}
 
-		ApatiteVM vm = ApatiteLoader.createVM();
+		ApatiteVM vm = createVM();
 		Optional<IApatiteScript> oScript = result.node.value.validate(vm);
 
 		assertTrue(!oScript.isPresent());
@@ -284,15 +296,15 @@ public class Test1
 		ResultOxygen<IApatiteCode> result = ApatiteScript.getSyntax().matches(source);
 
 		if (!result.isValid) {
-			fail();
+			fail("syntax error");
 		}
 
-		ApatiteVM vm = ApatiteLoader.createVM();
+		ApatiteVM vm = createVM();
 		Optional<IApatiteScript> oScript = result.node.value.validate(vm);
 
 		if (!oScript.isPresent()) {
 			vm.getErrors().forEach(System.err::println);
-			fail();
+			fail("compile error");
 		}
 
 		consumer.accept(oScript.get().invoke());
@@ -306,6 +318,16 @@ public class Test1
 	private void assertSuccess(double expected, String source, double delta)
 	{
 		assertSuccess(a -> assertEquals(expected, (Double) a, delta), source);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> ArrayList<T> array(T... ts)
+	{
+		ArrayList<T> array = new ArrayList<>();
+		for (T t : ts) {
+			array.add(t);
+		}
+		return array;
 	}
 
 }

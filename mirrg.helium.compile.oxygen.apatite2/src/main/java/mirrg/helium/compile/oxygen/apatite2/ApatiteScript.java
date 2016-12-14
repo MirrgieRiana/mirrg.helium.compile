@@ -10,11 +10,11 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeFunction;
+import mirrg.helium.compile.oxygen.apatite2.nodes.CodeIdentifier;
 import mirrg.helium.compile.oxygen.apatite2.nodes.CodeLiteralDouble;
 import mirrg.helium.compile.oxygen.apatite2.nodes.CodeLiteralInteger;
 import mirrg.helium.compile.oxygen.apatite2.nodes.CodeLiteralString;
-import mirrg.helium.compile.oxygen.apatite2.nodes.CodeFunction;
-import mirrg.helium.compile.oxygen.apatite2.nodes.CodeIdentifier;
 import mirrg.helium.compile.oxygen.editor.WithColor;
 import mirrg.helium.compile.oxygen.parser.core.Syntax;
 import mirrg.helium.compile.oxygen.parser.syntaxes.SyntaxOr;
@@ -70,13 +70,11 @@ public class ApatiteScript
 			n -> new CodeLiteralString(n.begin, n.end, n.value.get())), "String");
 	}
 
-	public Syntax<IApatiteCode> brackets = pack(tunnel((IApatiteCode) null)
-		.and(string("("))
-		.and($)
-		.extract(expression)
-		.and($)
-		.and(string(")")),
-		t -> t.get());
+	public Syntax<IApatiteCode> brackets = createBrackets(c -> {
+		c.accept(brackets("(", expression, ")", "_bracketsRound"));
+		c.accept(brackets("[", expression, "]", "_bracketsSquare"));
+		c.accept(brackets("{", expression, "}", "_bracketsCurly"));
+	});
 
 	public Syntax<IApatiteCode> identifier = named(packNode(regex("[a-zA-Z_][a-zA-Z_0-9]*"),
 		n -> new CodeIdentifier(n.value, n.begin, n.end)), "Identifier");
@@ -94,7 +92,11 @@ public class ApatiteScript
 
 	public Syntax<IApatiteCode> operatorRight = createRight(factor, c -> {
 		c.accept(bracketsVoid("(", ")", "_rightBracketsRound"));
-		c.accept(brackets("(", expression, ")", "_rightBracketsRound"));
+		c.accept(bracketsVoid("[", "]", "_rightBracketsSquare"));
+		c.accept(bracketsVoid("{", "}", "_rightBracketsCurly"));
+		c.accept(rightBrackets("(", expression, ")", "_rightBracketsRound"));
+		c.accept(rightBrackets("[", expression, "]", "_rightBracketsSquare"));
+		c.accept(rightBrackets("{", expression, "}", "_rightBracketsCurly"));
 	});
 
 	public Syntax<IApatiteCode> operatorLeft = createLeft(operatorRight, c -> {
@@ -206,7 +208,22 @@ public class ApatiteScript
 			n -> a -> new CodeFunction(name, n.begin, a.getEnd(), a));
 	}
 
-	protected Syntax<UnaryOperator<IApatiteCode>> brackets(
+	protected Syntax<IApatiteCode> brackets(
+		String left,
+		Syntax<IApatiteCode> inner,
+		String right,
+		String name)
+	{
+		return packNode(tunnel((IApatiteCode) null)
+			.and(string(left))
+			.and($)
+			.extract(inner)
+			.and($)
+			.and(string(right)),
+			n -> new CodeFunction(name, n.begin, n.end, n.value.get()));
+	}
+
+	protected Syntax<UnaryOperator<IApatiteCode>> rightBrackets(
 		String left,
 		Syntax<IApatiteCode> inner,
 		String right,
@@ -231,6 +248,15 @@ public class ApatiteScript
 			.and($)
 			.and(string(right)),
 			n -> a -> new CodeFunction(name, a.getBegin(), n.end, a));
+	}
+
+	protected Syntax<IApatiteCode> createBrackets(
+		Consumer<Consumer<Syntax<IApatiteCode>>> operator)
+	{
+		SyntaxOr<IApatiteCode> operators = or((IApatiteCode) null);
+		operator.accept(operators::or);
+
+		return operators;
 	}
 
 	@SuppressWarnings("deprecation")

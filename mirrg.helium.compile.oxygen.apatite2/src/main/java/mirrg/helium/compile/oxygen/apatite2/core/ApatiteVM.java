@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.type.IType;
-import mirrg.helium.standard.hydrogen.struct.Struct3;
 import mirrg.helium.standard.hydrogen.struct.Tuple;
 import mirrg.helium.standard.hydrogen.struct.Tuple3;
 
@@ -73,9 +72,9 @@ public class ApatiteVM
 			.map(t -> t.getY().matches(types))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
-			.sorted((a, b) -> a.x != b.x ? a.x - b.x : a.y - b.y)
+			.sorted((a, b) -> a.getX() != b.getX() ? a.getX() - b.getX() : a.getY() - b.getY())
 			.findFirst()
-			.map(Struct3::getZ);
+			.map(Tuple3::getZ);
 	}
 
 	//
