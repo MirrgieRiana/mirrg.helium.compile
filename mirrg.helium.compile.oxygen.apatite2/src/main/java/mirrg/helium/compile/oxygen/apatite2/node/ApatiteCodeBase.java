@@ -39,7 +39,15 @@ public abstract class ApatiteCodeBase implements IApatiteCode, IProviderColor
 
 	protected <T> Optional<IApatiteScript> success(Type<T> type, Supplier<T> supplier)
 	{
-		return Optional.of(new ApatiteScriptBase(type, supplier::get));
+		return Optional.of(new ApatiteScriptBase(type) {
+
+			@Override
+			public Object invoke()
+			{
+				return supplier.get();
+			}
+
+		});
 	}
 
 	private IApatiteScript script;
