@@ -248,11 +248,37 @@ public class ApatiteLoader
 			public Optional<IApatiteMetaFunctionEntity> matches(IApatiteCode... codes)
 			{
 				if (codes.length < 1) return Optional.empty();
-				if (!(codes[0] instanceof CodeIdentifier)) return Optional.empty();
-				String name = ((CodeIdentifier) codes[0]).name;
 
-				IApatiteCode[] codes2 = Stream.of(codes)
-					.skip(1)
+				String name;
+				ArrayList<IApatiteCode> codesArgument = new ArrayList<>();
+				{
+					IApatiteCode codeName;
+					b:
+					{
+						if (codes[0] instanceof CodeFunction) {
+							CodeFunction code = (CodeFunction) codes[0];
+							if (code.name.equals("_operatorPeriod")) {
+								codeName = code.codes[1];
+								codesArgument.add(code.codes[0]);
+								Stream.of(codes)
+									.skip(1)
+									.forEach(codesArgument::add);
+								break b;
+							}
+						}
+
+						codeName = codes[0];
+						Stream.of(codes)
+							.skip(1)
+							.forEach(codesArgument::add);
+					}
+
+					if (!(codeName instanceof CodeIdentifier)) return Optional.empty();
+
+					name = ((CodeIdentifier) codeName).name;
+				}
+
+				IApatiteCode[] codes2 = codesArgument.stream()
 					.flatMap(c -> {
 						if ((c instanceof CodeFunction) && ((CodeFunction) c).name.equals("_enumerateComma")) {
 							return Stream.of(((CodeFunction) c).codes);

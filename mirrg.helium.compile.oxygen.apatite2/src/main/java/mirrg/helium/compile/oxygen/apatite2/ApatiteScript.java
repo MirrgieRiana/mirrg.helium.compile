@@ -94,6 +94,7 @@ public class ApatiteScript
 	//
 
 	public Syntax<IApatiteCode> operatorRight = createRight(factor, c -> {
+		c.accept(rightOperator(".", factor, "_operatorPeriod"));
 		c.accept(rightBracketsVoid("(", ")", "_rightBracketsRound"));
 		c.accept(rightBracketsVoid("[", "]", "_rightBracketsSquare"));
 		c.accept(rightBracketsVoid("{", "}", "_rightBracketsCurly"));
@@ -236,6 +237,18 @@ public class ApatiteScript
 			.and($)
 			.and(string(right)),
 			n -> new CodeFunction(name, n.begin, n.end));
+	}
+
+	protected Syntax<UnaryOperator<IApatiteCode>> rightOperator(
+		String operator,
+		Syntax<IApatiteCode> right,
+		String name)
+	{
+		return packNode(tunnel((IApatiteCode) null)
+			.and(string(operator))
+			.and($)
+			.extract(right),
+			n -> a -> new CodeFunction(name, a.getBegin(), n.end, a, n.value.get()));
 	}
 
 	protected Syntax<UnaryOperator<IApatiteCode>> rightBrackets(

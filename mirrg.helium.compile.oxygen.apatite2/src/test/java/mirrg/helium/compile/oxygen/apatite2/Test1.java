@@ -92,9 +92,13 @@ public class Test1
 		assertSuccess(Math.sin(100.0), "sin(100.0)", 0.001);
 		assertSuccess(Math.cos(100.0), "cos(100.0)", 0.001);
 		assertSuccess(Math.tan(100.0), "tan(100.0)", 0.001);
+		assertSuccess(Math.sin(100.0), "(100.0).sin()", 0.001);
+		assertSuccess(Math.sin(Math.sin(100.0)), "(100.0).sin().sin()", 0.001);
 		assertSuccess(DOUBLE, "type(100.0)");
 		assertSuccess(STRING, "type(\"a\")");
 		assertSuccess(BOOLEAN, "type(4 > 5)");
+		assertSuccess(BOOLEAN, "(4 > 5).type()");
+		assertSuccess(BOOLEAN, "false.type()");
 		assertCompileError("50(100.0)");
 		assertCompileError("\"sin\"(100.0)");
 
