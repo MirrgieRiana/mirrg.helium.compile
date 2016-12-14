@@ -176,7 +176,7 @@ public class Sample1
 
 		public TypePointer(IType<T> type)
 		{
-			super("pointer" + "(" + type.getName() + ")", HColor.createLinearRatioColor(0.75, type.getColor(), Color.decode("#000000")));
+			super("Pointer" + "(" + type.getName() + ")", HColor.createLinearRatioColor(0.75, type.getColor(), Color.decode("#000000")));
 			this.type = type;
 		}
 
