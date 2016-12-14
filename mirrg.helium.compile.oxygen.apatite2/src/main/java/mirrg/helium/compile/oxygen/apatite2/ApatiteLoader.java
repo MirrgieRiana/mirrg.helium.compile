@@ -168,6 +168,7 @@ public class ApatiteLoader
 									type = oScript.get().getType();
 								} else {
 									if (!type.equals(oScript.get().getType())) {
+										flag = false;
 										vm.reportError(codes2[i].getBegin(), codes2[i].getEnd(),
 											"Type mismatch: " + oScript.get().getType().getName() + " != " + type.getName()); // TODO
 									}

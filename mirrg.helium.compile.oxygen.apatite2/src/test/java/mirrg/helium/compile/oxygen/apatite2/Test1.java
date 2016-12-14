@@ -77,6 +77,7 @@ public class Test1
 		assertSuccess(1, "[1, 2, 3][0]");
 		assertSuccess(ARRAY(INTEGER), "type([1, 2, 3])");
 		assertSuccess(3, "length([1, 2, 3])");
+		assertRuntimeException("[1, 2][3]");
 	}
 
 	@Test
@@ -289,6 +290,28 @@ public class Test1
 		Optional<IApatiteScript> oScript = result.node.value.validate(vm);
 
 		assertTrue(!oScript.isPresent());
+	}
+
+	private void assertRuntimeException(String source)
+	{
+		ResultOxygen<IApatiteCode> result = ApatiteScript.getSyntax().matches(source);
+
+		if (!result.isValid) {
+			fail("syntax error");
+		}
+
+		ApatiteVM vm = createVM();
+		Optional<IApatiteScript> oScript = result.node.value.validate(vm);
+
+		if (!oScript.isPresent()) {
+			vm.getErrors().forEach(System.err::println);
+			fail("compile error");
+		}
+
+		try {
+			oScript.get().invoke();
+			fail("No exception");
+		} catch (RuntimeException e) {}
 	}
 
 	private void assertSuccess(Consumer<Object> consumer, String source)

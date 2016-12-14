@@ -71,6 +71,9 @@ public class ApatiteScript
 	}
 
 	public Syntax<IApatiteCode> brackets = createBrackets(c -> {
+		c.accept(bracketsVoid("(", ")", "_bracketsRound"));
+		c.accept(bracketsVoid("[", "]", "_bracketsSquare"));
+		c.accept(bracketsVoid("{", "}", "_bracketsCurly"));
 		c.accept(brackets("(", expression, ")", "_bracketsRound"));
 		c.accept(brackets("[", expression, "]", "_bracketsSquare"));
 		c.accept(brackets("{", expression, "}", "_bracketsCurly"));
@@ -91,9 +94,9 @@ public class ApatiteScript
 	//
 
 	public Syntax<IApatiteCode> operatorRight = createRight(factor, c -> {
-		c.accept(bracketsVoid("(", ")", "_rightBracketsRound"));
-		c.accept(bracketsVoid("[", "]", "_rightBracketsSquare"));
-		c.accept(bracketsVoid("{", "}", "_rightBracketsCurly"));
+		c.accept(rightBracketsVoid("(", ")", "_rightBracketsRound"));
+		c.accept(rightBracketsVoid("[", "]", "_rightBracketsSquare"));
+		c.accept(rightBracketsVoid("{", "}", "_rightBracketsCurly"));
 		c.accept(rightBrackets("(", expression, ")", "_rightBracketsRound"));
 		c.accept(rightBrackets("[", expression, "]", "_rightBracketsSquare"));
 		c.accept(rightBrackets("{", expression, "}", "_rightBracketsCurly"));
@@ -223,6 +226,18 @@ public class ApatiteScript
 			n -> new CodeFunction(name, n.begin, n.end, n.value.get()));
 	}
 
+	protected Syntax<IApatiteCode> bracketsVoid(
+		String left,
+		String right,
+		String name)
+	{
+		return packNode(tunnel(null)
+			.and(string(left))
+			.and($)
+			.and(string(right)),
+			n -> new CodeFunction(name, n.begin, n.end));
+	}
+
 	protected Syntax<UnaryOperator<IApatiteCode>> rightBrackets(
 		String left,
 		Syntax<IApatiteCode> inner,
@@ -238,7 +253,7 @@ public class ApatiteScript
 			n -> a -> new CodeFunction(name, a.getBegin(), n.end, a, n.value.get()));
 	}
 
-	protected Syntax<UnaryOperator<IApatiteCode>> bracketsVoid(
+	protected Syntax<UnaryOperator<IApatiteCode>> rightBracketsVoid(
 		String left,
 		String right,
 		String name)
