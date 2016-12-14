@@ -2,10 +2,10 @@ package mirrg.helium.compile.oxygen.apatite2.nodes;
 
 import java.util.Optional;
 
-import mirrg.helium.compile.oxygen.apatite2.ApatiteConstant;
-import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
-import mirrg.helium.compile.oxygen.apatite2.ApatiteVariable;
-import mirrg.helium.compile.oxygen.apatite2.loader.Loader;
+import mirrg.helium.compile.oxygen.apatite2.Loader;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteConstant;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVariable;
 import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.type.Type;

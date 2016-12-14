@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.type.Type;
 import mirrg.helium.compile.oxygen.editor.IProviderColor;
 

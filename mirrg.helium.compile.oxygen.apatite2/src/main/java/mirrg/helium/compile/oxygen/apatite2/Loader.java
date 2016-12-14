@@ -1,4 +1,4 @@
-package mirrg.helium.compile.oxygen.apatite2.loader;
+package mirrg.helium.compile.oxygen.apatite2;
 
 import java.awt.Color;
 import java.util.Optional;
@@ -6,13 +6,13 @@ import java.util.stream.Stream;
 
 import org.apache.commons.math3.util.FastMath;
 
-import mirrg.helium.compile.oxygen.apatite2.ApatiteConstant;
-import mirrg.helium.compile.oxygen.apatite2.ApatiteFunction;
-import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
-import mirrg.helium.compile.oxygen.apatite2.IApatiteFunctionEntity;
-import mirrg.helium.compile.oxygen.apatite2.IApatiteFunctionProvider;
-import mirrg.helium.compile.oxygen.apatite2.IApatiteMetaFunctionEntity;
-import mirrg.helium.compile.oxygen.apatite2.IApatiteMetaFunctionProvider;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteConstant;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteFunction;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteFunctionEntity;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteFunctionProvider;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionEntity;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionProvider;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;

@@ -1,4 +1,4 @@
-package mirrg.helium.compile.oxygen.apatite2;
+package mirrg.helium.compile.oxygen.apatite2.core;
 
 import java.util.Optional;
 import java.util.function.Function;

@@ -2,7 +2,7 @@ package mirrg.helium.compile.oxygen.apatite2.util;
 
 import javax.swing.JTextPane;
 
-import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.parser.core.ResultOxygen;
 

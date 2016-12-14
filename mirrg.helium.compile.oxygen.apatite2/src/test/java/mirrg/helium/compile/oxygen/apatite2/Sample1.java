@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import javax.swing.WindowConstants;
 
-import mirrg.helium.compile.oxygen.apatite2.loader.Loader;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionEntity;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionProvider;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.nodes.NodeFunction;

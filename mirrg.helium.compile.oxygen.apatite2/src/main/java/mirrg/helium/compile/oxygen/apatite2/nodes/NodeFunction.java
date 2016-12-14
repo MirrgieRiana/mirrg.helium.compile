@@ -6,9 +6,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
-import mirrg.helium.compile.oxygen.apatite2.IApatiteFunctionEntity;
-import mirrg.helium.compile.oxygen.apatite2.IApatiteMetaFunctionEntity;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteFunctionEntity;
+import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionEntity;
 import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;

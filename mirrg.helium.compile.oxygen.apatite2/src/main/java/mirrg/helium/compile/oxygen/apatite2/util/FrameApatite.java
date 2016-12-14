@@ -14,8 +14,8 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.JTextPane;
 
-import mirrg.helium.compile.oxygen.apatite2.ApatiteVM;
-import mirrg.helium.compile.oxygen.apatite2.loader.Loader;
+import mirrg.helium.compile.oxygen.apatite2.Loader;
+import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.editor.EventTextPaneOxygen;
