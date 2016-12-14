@@ -287,7 +287,6 @@ public class ApatiteScript
 		return operators;
 	}
 
-	@SuppressWarnings("deprecation")
 	protected Syntax<IApatiteCode> createRight(
 		Syntax<IApatiteCode> operand,
 		Consumer<Consumer<Syntax<UnaryOperator<IApatiteCode>>>> operator)
@@ -295,21 +294,20 @@ public class ApatiteScript
 		SyntaxOr<UnaryOperator<IApatiteCode>> operators = or((UnaryOperator<IApatiteCode>) null);
 		operator.accept(operators::or);
 
-		return pack(serial(Struct2<IApatiteCode, ArrayList<UnaryOperator<IApatiteCode>>>::new)
+		return pack(serial(Struct2<IApatiteCode, ArrayList<Supplier<UnaryOperator<IApatiteCode>>>>::new)
 			.and(operand, Struct2::setX)
-			.and(repeat(extract((UnaryOperator<IApatiteCode>) null)
+			.and(repeat(tunnel((UnaryOperator<IApatiteCode>) null)
 				.and($)
 				.extract(operators)), Struct2::setY),
 			t -> {
 				IApatiteCode left = t.x;
 				for (int i = 0; i < t.y.size(); i++) {
-					left = t.y.get(i).apply(left);
+					left = t.y.get(i).get().apply(left);
 				}
 				return left;
 			});
 	}
 
-	@SuppressWarnings("deprecation")
 	protected Syntax<IApatiteCode> createLeft(
 		Syntax<IApatiteCode> operand,
 		Consumer<Consumer<Syntax<UnaryOperator<IApatiteCode>>>> operator)
@@ -317,15 +315,15 @@ public class ApatiteScript
 		SyntaxOr<UnaryOperator<IApatiteCode>> operators = or((UnaryOperator<IApatiteCode>) null);
 		operator.accept(operators::or);
 
-		return pack(serial(Struct2<ArrayList<UnaryOperator<IApatiteCode>>, IApatiteCode>::new)
-			.and(repeat(extract((UnaryOperator<IApatiteCode>) null)
+		return pack(serial(Struct2<ArrayList<Supplier<UnaryOperator<IApatiteCode>>>, IApatiteCode>::new)
+			.and(repeat(tunnel((UnaryOperator<IApatiteCode>) null)
 				.extract(operators)
 				.and($)), Struct2::setX)
 			.and(operand, Struct2::setY),
 			t -> {
 				IApatiteCode right = t.y;
 				for (int i = t.x.size() - 1; i >= 0; i--) {
-					right = t.x.get(i).apply(right);
+					right = t.x.get(i).get().apply(right);
 				}
 				return right;
 			});
