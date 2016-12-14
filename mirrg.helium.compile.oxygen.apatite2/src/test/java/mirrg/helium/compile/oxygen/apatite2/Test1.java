@@ -248,6 +248,16 @@ public class Test1
 		assertSuccess(false, "false ?: false");
 	}
 
+	@Test
+	public void testFunctionType()
+	{
+		assertCompileError("type()");
+		assertSuccess(ApatiteLoader.INTEGER, "type(5)");
+		assertCompileError("type(1, 2)");
+
+		assertSuccess(ApatiteLoader.DOUBLE, "type(5.0)");
+	}
+
 	private void assertSyntaxError(String source)
 	{
 		ResultOxygen<IApatiteCode> result = ApatiteScript.getSyntax().matches(source);
