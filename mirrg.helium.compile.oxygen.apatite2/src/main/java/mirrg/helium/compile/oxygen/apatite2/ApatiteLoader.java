@@ -17,30 +17,39 @@ import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.nodes.CodeFunction;
 import mirrg.helium.compile.oxygen.apatite2.nodes.CodeIdentifier;
-import mirrg.helium.compile.oxygen.apatite2.type.Type;
+import mirrg.helium.compile.oxygen.apatite2.type.IType;
+import mirrg.helium.compile.oxygen.apatite2.type.TypeArray;
+import mirrg.helium.compile.oxygen.apatite2.type.TypeBasic;
+import mirrg.helium.compile.oxygen.apatite2.type.TypeInteger;
+import mirrg.helium.compile.oxygen.apatite2.type.TypeValue;
 import mirrg.helium.math.hydrogen.complex.StructureComplex;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
 
 public class ApatiteLoader
 {
 
-	public static final Type<Object> VALUE = new Type<>("value", Color.decode("#8888ff"));
-	public static final Type<Integer> INTEGER = new Type<>("integer", Color.decode("#ff8800"));
-	public static final Type<Double> DOUBLE = new Type<>("double", Color.decode("#000088"));
-	public static final Type<StructureComplex> COMPLEX = new Type<>("complex", Color.decode("#880000"));
-	public static final Type<String> STRING = new Type<>("string", Color.decode("#ff00ff"));
-	public static final Type<String> KEYWORD = new Type<>("keyword", Color.decode("#00aa00"));
-	public static final Type<Boolean> BOOLEAN = new Type<>("boolean", Color.decode("#888800"));
-	public static final Type<Type<?>> TYPE = new Type<>("type", Color.decode("#00aa00"));
+	public static final IType<Object> VALUE = new TypeValue("Value", Color.decode("#8888ff"));
+	public static final IType<StructureComplex> COMPLEX = new TypeBasic<>("Complex", Color.decode("#880000"));
+	public static final IType<Double> DOUBLE = new TypeBasic<>("Double", Color.decode("#000088"));
+	public static final IType<Integer> INTEGER = new TypeInteger("Integer", Color.decode("#ff8800"));
+	public static final IType<String> STRING = new TypeBasic<>("String", Color.decode("#ff00ff"));
+	public static final IType<String> KEYWORD = new TypeBasic<>("Keyword", Color.decode("#00aa00"));
+	public static final IType<Boolean> BOOLEAN = new TypeBasic<>("Boolean", Color.decode("#888800"));
+	public static final IType<IType<?>> TYPE = new TypeBasic<>("Type", Color.decode("#00aa00"));
 
-	public static final Type<Object> V = VALUE;
-	public static final Type<Integer> I = INTEGER;
-	public static final Type<Double> D = DOUBLE;
-	public static final Type<StructureComplex> C = COMPLEX;
-	public static final Type<String> S = STRING;
-	public static final Type<String> K = KEYWORD;
-	public static final Type<Boolean> B = BOOLEAN;
-	public static final Type<Type<?>> T = TYPE;
+	public static final IType<Object> V = VALUE;
+	public static final IType<StructureComplex> C = COMPLEX;
+	public static final IType<Double> D = DOUBLE;
+	public static final IType<Integer> I = INTEGER;
+	public static final IType<String> S = STRING;
+	public static final IType<String> K = KEYWORD;
+	public static final IType<Boolean> B = BOOLEAN;
+	public static final IType<IType<?>> T = TYPE;
+
+	public static <T> IType<T[]> ARRAY(IType<T> type)
+	{
+		return new TypeArray<T>(type);
+	}
 
 	public static ApatiteVM createVM()
 	{
@@ -65,15 +74,6 @@ public class ApatiteLoader
 
 	public void load()
 	{
-
-		INTEGER.registerDistance(VALUE, 2, a -> a);
-		INTEGER.registerDistance(DOUBLE, 1, a -> (double) a);
-		DOUBLE.registerDistance(VALUE, 1, a -> a);
-		STRING.registerDistance(VALUE, 1, a -> a);
-		KEYWORD.registerDistance(VALUE, 1, a -> a);
-		BOOLEAN.registerDistance(VALUE, 1, a -> a);
-		TYPE.registerDistance(VALUE, 1, a -> a);
-
 		rc("true", B, true);
 		rc("false", B, false);
 		rf0("now", D, () -> (double) System.currentTimeMillis());
@@ -99,7 +99,7 @@ public class ApatiteLoader
 						return Optional.of(new IApatiteScript() {
 
 							@Override
-							public mirrg.helium.compile.oxygen.apatite2.type.Type<?> getType()
+							public mirrg.helium.compile.oxygen.apatite2.type.IType<?> getType()
 							{
 								return TYPE;
 							}
@@ -173,18 +173,8 @@ public class ApatiteLoader
 		rf2("_operatorGreater", B, I, I, (a, b) -> a > b);
 		rf2("_operatorGreater", B, D, D, (a, b) -> a > b);
 
-		rf2("_operatorEqualEqual", B, I, I, (a, b) -> a == b);
-		rf2("_operatorEqualEqual", B, I, D, (a, b) -> false);
-		rf2("_operatorEqualEqual", B, D, I, (a, b) -> false);
-		rf2("_operatorEqualEqual", B, D, D, (a, b) -> a == b);
-		rf2("_operatorEqualEqual", B, B, B, (a, b) -> a == b);
-		rf2("_operatorEqualEqual", B, S, S, (a, b) -> a.equals(b));
-		rf2("_operatorExclamationEqual", B, I, I, (a, b) -> a != b);
-		rf2("_operatorExclamationEqual", B, I, D, (a, b) -> true);
-		rf2("_operatorExclamationEqual", B, D, I, (a, b) -> true);
-		rf2("_operatorExclamationEqual", B, D, D, (a, b) -> a != b);
-		rf2("_operatorExclamationEqual", B, B, B, (a, b) -> a != b);
-		rf2("_operatorExclamationEqual", B, S, S, (a, b) -> !a.equals(b));
+		rf2("_operatorEqualEqual", B, V, V, (a, b) -> a.equals(b));
+		rf2("_operatorExclamationEqual", B, V, V, (a, b) -> !a.equals(b));
 
 		rf2("_operatorAmpersandAmpersand", B, B, B, (a, b) -> a && b);
 		rf2("_operatorPipePipe", B, B, B, (a, b) -> a || b);
@@ -192,7 +182,7 @@ public class ApatiteLoader
 		vm.registerFunction(new IApatiteFunctionProvider() {
 
 			@Override
-			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(Type<?>... types)
+			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
 			{
 				if (types.length != 3) return Optional.empty();
 				if (!types[0].equals(BOOLEAN)) return Optional.empty();
@@ -201,7 +191,7 @@ public class ApatiteLoader
 				return Optional.of(new Struct3<>(0, 0, new IApatiteFunctionEntity() {
 
 					@Override
-					public Type<?> getType()
+					public IType<?> getType()
 					{
 						return types[1];
 					}
@@ -219,7 +209,7 @@ public class ApatiteLoader
 		vm.registerFunction(new IApatiteFunctionProvider() {
 
 			@Override
-			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(Type<?>... types)
+			public Optional<Struct3<Integer, Integer, IApatiteFunctionEntity>> matches(IType<?>... types)
 			{
 				if (types.length != 2) return Optional.empty();
 				if (!types[0].equals(BOOLEAN)) return Optional.empty();
@@ -228,7 +218,7 @@ public class ApatiteLoader
 				return Optional.of(new Struct3<>(0, 0, new IApatiteFunctionEntity() {
 
 					@Override
-					public Type<?> getType()
+					public IType<?> getType()
 					{
 						return types[0];
 					}
@@ -246,12 +236,12 @@ public class ApatiteLoader
 
 	}
 
-	protected <O> void rc(String name, Type<O> out, O value)
+	protected <O> void rc(String name, IType<O> out, O value)
 	{
 		vm.registerConstant(new ApatiteConstant<>(out, name, value));
 	}
 
-	protected <O> void rf0(String name, Type<O> out, IRF0<O> function)
+	protected <O> void rf0(String name, IType<O> out, IRF0<O> function)
 	{
 		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply()), name);
 	}
@@ -264,7 +254,7 @@ public class ApatiteLoader
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <O, I1> void rf1(String name, Type<O> out, Type<I1> in1, IRF1<I1, O> function)
+	protected <O, I1> void rf1(String name, IType<O> out, IType<I1> in1, IRF1<I1, O> function)
 	{
 		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply((I1) a[0]), in1), name);
 	}
@@ -277,7 +267,7 @@ public class ApatiteLoader
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <O, I1, I2> void rf2(String name, Type<O> out, Type<I1> in1, Type<I2> in2, IRF2<I1, I2, O> function)
+	protected <O, I1, I2> void rf2(String name, IType<O> out, IType<I1> in1, IType<I2> in2, IRF2<I1, I2, O> function)
 	{
 		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply((I1) a[0], (I2) a[1]), in1, in2), name);
 	}
@@ -290,7 +280,7 @@ public class ApatiteLoader
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <O, I1, I2, I3> void rf3(String name, Type<O> out, Type<I1> in1, Type<I2> in2, Type<I3> in3, IRF3<I1, I2, I3, O> function)
+	protected <O, I1, I2, I3> void rf3(String name, IType<O> out, IType<I1> in1, IType<I2> in2, IType<I3> in3, IRF3<I1, I2, I3, O> function)
 	{
 		vm.registerFunction(new ApatiteFunction<>(out, a -> function.apply((I1) a[0], (I2) a[1], (I3) a[2]), in1, in2, in3), name);
 	}

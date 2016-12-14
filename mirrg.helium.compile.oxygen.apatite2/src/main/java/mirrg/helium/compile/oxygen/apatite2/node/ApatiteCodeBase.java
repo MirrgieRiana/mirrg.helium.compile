@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
-import mirrg.helium.compile.oxygen.apatite2.type.Type;
+import mirrg.helium.compile.oxygen.apatite2.type.IType;
 import mirrg.helium.compile.oxygen.editor.IProviderColor;
 
 public abstract class ApatiteCodeBase implements IApatiteCode, IProviderColor
@@ -37,7 +37,7 @@ public abstract class ApatiteCodeBase implements IApatiteCode, IProviderColor
 		return Optional.empty();
 	}
 
-	protected <T> Optional<IApatiteScript> success(Type<T> type, Supplier<T> supplier)
+	protected <T> Optional<IApatiteScript> success(IType<T> type, Supplier<T> supplier)
 	{
 		return Optional.of(new ApatiteScriptBase(type) {
 

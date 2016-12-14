@@ -8,7 +8,7 @@ import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVM;
 import mirrg.helium.compile.oxygen.apatite2.core.ApatiteVariable;
 import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
-import mirrg.helium.compile.oxygen.apatite2.type.Type;
+import mirrg.helium.compile.oxygen.apatite2.type.IType;
 
 public class CodeIdentifier extends ApatiteCodeBase
 {
@@ -41,7 +41,7 @@ public class CodeIdentifier extends ApatiteCodeBase
 	@SuppressWarnings("unchecked")
 	private Optional<IApatiteScript> success(ApatiteConstant<?> constant)
 	{
-		return success((Type<Object>) constant.type, () -> {
+		return success((IType<Object>) constant.type, () -> {
 			return constant.value;
 		});
 	}
@@ -68,7 +68,7 @@ public class CodeIdentifier extends ApatiteCodeBase
 	@SuppressWarnings("unchecked")
 	private Optional<IApatiteScript> success2(ApatiteVariable<?> variable)
 	{
-		return success((Type<Object>) variable.type, () -> {
+		return success((IType<Object>) variable.type, () -> {
 			return variable.value;
 		});
 	}

@@ -1,19 +1,19 @@
 package mirrg.helium.compile.oxygen.apatite2.node;
 
-import mirrg.helium.compile.oxygen.apatite2.type.Type;
+import mirrg.helium.compile.oxygen.apatite2.type.IType;
 
 public abstract class ApatiteScriptBase implements IApatiteScript
 {
 
-	private Type<?> type;
+	private IType<?> type;
 
-	public ApatiteScriptBase(Type<?> type)
+	public ApatiteScriptBase(IType<?> type)
 	{
 		this.type = type;
 	}
 
 	@Override
-	public Type<?> getType()
+	public IType<?> getType()
 	{
 		return type;
 	}

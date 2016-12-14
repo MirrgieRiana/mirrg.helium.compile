@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
-import mirrg.helium.compile.oxygen.apatite2.type.Type;
+import mirrg.helium.compile.oxygen.apatite2.type.IType;
 import mirrg.helium.standard.hydrogen.struct.Struct3;
 import mirrg.helium.standard.hydrogen.struct.Tuple;
 import mirrg.helium.standard.hydrogen.struct.Tuple3;
@@ -66,7 +66,7 @@ public class ApatiteVM
 		return functions;
 	}
 
-	public Optional<IApatiteFunctionEntity> getFunction(String name, Type<?>[] types)
+	public Optional<IApatiteFunctionEntity> getFunction(String name, IType<?>[] types)
 	{
 		return getFunctions().stream()
 			.filter(t -> t.getX().equals(name))

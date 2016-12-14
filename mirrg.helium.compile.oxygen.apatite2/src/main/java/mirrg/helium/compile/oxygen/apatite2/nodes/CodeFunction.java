@@ -12,7 +12,7 @@ import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionEntity;
 import mirrg.helium.compile.oxygen.apatite2.node.ApatiteCodeBase;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
-import mirrg.helium.compile.oxygen.apatite2.type.Type;
+import mirrg.helium.compile.oxygen.apatite2.type.IType;
 import mirrg.helium.compile.oxygen.editor.IProviderChildren;
 import mirrg.helium.compile.oxygen.parser.core.Node;
 
@@ -48,7 +48,7 @@ public class CodeFunction extends ApatiteCodeBase implements IProviderChildren
 		boolean flag = true;
 
 		IApatiteScript[] scripts = new IApatiteScript[codes.length];
-		Type<?>[] types = new Type<?>[codes.length];
+		IType<?>[] types = new IType<?>[codes.length];
 		for (int i = 0; i < codes.length; i++) {
 			Optional<IApatiteScript> oScript = codes[i].validate(vm);
 			if (!oScript.isPresent()) {
@@ -76,7 +76,7 @@ public class CodeFunction extends ApatiteCodeBase implements IProviderChildren
 	@SuppressWarnings("unchecked")
 	private Optional<IApatiteScript> success(IApatiteFunctionEntity function, IApatiteScript[] scripts)
 	{
-		return success((Type<Object>) function.getType(), () -> {
+		return success((IType<Object>) function.getType(), () -> {
 			Object[] arguments = new Object[scripts.length];
 			for (int i = 0; i < scripts.length; i++) {
 				arguments[i] = scripts[i].invoke();
@@ -88,7 +88,7 @@ public class CodeFunction extends ApatiteCodeBase implements IProviderChildren
 	@SuppressWarnings("unchecked")
 	private Optional<IApatiteScript> success(IApatiteScript function)
 	{
-		return success((Type<Object>) function.getType(), function::invoke);
+		return success((IType<Object>) function.getType(), function::invoke);
 	}
 
 	@Override

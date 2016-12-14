@@ -2,6 +2,7 @@ package mirrg.helium.compile.oxygen.apatite2;
 
 import java.awt.Color;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.swing.WindowConstants;
 
@@ -11,7 +12,8 @@ import mirrg.helium.compile.oxygen.apatite2.core.IApatiteMetaFunctionProvider;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteCode;
 import mirrg.helium.compile.oxygen.apatite2.node.IApatiteScript;
 import mirrg.helium.compile.oxygen.apatite2.nodes.CodeFunction;
-import mirrg.helium.compile.oxygen.apatite2.type.Type;
+import mirrg.helium.compile.oxygen.apatite2.type.IType;
+import mirrg.helium.compile.oxygen.apatite2.type.TypeBasic;
 import mirrg.helium.compile.oxygen.apatite2.util.EventFrameApatite;
 import mirrg.helium.compile.oxygen.apatite2.util.FrameApatite;
 import mirrg.helium.swing.nitrogen.util.HColor;
@@ -78,12 +80,12 @@ public class Sample1
 							Optional<IApatiteScript> script = codes[0].validate(vm);
 							if (!script.isPresent()) return Optional.empty();
 
-							TypePointer type = new TypePointer(script.get().getType());
+							TypePointer<?> type = new TypePointer<>(script.get().getType());
 
 							return Optional.of(new IApatiteScript() {
 
 								@Override
-								public mirrg.helium.compile.oxygen.apatite2.type.Type<?> getType()
+								public mirrg.helium.compile.oxygen.apatite2.type.IType<?> getType()
 								{
 									return type;
 								}
@@ -125,9 +127,9 @@ public class Sample1
 							return Optional.of(new IApatiteScript() {
 
 								@Override
-								public mirrg.helium.compile.oxygen.apatite2.type.Type<?> getType()
+								public mirrg.helium.compile.oxygen.apatite2.type.IType<?> getType()
 								{
-									return ((TypePointer) script.get().getType()).parent;
+									return ((TypePointer<?>) script.get().getType()).type;
 								}
 
 								@Override
@@ -167,23 +169,15 @@ public class Sample1
 
 	}
 
-	private static class TypePointer extends Type<Object>
+	private static class TypePointer<T> extends TypeBasic<Supplier<T>>
 	{
 
-		public final Type<?> parent;
+		public final IType<T> type;
 
-		public TypePointer(Type<?> parent)
+		public TypePointer(IType<T> type)
 		{
-			super("pointer", HColor.createLinearRatioColor(0.5, parent.color, Color.decode("#000000")));
-			this.parent = parent;
-
-			registerDistance(ApatiteLoader.VALUE, 1, a -> a);
-		}
-
-		@Override
-		public String getName()
-		{
-			return super.getName() + "(" + parent.getName() + ")";
+			super("pointer" + "(" + type.getName() + ")", HColor.createLinearRatioColor(0.75, type.getColor(), Color.decode("#000000")));
+			this.type = type;
 		}
 
 	}
